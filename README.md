@@ -1,11 +1,11 @@
-# GB Platform
+## GB Platform
 
 This is a group project for Programming Application and Frameworks module at SLIIT
 
 Technology Stack 
-## RESTful web services: Java – JAX-RS (Jersey) on Tomcat 
-## DB: MySQL 
-## Client: A compatible test client
+# RESTful web services: Java – JAX-RS (Jersey) on Tomcat 
+# DB: MySQL 
+# Client: A compatible test client
 
 Development Environments Download Links
 Eclipse: (Newer Versions May Not Support)
