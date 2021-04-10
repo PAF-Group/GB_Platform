@@ -1,10 +1,10 @@
 package com;
 
 import model.Item;
-//For REST Service
+//For REST Servicee
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-//For JSON
+//For JSON Data
 import com.google.gson.*;
 //For XML
 import org.jsoup.*;
