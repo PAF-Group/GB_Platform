@@ -1,7 +1,7 @@
 package com;
 
 import model.Item;
-//For REST Service
+//For REST Servicee
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 //For JSON
