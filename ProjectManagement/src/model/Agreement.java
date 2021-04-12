@@ -123,7 +123,7 @@ public class Agreement {
 		return output;
 	}
 
-	public String deleteItem(String projectid) {
+	public String deleteItem(String agreementid) {
 		String output = "";
 		try {
 			Connection con = connect();
@@ -131,10 +131,10 @@ public class Agreement {
 				return "Error while connecting to the database for deleting.";
 			}
 			// create a prepared statement
-			String query = "delete from project_table where Project_ID =?";
+			String query = "delete from agreement_table where Agreement_ID =?";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			// binding values
-			preparedStmt.setInt(1, Integer.parseInt(projectid));
+			preparedStmt.setInt(1, Integer.parseInt(agreementid));
 			// execute the statement
 			preparedStmt.execute();
 			con.close();
