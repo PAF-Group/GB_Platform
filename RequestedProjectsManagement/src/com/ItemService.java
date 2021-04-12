@@ -41,11 +41,11 @@ public class ItemService {
 		JsonObject itemObject = new JsonParser().parse(itemData).getAsJsonObject();
 		// Read the values from the JSON object
 		String pRequest_id= itemObject.get("pRequest_id").getAsString();
-		String itemCode = itemObject.get("itemCode").getAsString();
-		String itemName = itemObject.get("itemName").getAsString();
-		String itemPrice = itemObject.get("itemPrice").getAsString();
-		String itemDesc = itemObject.get("itemDesc").getAsString();
-		String output = itemObj.updateItem(pRequest_id, itemCode, itemName, itemPrice, itemDesc);
+		String name = itemObject.get("name").getAsString();
+		String feild = itemObject.get("feild").getAsString();
+		String description = itemObject.get("description").getAsString();
+		String submission_link = itemObject.get("submission_link").getAsString();
+		String output = itemObj.updateItem(pRequest_id,name, feild, description, submission_link);
 		return output;
 	}
 
