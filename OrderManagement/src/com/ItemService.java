@@ -4,7 +4,7 @@ import model.Item;
 //For REST Servicee
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-//For JSON Dataa
+//For JSON
 import com.google.gson.*;
 //For XML
 import org.jsoup.*;
