@@ -95,7 +95,7 @@ public class Agreement {
 		return output;
 	}
 
-	public String updateItem(String ID, String name, String description, String filed, String url,String researcherid ) {
+	public String updateItem(String Agreementid, String fundingbodyid, String agreementpath, String status, String projectid ) {
 		String output = "";
 		try {
 			Connection con = connect();
@@ -103,14 +103,15 @@ public class Agreement {
 				return "Error while connecting to the database for updating.";
 			}
 			// create a prepared statement
-			String query = "UPDATE items SET itemCode=?,itemName=?,itemPrice=?,itemDesc=? WHERE itemID=?";
+			String query = "UPDATE agreement_table SET FundingBody_ID=?,Agreement_Path=?,Status=?,Project_ID=? WHERE Agreement_ID=?";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			// binding values
-			preparedStmt.setString(1, name);
-			preparedStmt.setString(2, description);
-			preparedStmt.setString(3, filed);
-			preparedStmt.setString(4, url);
-			preparedStmt.setInt(5, Integer.parseInt(researcherid));
+			preparedStmt.setInt(1, Integer.parseInt(fundingbodyid));
+			preparedStmt.setString(2, agreementpath);
+			preparedStmt.setString(3, status);
+			preparedStmt.setInt(4, Integer.parseInt(projectid));
+			preparedStmt.setInt(5, Integer.parseInt(Agreementid));
+			
 			// execute the statement
 			preparedStmt.execute();
 			con.close();
