@@ -9,7 +9,7 @@ public class Item { // A common method to connect to the DB
 			Class.forName("com.mysql.jdbc.Driver");
 
 			// Provide the correct details: DBServer/DBName, username, password
-			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/test", "root", "");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/req_project", "root", "okanda");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
