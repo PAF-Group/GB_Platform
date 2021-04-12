@@ -104,7 +104,7 @@ public class Item { // A common method to connect to the DB
 				return "Error while connecting to the database for updating.";
 			}
 			// create a prepared statement
-			String query = "UPDATE items SET itemCode=?,itemName=?,itemPrice=?,itemDesc=? WHERE itemID=?";
+			String query = "UPDATE project_table SET Name=?,Description=?,Filed=?,Project_Report_Url=?,Researcher_ID WHERE Project_ID=?";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			// binding values
 			preparedStmt.setString(1, name);
@@ -112,6 +112,7 @@ public class Item { // A common method to connect to the DB
 			preparedStmt.setString(3, filed);
 			preparedStmt.setString(4, url);
 			preparedStmt.setInt(5, Integer.parseInt(researcherid));
+			preparedStmt.setInt(6, Integer.parseInt(ID));
 			// execute the statement
 			preparedStmt.execute();
 			con.close();
@@ -123,26 +124,26 @@ public class Item { // A common method to connect to the DB
 		return output;
 	}
 
-//	public String deleteItem(String itemID) {
-//		String output = "";
-//		try {
-//			Connection con = connect();
-//			if (con == null) {
-//				return "Error while connecting to the database for deleting.";
-//			}
-//			// create a prepared statement
-//			String query = "delete from items where itemID=?";
-//			PreparedStatement preparedStmt = con.prepareStatement(query);
-//			// binding values
-//			preparedStmt.setInt(1, Integer.parseInt(itemID));
-//			// execute the statement
-//			preparedStmt.execute();
-//			con.close();
-//			output = "Deleted successfully";
-//		} catch (Exception e) {
-//			output = "Error while deleting the item.";
-//			System.err.println(e.getMessage());
-//		}
-//		return output;
-//	}
+	public String deleteItem(String projectid) {
+		String output = "";
+		try {
+			Connection con = connect();
+			if (con == null) {
+				return "Error while connecting to the database for deleting.";
+			}
+			// create a prepared statement
+			String query = "delete from project_table where Project_ID =?";
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			// binding values
+			preparedStmt.setInt(1, Integer.parseInt(projectid));
+			// execute the statement
+			preparedStmt.execute();
+			con.close();
+			output = "Deleted successfully";
+		} catch (Exception e) {
+			output = "Error while deleting the item.";
+			System.err.println(e.getMessage());
+		}
+		return output;
+	}
 }
