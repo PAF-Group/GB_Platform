@@ -9,14 +9,14 @@ public class Item { // A common method to connect to the DB
 			Class.forName("com.mysql.jdbc.Driver");
 
 			// Provide the correct details: DBServer/DBName, username, password
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/req_project", "root", "okanda");
+			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/req_project", "root", "okanda");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return con;
 	}
 
-	public String insertItem(String code, String name, String price, String desc) {
+	public String insertItem(String name, String feild, String description, String submission_link,String fundingbody_id) {
 		String output = "";
 		try {
 			Connection con = connect();
@@ -24,15 +24,17 @@ public class Item { // A common method to connect to the DB
 				return "Error while connecting to the database for inserting.";
 			}
 			// create a prepared statement
-			String query = " insert into items (`itemID`,`itemCode`,`itemName`,`itemPrice`,`itemDesc`)"
-					+ " values (?, ?, ?, ?, ?)";
+			String query = " insert into project_request (`pRequest_id`,`name`,`feild`,`description`,`submission_link`,`fundingbody_id`)"
+					+ " values (?, ?, ?, ?, ?,?)";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			// binding values
 			preparedStmt.setInt(1, 0);
-			preparedStmt.setString(2, code);
-			preparedStmt.setString(3, name);
-			preparedStmt.setDouble(4, Double.parseDouble(price));
-			preparedStmt.setString(5, desc);
+			preparedStmt.setString(2, name);
+			preparedStmt.setString(3, feild);
+			preparedStmt.setString(4, description);
+			preparedStmt.setString(5, submission_link);
+			preparedStmt.setString(5, fundingbody_id);
+			
 // execute the statement
 			preparedStmt.execute();
 			con.close();
@@ -52,29 +54,29 @@ public class Item { // A common method to connect to the DB
 				return "Error while connecting to the database for reading.";
 			}
 			// Prepare the html table to be displayed
-			output = "<table border='1'><tr><th>Item Code</th><th>Item Name</th>" + "<th>Item Price</th>"
-					+ "<th>Item Description</th>" + "<th>Update</th><th>Remove</th></tr>";
+			output = "<table border='1'><tr><th>Name</th><th>Feild</th>" + "<th>Description</th>"
+					+ "<th>Submission_Link</th>" + "<th>Update</th><th>Remove</th></tr>";
 
-			String query = "select * from items";
+			String query = "select * from project_request";
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			// iterate through the rows in the result set
 			while (rs.next()) {
-				String itemID = Integer.toString(rs.getInt("itemID"));
-				String itemCode = rs.getString("itemCode");
-				String itemName = rs.getString("itemName");
-				String itemPrice = Double.toString(rs.getDouble("itemPrice"));
-				String itemDesc = rs.getString("itemDesc");
+				String pRequest_id = Integer.toString(rs.getInt("pRequest_id"));
+				String name = rs.getString("name");
+				String feild = rs.getString("feild");
+				String description = rs.getString("description");
+				String submission_link = rs.getString("submission_link");
 				// Add into the html table
-				output += "<tr><td>" + itemCode + "</td>";
-				output += "<td>" + itemName + "</td>";
-				output += "<td>" + itemPrice + "</td>";
-				output += "<td>" + itemDesc + "</td>";
+				output += "<tr><td>" + name + "</td>";
+				output += "<td>" + feild + "</td>";
+				output += "<td>" + description + "</td>";
+				output += "<td>" + submission_link + "</td>";
 				// buttons
 				output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>"
 						+ "<td><form method='post' action='items.jsp'>"
 						+ "<input name='btnRemove' type='submit' value='Remove'class='btn btn-danger'>"
-						+ "<input name='itemID' type='hidden' value='" + itemID + "'>" + "</form></td></tr>";
+						+ "<input name='pRequest_id' type='hidden' value='" + pRequest_id+ "'>" + "</form></td></tr>";
 			}
 			con.close();
 			// Complete the html table

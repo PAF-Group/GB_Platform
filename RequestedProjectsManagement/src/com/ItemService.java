@@ -26,9 +26,9 @@ public class ItemService {
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String insertItem(@FormParam("itemCode") String itemCode, @FormParam("itemName") String itemName,
-			@FormParam("itemPrice") String itemPrice, @FormParam("itemDesc") String itemDesc) {
-		String output = itemObj.insertItem(itemCode, itemName, itemPrice, itemDesc);
+	public String insertItem(@FormParam("name") String name, @FormParam("feild") String feild,
+			@FormParam("description") String description, @FormParam("submission_link") String submission_link, @FormParam("fundingbody_id") String fundingbody_id) {
+		String output = itemObj.insertItem(name, feild, description, submission_link,fundingbody_id);
 		return output;
 	}
 
