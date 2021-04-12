@@ -58,8 +58,8 @@ public class ItemService {
 		Document doc = Jsoup.parse(itemData, "", Parser.xmlParser());
 
 		// Read the value from the element <itemID>
-		String itemID = doc.select("itemID").text();
-		String output = itemObj.deleteItem(itemID);
+		String pRequest_id = doc.select("pRequest_id").text();
+		String output = itemObj.deleteItem(pRequest_id);
 		return output;
 	}
 
