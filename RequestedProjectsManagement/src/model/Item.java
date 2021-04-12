@@ -88,7 +88,7 @@ public class Item { // A common method to connect to the DB
 		return output;
 	}
 
-	public String updateItem(String ID, String code, String name, String price, String desc) {
+	public String updateItem(String ID, String name, String feild, String description, String submission_link) {
 		String output = "";
 		try {
 			Connection con = connect();
@@ -96,13 +96,13 @@ public class Item { // A common method to connect to the DB
 				return "Error while connecting to the database for updating.";
 			}
 			// create a prepared statement
-			String query = "UPDATE items SET itemCode=?,itemName=?,itemPrice=?,itemDesc=? WHERE itemID=?";
+			String query = "UPDATE project_request SET name=?,feild=?,description=?,submission_link=? WHERE pRequest_id=?";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			// binding values
-			preparedStmt.setString(1, code);
-			preparedStmt.setString(2, name);
-			preparedStmt.setDouble(3, Double.parseDouble(price));
-			preparedStmt.setString(4, desc);
+			preparedStmt.setString(1, name);
+			preparedStmt.setString(2, feild);
+			preparedStmt.setString(3,description);
+			preparedStmt.setString(4, submission_link);
 			preparedStmt.setInt(5, Integer.parseInt(ID));
 			// execute the statement
 			preparedStmt.execute();
@@ -115,7 +115,7 @@ public class Item { // A common method to connect to the DB
 		return output;
 	}
 
-	public String deleteItem(String itemID) {
+	public String deleteItem(String pRequest_id) {
 		String output = "";
 		try {
 			Connection con = connect();
@@ -123,10 +123,10 @@ public class Item { // A common method to connect to the DB
 				return "Error while connecting to the database for deleting.";
 			}
 			// create a prepared statement
-			String query = "delete from items where itemID=?";
+			String query = "delete from project_request where pRequest_id=?";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			// binding values
-			preparedStmt.setInt(1, Integer.parseInt(itemID));
+			preparedStmt.setInt(1, Integer.parseInt(pRequest_id));
 			// execute the statement
 			preparedStmt.execute();
 			con.close();
