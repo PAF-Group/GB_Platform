@@ -4,7 +4,7 @@ import model.Item;
 //For REST Servicee
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-//For JSON Da
+//For JSON
 import com.google.gson.*;
 //For XML
 import org.jsoup.*;
@@ -29,6 +29,7 @@ public class ItemService {
 	public String insertItem(@FormParam("itemCode") String itemCode, @FormParam("itemName") String itemName,
 			@FormParam("itemPrice") String itemPrice, @FormParam("itemDesc") String itemDesc) {
 		String output = itemObj.insertItem(itemCode, itemName, itemPrice, itemDesc);
+		System.out.println("Hello");
 		return output;
 	}
 
