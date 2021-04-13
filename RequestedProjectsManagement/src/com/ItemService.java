@@ -32,7 +32,7 @@ public class ItemService {
 		return output;
 	}
 
-	@PUT
+	@PUT                           //ass update annotation
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
