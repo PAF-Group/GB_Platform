@@ -7,14 +7,9 @@ package com;
 
 import model.Orders;
 
-import java.util.ArrayList;
-
 //For REST Service
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import org.json.JSONArray;
 
 //For JSON
 import com.google.gson.*;
@@ -27,8 +22,6 @@ public class OrderService {
 	@Path("/")
 	@Produces(MediaType.TEXT_HTML)
 	public String getItems() {
-		System.out.println("working");
-		//return Response.status(200).entity(orderModel.getAllOrders()).build();
 		return orderModel.getAllOrders();
 	}
 	

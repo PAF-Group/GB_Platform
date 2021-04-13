@@ -93,12 +93,15 @@ public class Orders {
 			if (con == null) {
 				return "Error while connecting to the database for updating.";
 			}
+			
+			String sAdr = getShippingAddress(shippingAddress, String.valueOf(buyerId));
+			
 			// create a prepared statement
 			String query = "INSERT INTO Orders(BuyerId, ShippingAddress) VALUES(?, ?)";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			// binding values
 			preparedStmt.setInt(1, buyerId);
-			preparedStmt.setString(2, shippingAddress);
+			preparedStmt.setString(2, sAdr);
 			// execute the statement
 			preparedStmt.execute();
 			
@@ -115,8 +118,6 @@ public class Orders {
 				return "Error whiling processing";
 			}
 			
-			Client client = new Client();
-			
 			//Get the items in the order and add them to the Order details table
 			for(int i = 0; i < orders.size(); i++) {
 				JsonObject ord =  orders.get(i).getAsJsonObject();
@@ -124,6 +125,7 @@ public class Orders {
 				int quantity = ord.get("quantity").getAsInt();
 				
 				//Get the unit price of the product from Product Micro Service
+				Client client = new Client();
 				WebResource resource = client.resource("http://localhost:8080/Lab05Rest/ItemService/Items");
 		        String response = resource.queryParam("id", productId).accept(MediaType.TEXT_PLAIN).get(String.class);
 				
@@ -160,5 +162,23 @@ public class Orders {
 			System.err.println(e.getMessage());
 		}
 		return output;
+	}
+
+	/*
+	 * Get the shipping address from for the order
+	 * If the user has mentioned same then the shipping address is taken from User Management via API call
+	 * Else use the address provided by the user at the order placement
+	 * 
+	 * */
+	private String getShippingAddress(String shippingAddress, String buyerId) {
+		String sAdr;
+		if(shippingAddress.equals("Same Address")) {
+			Client client = new Client();
+			WebResource resource = client.resource("http://localhost:8080/Lab05Rest/ItemService/Items");
+	        sAdr = resource.queryParam("id", buyerId).accept(MediaType.TEXT_PLAIN).get(String.class);	
+		} else {
+			sAdr = shippingAddress;
+		}
+		return sAdr;
 	}
 }
