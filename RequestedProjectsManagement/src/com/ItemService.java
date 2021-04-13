@@ -15,7 +15,7 @@ import org.jsoup.nodes.Document;
 public class ItemService {
 	Item itemObj = new Item();
 
-	@GET
+	@GET                             //add a get method to get data 
 	@Path("/")
 	@Produces(MediaType.TEXT_HTML)
 	public String readItems() {
