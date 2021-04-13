@@ -284,19 +284,19 @@ public class Orders {
 				
 				// Get the status and quantity of the product in the order
 				String query2 = "SELECT `status`, quantity, unitPrice from orderDetails where orderId = ? and productId = ?";
-				PreparedStatement preparedStmt2 = con.prepareStatement(query);
+				PreparedStatement preparedStmt2 = con.prepareStatement(query2);
 				// binding values
 				preparedStmt2.setInt(1, orderId);
 				preparedStmt2.setInt(2, Integer.parseInt(productId));
 				// execute the statement
 				ResultSet rs2 = preparedStmt2.executeQuery();
 
-				if (rs.next()) {
-					pStatus = rs.getString(1);
-					qty = rs.getInt(2);
-					unitPrice = rs.getDouble(3);
+				if (rs2.next()) {
+					pStatus = rs2.getString(1);
+					qty = rs2.getInt(2);
+					unitPrice = rs2.getDouble(3);
 				} else {
-					return "Something went wrong";
+					return "Something went wrong in checking products";
 				}
 				
 				//If quantity has not been changed no need to update
@@ -324,29 +324,6 @@ public class Orders {
 				preparedStmt3.execute();
 			}
 
-			// create a prepared statement
-			String query1 = "UPDATE `orders` SET `ShippingAddress`=?,`TotalAmount`=? WHERE OrderId = ?";
-			PreparedStatement preparedStmt1 = con.prepareStatement(query1);
-			// binding values
-			preparedStmt.setDouble(2, total);
-			preparedStmt.setString(1, sAdr);
-			preparedStmt.setInt(3, orderId);
-			// execute the statement
-			preparedStmt.execute();
-
-			String queryOrderId = "SELECT OrderId FROM orders WHERE BuyerId = ? ORDER BY OrderId DESC LIMIT 1";
-			PreparedStatement preparedStmt2 = con.prepareStatement(queryOrderId);
-			// binding values
-			preparedStmt1.setInt(1, buyerId);
-			// execute the statement
-			ResultSet resultSet = preparedStmt1.executeQuery();
-
-			if (resultSet.next()) {
-				orderId = resultSet.getInt(1);
-			} else {
-				return "Error whiling processing";
-			}
-
 			// Update the orders table with total price of the order
 			String queryTP = "UPDATE `orders` SET `TotalAmount`= ?, shippingAddress = ? WHERE OrderId = ?";
 			PreparedStatement preparedStmt3 = con.prepareStatement(queryTP);
@@ -360,7 +337,7 @@ public class Orders {
 			con.close();
 			output += "<h5>Update operation successfully executed. Check whehter some errors in the description<h5>";
 		} catch (Exception e) {
-			output = "Error while inserting data";
+			output = "Error while updating data";
 			System.err.println(e.getMessage());
 		}
 		return output;
