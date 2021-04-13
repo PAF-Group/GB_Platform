@@ -32,7 +32,7 @@ public class ItemService {
 		return output;
 	}
 
-	@PUT                           //ass update annotation
+	@PUT                           //add update annotation
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
@@ -49,7 +49,7 @@ public class ItemService {
 		return output;
 	}
 
-	@DELETE
+	@DELETE                     //delete annotation
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
