@@ -22,7 +22,7 @@ public class ItemService {
 		return itemObj.readItems();
 	}
 
-	@POST
+	@POST                  //add data insert annotation
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
