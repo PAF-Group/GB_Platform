@@ -8,18 +8,18 @@ package model;
 import java.sql.*;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 
-public class Orders { 
-	/*Method for connect to the database
+public class Orders {
+	/*
+	 * Method for connect to the database
 	 * 
 	 * @return Connection
-	*/
+	 */
 	private Connection connect() {
 		Connection con = null;
 		try {
@@ -32,44 +32,44 @@ public class Orders {
 		}
 		return con;
 	}
-	
+
 	/*
 	 * Read all records in the orders table
 	 * 
-	 * */
+	 */
 	public String getAllOrders() {
 		String output;
 		try {
 			Connection con = connect();
 			if (con == null) {
-				output =  "Error while connecting to the database for reading.";
+				output = "Error while connecting to the database for reading.";
 				return output;
 			}
-			
+
 			// Prepare the html table to be displayed
-			output = "<table border='1'><tr><th>Order Id</th><th>Buyer Id</th>" + "<th>Date</th>"
-								+ "<th>Status</th>" + "<th>Total Amount</th>";
-			
-			//SQL Query for selecting all orders
+			output = "<table border='1'><tr><th>Order Id</th><th>Buyer Id</th>" + "<th>Date</th>" + "<th>Status</th>"
+					+ "<th>Total Amount</th>";
+
+			// SQL Query for selecting all orders
 			String query = "select * from orders";
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			// iterate through the rows in the result set
 			while (rs.next()) {
-				
+
 				String orderId = Integer.toString(rs.getInt("OrderId"));
-				String buyerId  = Integer.toString(rs.getInt("BuyerId"));
-				String date  = rs.getDate("Date").toString();
+				String buyerId = Integer.toString(rs.getInt("BuyerId"));
+				String date = rs.getDate("Date").toString();
 				String status = rs.getString("Status");
 				String totalAmount = Double.toString(rs.getDouble("TotalAmount"));
-				
+
 				// Add into the html table
 				output += "<tr><td>" + orderId + "</td>";
 				output += "<td>" + buyerId + "</td>";
 				output += "<td>" + date + "</td>";
 				output += "<td>" + status + "</td>";
 				output += "<td>" + totalAmount + "</td></tr>";
-				}
+			}
 			con.close();
 			// Complete the html table
 			output += "</table>";
@@ -79,11 +79,11 @@ public class Orders {
 		}
 		return output;
 	}
-	
+
 	/*
 	 * Add order to the database
 	 * 
-	 * */
+	 */
 	public String addOrder(int buyerId, String shippingAddress, JsonArray orders) {
 		String output = "";
 		int orderId;
@@ -93,9 +93,9 @@ public class Orders {
 			if (con == null) {
 				return "Error while connecting to the database for updating.";
 			}
-			
+
 			String sAdr = getShippingAddress(shippingAddress, String.valueOf(buyerId));
-			
+
 			// create a prepared statement
 			String query = "INSERT INTO Orders(BuyerId, ShippingAddress) VALUES(?, ?)";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
@@ -104,40 +104,40 @@ public class Orders {
 			preparedStmt.setString(2, sAdr);
 			// execute the statement
 			preparedStmt.execute();
-			
+
 			String queryOrderId = "SELECT OrderId FROM orders WHERE BuyerId = ? ORDER BY OrderId DESC LIMIT 1";
 			PreparedStatement preparedStmt1 = con.prepareStatement(queryOrderId);
-			//binding values
+			// binding values
 			preparedStmt1.setInt(1, buyerId);
 			// execute the statement
 			ResultSet resultSet = preparedStmt1.executeQuery();
-			
+
 			if (resultSet.next()) {
 				orderId = resultSet.getInt(1);
 			} else {
 				return "Error whiling processing";
 			}
-			
-			//Get the items in the order and add them to the Order details table
-			for(int i = 0; i < orders.size(); i++) {
-				JsonObject ord =  orders.get(i).getAsJsonObject();
+
+			// Get the items in the order and add them to the Order details table
+			for (int i = 0; i < orders.size(); i++) {
+				JsonObject ord = orders.get(i).getAsJsonObject();
 				String productId = ord.get("productId").getAsString();
 				int quantity = ord.get("quantity").getAsInt();
-				
-				//Get the unit price of the product from Product Micro Service
+
+				// Get the unit price of the product from Product Micro Service
 				Client client = new Client();
 				WebResource resource = client.resource("http://localhost:8080/Lab05Rest/ItemService/Items");
-		        String response = resource.queryParam("id", productId).accept(MediaType.TEXT_PLAIN).get(String.class);
-				
-		        //Calculate the amount 
-		        double amount = quantity * Double.parseDouble(response);
-		        
-		        //Add the amount to the total price
-		        total += amount;
-		        
-		        String queryOD = "INSERT INTO `orderdetails`(`OrderId`, `ProductId`, `Quantity`, `UnitPrice`) VALUES (? , ? , ? , ?)";
+				String response = resource.queryParam("id", productId).accept(MediaType.TEXT_PLAIN).get(String.class);
+
+				// Calculate the amount
+				double amount = quantity * Double.parseDouble(response);
+
+				// Add the amount to the total price
+				total += amount;
+
+				String queryOD = "INSERT INTO `orderdetails`(`OrderId`, `ProductId`, `Quantity`, `UnitPrice`) VALUES (? , ? , ? , ?)";
 				PreparedStatement preparedStmt2 = con.prepareStatement(queryOD);
-				//binding values
+				// binding values
 				preparedStmt2.setInt(1, orderId);
 				preparedStmt2.setInt(2, Integer.parseInt(productId));
 				preparedStmt2.setInt(3, quantity);
@@ -145,18 +145,19 @@ public class Orders {
 				// execute the statement
 				preparedStmt2.execute();
 			}
-			
-			//Update the orders table with total price of the order
+
+			// Update the orders table with total price of the order
 			String queryTP = "UPDATE `orders` SET `TotalAmount`= ? WHERE OrderId = ?";
 			PreparedStatement preparedStmt3 = con.prepareStatement(queryTP);
-			//binding values
+			// binding values
 			preparedStmt3.setInt(2, orderId);
 			preparedStmt3.setDouble(1, total);
 			// execute the statement
 			preparedStmt3.execute();
-			
+
 			con.close();
-			output = "<h5>Order Placed Successfully</h5> <ul><li>Order ID : " + orderId + "</li><li>Total Amount : LKR " +total + "</li></ul><p>Next, please add your payment to process the order</p>";
+			output = "<h5>Order Placed Successfully</h5> <ul><li>Order ID : " + orderId + "</li><li>Total Amount : LKR "
+					+ total + "</li></ul><p>Next, please add your payment to process the order</p>";
 		} catch (Exception e) {
 			output = "Error while inserting data";
 			System.err.println(e.getMessage());
@@ -165,20 +166,75 @@ public class Orders {
 	}
 
 	/*
-	 * Get the shipping address from for the order
-	 * If the user has mentioned same then the shipping address is taken from User Management via API call
-	 * Else use the address provided by the user at the order placement
+	 * Get the shipping address from for the order If the user has mentioned same
+	 * then the shipping address is taken from User Management via API call Else use
+	 * the address provided by the user at the order placement
 	 * 
-	 * */
+	 */
 	private String getShippingAddress(String shippingAddress, String buyerId) {
 		String sAdr;
-		if(shippingAddress.equals("Same Address")) {
+		if (shippingAddress.equals("Same Address")) {
 			Client client = new Client();
 			WebResource resource = client.resource("http://localhost:8080/Lab05Rest/ItemService/Items");
-	        sAdr = resource.queryParam("id", buyerId).accept(MediaType.TEXT_PLAIN).get(String.class);	
+			sAdr = resource.queryParam("id", buyerId).accept(MediaType.TEXT_PLAIN).get(String.class);
 		} else {
 			sAdr = shippingAddress;
 		}
 		return sAdr;
+	}
+
+	/*
+	 * Delete a order When deleting the order it will check the stage of the order
+	 * According to the status of the order it will decide whether delete(cancel)
+	 * the order or not
+	 * 
+	 * If we can delete the order, it will delete all the records related to that
+	 * order
+	 */
+	public String deleteOrder(String orderId) {
+		String output = null;
+		String status = null;
+		try {
+			Connection con = connect();
+			if (con == null) {
+				return "Error while connecting to the database for updating.";
+			}
+			// Get the status of the order
+			String query = "SELECT `status` from orders where orderId = ?";
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			// binding values
+			preparedStmt.setInt(1, Integer.parseInt(orderId));
+			// execute the statement
+			ResultSet rs = preparedStmt.executeQuery();
+
+			if (rs.next()) {
+				status = rs.getString(1);
+			} else {
+				return "Something went wrong";
+			}
+
+			if (status.equals("SHIPPED ALL") || status.equals("SHIPPED SOME ITEMS")) {
+				output = "Your order has been shipped therefore you cannot delete the order now";
+				return output;
+			}
+
+			// Delete the record in order table
+			String query1 = "DELETE FROM orders WHERE orderId = ?";
+			PreparedStatement preparedStmt1 = con.prepareStatement(query1);
+			// binding values
+			preparedStmt1.setInt(1, Integer.parseInt(orderId));
+			// execute the statement
+			preparedStmt1.execute();
+			
+			output = "Order Deleted Successfully";
+			
+			//Close the connection
+			con.close();
+
+		} catch (Exception e) {
+			output = "Error while deleting order";
+			System.err.println(e.getMessage());
+		}
+		return output;
 	}
 }

@@ -11,6 +11,10 @@ import model.Orders;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.parser.Parser;
+
 //For JSON
 import com.google.gson.*;
 
@@ -39,6 +43,20 @@ public class OrderService {
 		JsonArray orderDetails = itemObject.get("orderDetails").getAsJsonArray();
 		
 		String output = orderModel.addOrder(Integer.parseInt(buyerId), shippingAddress, orderDetails);
+		return output;
+	}
+	
+	@DELETE
+	@Path("/")
+	@Consumes(MediaType.APPLICATION_XML)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String deleteItem(String itemData) {
+		// Convert the input string to an XML document
+		Document doc = Jsoup.parse(itemData, "", Parser.xmlParser());
+
+		// Read the value from the element <itemID>
+		String orderId = doc.select("OrderId").text();
+		String output = orderModel.deleteOrder(orderId);
 		return output;
 	}
 }
