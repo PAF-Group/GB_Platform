@@ -68,14 +68,14 @@ public class Funds {
 					String fundingID = Integer.toString(rs.getInt("Funding_ID"));
 					String date = rs.getString("Date");
 					String amount = Float.toString(rs.getFloat("Amount"));
-					String bankslip = rs.getString("Bank_Slip");
+					String bankslips = rs.getString("Bank_Slip");
 					
 					
 					// Add into the html table
 					output += "<tr><td>" +  fundingID  + "</td>";
 					output += "<td>" + date + "</td>";
 					output += "<td>" + amount + "</td>";
-					output += "<td>" + bankslip + "</td>";
+					output += "<td>" + bankslips + "</td>";
 					
 					
 					// buttons
