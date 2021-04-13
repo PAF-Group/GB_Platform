@@ -6,11 +6,15 @@ package com;
  * */
 
 import model.Orders;
+
+import java.util.ArrayList;
+
 //For REST Service
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.json.JSONArray;
 
 //For JSON
 import com.google.gson.*;
@@ -27,4 +31,22 @@ public class OrderService {
 		//return Response.status(200).entity(orderModel.getAllOrders()).build();
 		return orderModel.getAllOrders();
 	}
+	
+	
+	@POST
+	@Path("/")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_HTML)
+	public String addOrder(String itemData) {
+		// Convert the input string to a JSON object
+		JsonObject itemObject = new JsonParser().parse(itemData).getAsJsonObject();
+		// Read the values from the JSON object
+		String buyerId = itemObject.get("buyerId").getAsString();
+		String shippingAddress = itemObject.get("shippingAddress").getAsString();
+		JsonArray orderDetails = itemObject.get("orderDetails").getAsJsonArray();
+		
+		String output = orderModel.addOrder(Integer.parseInt(buyerId), shippingAddress, orderDetails);
+		return output;
+	}
 }
+

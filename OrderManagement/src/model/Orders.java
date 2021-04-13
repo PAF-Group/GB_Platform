@@ -7,6 +7,14 @@ package model;
 
 import java.sql.*;
 
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource;
+
 public class Orders { 
 	/*Method for connect to the database
 	 * 
@@ -76,4 +84,81 @@ public class Orders {
 	 * Add order to the database
 	 * 
 	 * */
+	public String addOrder(int buyerId, String shippingAddress, JsonArray orders) {
+		String output = "";
+		int orderId;
+		double total = 0;
+		try {
+			Connection con = connect();
+			if (con == null) {
+				return "Error while connecting to the database for updating.";
+			}
+			// create a prepared statement
+			String query = "INSERT INTO Orders(BuyerId, ShippingAddress) VALUES(?, ?)";
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			// binding values
+			preparedStmt.setInt(1, buyerId);
+			preparedStmt.setString(2, shippingAddress);
+			// execute the statement
+			preparedStmt.execute();
+			
+			String queryOrderId = "SELECT OrderId FROM orders WHERE BuyerId = ? ORDER BY OrderId DESC LIMIT 1";
+			PreparedStatement preparedStmt1 = con.prepareStatement(queryOrderId);
+			//binding values
+			preparedStmt1.setInt(1, buyerId);
+			// execute the statement
+			ResultSet resultSet = preparedStmt1.executeQuery();
+			
+			if (resultSet.next()) {
+				orderId = resultSet.getInt(1);
+			} else {
+				return "Error whiling processing";
+			}
+			
+			Client client = new Client();
+			
+			//Get the items in the order and add them to the Order details table
+			for(int i = 0; i < orders.size(); i++) {
+				JsonObject ord =  orders.get(i).getAsJsonObject();
+				String productId = ord.get("productId").getAsString();
+				int quantity = ord.get("quantity").getAsInt();
+				
+				//Get the unit price of the product from Product Micro Service
+				WebResource resource = client.resource("http://localhost:8080/Lab05Rest/ItemService/Items");
+		        String response = resource.queryParam("id", productId).accept(MediaType.TEXT_PLAIN).get(String.class);
+				
+		        //Calculate the amount 
+		        double amount = quantity * Double.parseDouble(response);
+		        
+		        //Add the amount to the total price
+		        total += amount;
+		        
+		        String queryOD = "INSERT INTO `orderdetails`(`OrderId`, `ProductId`, `Quantity`, `UnitPrice`) VALUES (? , ? , ? , ?)";
+				PreparedStatement preparedStmt2 = con.prepareStatement(queryOD);
+				//binding values
+				preparedStmt2.setInt(1, orderId);
+				preparedStmt2.setInt(2, Integer.parseInt(productId));
+				preparedStmt2.setInt(3, quantity);
+				preparedStmt2.setDouble(4, amount);
+				// execute the statement
+				preparedStmt2.execute();
+			}
+			
+			//Update the orders table with total price of the order
+			String queryTP = "UPDATE `orders` SET `TotalAmount`= ? WHERE OrderId = ?";
+			PreparedStatement preparedStmt3 = con.prepareStatement(queryTP);
+			//binding values
+			preparedStmt3.setInt(2, orderId);
+			preparedStmt3.setDouble(1, total);
+			// execute the statement
+			preparedStmt3.execute();
+			
+			con.close();
+			output = "<h5>Order Placed Successfully</h5> <ul><li>Order ID : " + orderId + "</li><li>Total Amount : LKR " +total + "</li></ul><p>Next, please add your payment to process the order</p>";
+		} catch (Exception e) {
+			output = "Error while inserting data";
+			System.err.println(e.getMessage());
+		}
+		return output;
+	}
 }
