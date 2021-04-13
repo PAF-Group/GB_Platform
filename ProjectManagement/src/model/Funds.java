@@ -57,32 +57,32 @@ public class Funds {
 					return "Error while connecting to the database for reading.";
 				}
 				// Prepare the html table to be displayed
-				output = "<table border='1'><tr><th>Agreement_ID</th><th>FundingBody_ID</th>" + "<th>Agreement_Path</th>"
-						+ "<th>Status</th>" +"<th>Project_IDL</th>"+ "<th>Update</th><th>Remove</th></tr>";
+				output = "<table border='1'><tr><th>Funding_ID</th><th>Date</th>" + "<th>Amount</th>"
+						+ "<th>Bank_Slip</th>" + "<th>Update</th><th>Remove</th></tr>";
 
-				String query = "select * from agreement_table";
+				String query = "select * from funds_table";
 				Statement stmt = con.createStatement();
 				ResultSet rs = stmt.executeQuery(query);
 				// iterate through the rows in the result set
 				while (rs.next()) {
-					String agreementID = Integer.toString(rs.getInt("Agreement_ID"));
-					String fundingbodyid = Integer.toString(rs.getInt("FundingBody_ID"));
-					String path = rs.getString("Agreement_Path");
-					String Status = rs.getString("Status");
-					String researcherID = Integer.toString(rs.getInt("Researcher_ID"));
+					String fundingID = Integer.toString(rs.getInt("Funding_ID"));
+					String date = rs.getString("Date");
+					String amount = Float.toString(rs.getFloat("Amount"));
+					String bankslip = rs.getString("Bank_Slip");
+					
 					
 					// Add into the html table
-					output += "<tr><td>" +  agreementID + "</td>";
-					output += "<td>" + fundingbodyid + "</td>";
-					output += "<td>" + path + "</td>";
-					output += "<td>" + Status + "</td>";
-					output += "<td>" + researcherID + "</td>";
+					output += "<tr><td>" +  fundingID  + "</td>";
+					output += "<td>" + date + "</td>";
+					output += "<td>" + amount + "</td>";
+					output += "<td>" + bankslip + "</td>";
+					
 					
 					// buttons
 					output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>"
 							+ "<td><form method='post' action='items.jsp'>"
 							+ "<input name='btnRemove' type='submit' value='Remove'class='btn btn-danger'>"
-							+ "<input name='itemID' type='hidden' value='" + agreementID + "'>" + "</form></td></tr>";
+							+ "<input name='itemID' type='hidden' value='" + fundingID + "'>" + "</form></td></tr>";
 				}
 				con.close();
 				// Complete the html table
@@ -94,7 +94,7 @@ public class Funds {
 			return output;
 		}
 
-		public String updateItem(String Agreementid, String fundingbodyid, String agreementpath, String status, String projectid ) {
+		public String updateItem(String fundid, String date, String amount, String bankslip ) {
 			String output = "";
 			try {
 				Connection con = connect();
@@ -102,14 +102,13 @@ public class Funds {
 					return "Error while connecting to the database for updating.";
 				}
 				// create a prepared statement
-				String query = "UPDATE agreement_table SET FundingBody_ID=?,Agreement_Path=?,Status=?,Project_ID=? WHERE Agreement_ID=?";
+				String query = "UPDATE funds_table SET Date=?,Amount=?,Bank_Slip=? WHERE Funding_ID=?";
 				PreparedStatement preparedStmt = con.prepareStatement(query);
-				// binding values
-				preparedStmt.setInt(1, Integer.parseInt(fundingbodyid));
-				preparedStmt.setString(2, agreementpath);
-				preparedStmt.setString(3, status);
-				preparedStmt.setInt(4, Integer.parseInt(projectid));
-				preparedStmt.setInt(5, Integer.parseInt(Agreementid));
+				// binding values	preparedStmt.setString(2, agreementpath);preparedStmt.setInt(1, Integer.parseInt(fundingbodyid));
+				preparedStmt.setString(1, date);
+				preparedStmt.setFloat(2, Float.parseFloat(amount));
+				preparedStmt.setString(3, bankslip);
+				preparedStmt.setInt(4, Integer.parseInt(fundid));
 				
 				// execute the statement
 				preparedStmt.execute();
