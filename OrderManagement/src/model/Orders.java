@@ -225,14 +225,142 @@ public class Orders {
 			preparedStmt1.setInt(1, Integer.parseInt(orderId));
 			// execute the statement
 			preparedStmt1.execute();
-			
+
 			output = "Order Deleted Successfully";
-			
-			//Close the connection
+
+			// Close the connection
 			con.close();
 
 		} catch (Exception e) {
 			output = "Error while deleting order";
+			System.err.println(e.getMessage());
+		}
+		return output;
+	}
+
+	public String updateOrder(int orderId, int buyerId, String shippingAddress, JsonArray orders) {
+		String output = "";
+		double total = 0;
+		String orStatus;
+		String sAdr;
+		String currentSA;
+		try {
+			Connection con = connect();
+			if (con == null) {
+				return "Error while connecting to the database for updating.";
+			}
+
+			// Get the status and shipping address of the order
+			String query = "SELECT `status`, shippingAddress from orders where orderId = ?";
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			// binding values
+			preparedStmt.setInt(1, orderId);
+			// execute the statement
+			ResultSet rs = preparedStmt.executeQuery();
+
+			// Get the shipping address
+			sAdr = getShippingAddress(shippingAddress, String.valueOf(buyerId));
+
+			if (rs.next()) {
+				orStatus = rs.getString(1);
+				currentSA = rs.getString(2);
+			} else {
+				return "Something went wrong";
+			}
+
+			if ((orStatus.equals("SHIPPED ALL") || orStatus.equals("SHIPPED SOME ITEMS")) && !currentSA.equals(sAdr)) {
+				output = "<h6>Your order has been shipped therefore you cannot change the shipping address<h6>";
+				sAdr = currentSA;
+			}
+
+			// Get the items in the order and add them to the Order details table
+			for (int i = 0; i < orders.size(); i++) {
+				String pStatus;
+				JsonObject ord = orders.get(i).getAsJsonObject();
+				String productId = ord.get("productId").getAsString();
+				int quantity = ord.get("quantity").getAsInt();
+				int qty;
+				double unitPrice;
+				
+				// Get the status and quantity of the product in the order
+				String query2 = "SELECT `status`, quantity, unitPrice from orderDetails where orderId = ? and productId = ?";
+				PreparedStatement preparedStmt2 = con.prepareStatement(query);
+				// binding values
+				preparedStmt2.setInt(1, orderId);
+				preparedStmt2.setInt(2, Integer.parseInt(productId));
+				// execute the statement
+				ResultSet rs2 = preparedStmt2.executeQuery();
+
+				if (rs.next()) {
+					pStatus = rs.getString(1);
+					qty = rs.getInt(2);
+					unitPrice = rs.getDouble(3);
+				} else {
+					return "Something went wrong";
+				}
+				
+				//If quantity has not been changed no need to update
+				if (qty == quantity) {
+					total += qty * unitPrice;
+					break;
+				}
+				
+				if (pStatus.equals("SHIPPED")) {
+					output += "<h6>Your product " + productId + " has been shipped therefore you cannot change the quantity now</h6>";
+					break;
+				}
+				
+				// Calculate the amount
+				double amount = quantity * unitPrice;
+
+				// Add the amount to the total price
+				total += amount;
+
+				String query3 = "UPDATE `orderdetails` SET `Quantity` = ?";
+				PreparedStatement preparedStmt3 = con.prepareStatement(query3);
+				// binding values
+				preparedStmt3.setInt(1, quantity);
+				// execute the statement
+				preparedStmt3.execute();
+			}
+
+			// create a prepared statement
+			String query1 = "UPDATE `orders` SET `ShippingAddress`=?,`TotalAmount`=? WHERE OrderId = ?";
+			PreparedStatement preparedStmt1 = con.prepareStatement(query1);
+			// binding values
+			preparedStmt.setDouble(2, total);
+			preparedStmt.setString(1, sAdr);
+			preparedStmt.setInt(3, orderId);
+			// execute the statement
+			preparedStmt.execute();
+
+			String queryOrderId = "SELECT OrderId FROM orders WHERE BuyerId = ? ORDER BY OrderId DESC LIMIT 1";
+			PreparedStatement preparedStmt2 = con.prepareStatement(queryOrderId);
+			// binding values
+			preparedStmt1.setInt(1, buyerId);
+			// execute the statement
+			ResultSet resultSet = preparedStmt1.executeQuery();
+
+			if (resultSet.next()) {
+				orderId = resultSet.getInt(1);
+			} else {
+				return "Error whiling processing";
+			}
+
+			// Update the orders table with total price of the order
+			String queryTP = "UPDATE `orders` SET `TotalAmount`= ?, shippingAddress = ? WHERE OrderId = ?";
+			PreparedStatement preparedStmt3 = con.prepareStatement(queryTP);
+			// binding values
+			preparedStmt3.setInt(3, orderId);
+			preparedStmt3.setDouble(1, total);
+			preparedStmt3.setString(2, sAdr);
+			// execute the statement
+			preparedStmt3.execute();
+
+			con.close();
+			output += "<h5>Update operation successfully executed. Check whehter some errors in the description<h5>";
+		} catch (Exception e) {
+			output = "Error while inserting data";
 			System.err.println(e.getMessage());
 		}
 		return output;

@@ -59,5 +59,22 @@ public class OrderService {
 		String output = orderModel.deleteOrder(orderId);
 		return output;
 	}
+	
+	@PUT
+	@Path("/")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_HTML)
+	public String updateOrder(String itemData) {
+		// Convert the input string to a JSON object
+		JsonObject itemObject = new JsonParser().parse(itemData).getAsJsonObject();
+		// Read the values from the JSON object
+		String orderId =  itemObject.get("orderId").getAsString();
+		String buyerId =  itemObject.get("buyerId").getAsString();
+		String shippingAddress = itemObject.get("shippingAddress").getAsString();
+		JsonArray orderDetails = itemObject.get("orderDetails").getAsJsonArray();
+		
+		String output = orderModel.updateOrder(Integer.parseInt(orderId), Integer.parseInt(buyerId), shippingAddress, orderDetails);
+		return output;
+	}
 }
 
