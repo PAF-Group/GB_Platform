@@ -46,7 +46,7 @@ public class Item { // A common method to connect to the DB
 		return output;
 	}
 
-	public String readItems() {
+	public String readItems() {  //data retrive method
 		String output = "";
 		try {
 			Connection con = connect();
