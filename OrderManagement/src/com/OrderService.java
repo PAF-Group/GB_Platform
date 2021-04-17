@@ -142,5 +142,21 @@ public class OrderService {
 		String output = orderModel.confirmOrder(OrderId, productId);
 		return output;
 	}
+	
+	@POST
+	@Path("/openIssue")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String openIssue(String issueDetails) {
+		// Convert the input string to a JSON object
+		JsonObject itemObject = new JsonParser().parse(issueDetails).getAsJsonObject();
+		// Read the values from the JSON object
+		int orderId = itemObject.get("orderId").getAsInt();
+		int productId = itemObject.get("productId").getAsInt();
+		String issue = itemObject.get("issue").getAsString();
+		
+		String output = orderModel.openIssue(orderId, productId, issue);
+		return output;
+	}
 }
 

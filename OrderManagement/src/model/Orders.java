@@ -129,8 +129,9 @@ public class Orders {
 				// Get the unit price of the product from Product Micro Service
 				Client client = new Client();
 				WebResource resource = client.resource("http://localhost:8080/Lab05Rest/ItemService/Items");
-				String response = resource.queryParam("id", productId).accept(MediaType.APPLICATION_JSON).get(String.class);
-				
+				String response = resource.queryParam("id", productId).accept(MediaType.APPLICATION_JSON)
+						.get(String.class);
+
 				JsonObject itemObject = new JsonParser().parse(response).getAsJsonObject();
 				// Read the values from the JSON object
 				String unitPrice = itemObject.get("unitPrice").getAsString();
@@ -550,16 +551,20 @@ public class Orders {
 				return output;
 			}
 
-			// SQL Query 
+			// SQL Query
 			String query = "select * from orders where orderId = ?";
 			PreparedStatement preparedStatement = con.prepareStatement(query);
 			preparedStatement.setInt(1, orderId);
 			ResultSet rs = preparedStatement.executeQuery();
-			
+
 			if (rs.next()) {
-				output += "<h5>Order Details</h5><ul><li>Order Id : " + orderId + "</li><li>Date : " + rs.getDate("Date").toString() + "</li><li>Status : " + rs.getString("Status") + "</li><li>Payment Accepted : " + rs.getString("paymentAccepted") +"</li><li>Shipping Address : " + rs.getString("ShippingAddress") +"</li><li>Total Amount : " + rs.getString("TotalAmount") + "</li></ul><br><br>";
+				output += "<h5>Order Details</h5><ul><li>Order Id : " + orderId + "</li><li>Date : "
+						+ rs.getDate("Date").toString() + "</li><li>Status : " + rs.getString("Status")
+						+ "</li><li>Payment Accepted : " + rs.getString("paymentAccepted")
+						+ "</li><li>Shipping Address : " + rs.getString("ShippingAddress") + "</li><li>Total Amount : "
+						+ rs.getString("TotalAmount") + "</li></ul><br><br>";
 			}
-			
+
 			// Prepare the html table to be displayed
 			output += "<table border='1'><tr><th>Product Id</th><th>Unit Price</th><th>Quantity</th><th>Status</th><th>Shipped Date</th><th>Shipping Company</th><th>Shipped Track Id</th></tr>";
 
@@ -567,9 +572,9 @@ public class Orders {
 			String query1 = "select * from orderdetails where orderId = ?";
 			PreparedStatement preparedStatement1 = con.prepareStatement(query1);
 			preparedStatement1.setInt(1, orderId);
-			
+
 			ResultSet rs1 = preparedStatement1.executeQuery();
-			
+
 			// iterate through the rows in the result set
 			while (rs1.next()) {
 				int productId = rs1.getInt("ProductId");
@@ -578,10 +583,10 @@ public class Orders {
 					sDate = rs1.getDate("ShippingDate").toString();
 				} catch (Exception e) {
 				}
-				
+
 				String status = rs1.getString("Status");
 				String unitPrice = Double.toString(rs1.getDouble("UnitPrice"));
-				String sCompany =  rs1.getString("ShippingCompany");
+				String sCompany = rs1.getString("ShippingCompany");
 				String ShipingTrackId = rs1.getString("ShipingTrackId");
 				int quantity = rs1.getInt("Quantity");
 
@@ -594,7 +599,7 @@ public class Orders {
 				output += "<td>" + sCompany + "</td>";
 				output += "<td>" + ShipingTrackId + "</td></tr>";
 			}
-			
+
 			con.close();
 			// Complete the html table
 			output += "</table>";
@@ -651,6 +656,10 @@ public class Orders {
 		return output;
 	}
 
+	/*
+	 * Method for get order details by seller ID
+	 * 
+	 */
 	public String getOrdersBySeller(String sellerId) {
 		String output;
 		try {
@@ -662,7 +671,7 @@ public class Orders {
 
 			// Prepare the html table to be displayed
 			output = "<table border='1'><tr><th>Order Id</th>" + "<th>Product Id</th>" + "<th>Ordered Date</th>"
-					+ "<th>Buyer Id</th><th>Unit Price</th><th>Quantity</th>th>Is Payment Accepted</th><th>Status</th>th>Shipping Address</th><th>Shipped Date</th><th>Shipping Company</th><th>Shipped Track Id</th>";
+					+ "<th>Buyer Id</th><th>Unit Price</th><th>Quantity</th><th>Is Payment Accepted</th><th>Status</th><th>Shipping Address</th><th>Shipped Date</th><th>Shipping Company</th><th>Shipped Track Id</th>";
 
 			// SQL Query for selecting all orders
 			String query = "select * from orderDetails where sellerId = ?";
@@ -679,26 +688,26 @@ public class Orders {
 					sDate = rs.getDate("ShippingDate").toString();
 				} catch (Exception e) {
 				}
-				
+
 				String itemStatus = rs.getString("Status");
 				String unitPrice = Double.toString(rs.getDouble("UnitPrice"));
-				String sCompany =  rs.getString("ShippingCompany");
+				String sCompany = rs.getString("ShippingCompany");
 				String ShipingTrackId = rs.getString("ShipingTrackId");
 				int quantity = rs.getInt("Quantity");
-				
+
 				String oDate = null, sAdr = null, isPaymentAcc = null, bId = null;
-				
+
 				String query1 = "select * from orders where orderId = ?";
 				PreparedStatement preparedStatement1 = con.prepareStatement(query1);
 				preparedStatement1.setInt(1, Integer.parseInt(orderId));
-				ResultSet rs1 = preparedStatement.executeQuery();
+				ResultSet resultSet = preparedStatement1.executeQuery();
+
+				resultSet.next();
 				
-				if (rs1.next()) {
-					oDate = rs1.getDate("Date").toString();
-					sAdr = rs1.getString("Status");
-					isPaymentAcc = rs1.getString("ShippingAddress");
-					bId = rs1.getString("BuyerId");
-				}
+				bId = resultSet.getString(2);
+				oDate = resultSet.getString(3);
+				sAdr = resultSet.getString(4);
+				isPaymentAcc = resultSet.getString(6);
 
 				// Add into the html table
 				output += "<tr><td>" + orderId + "</td>";
@@ -723,4 +732,34 @@ public class Orders {
 		}
 		return output;
 	}
+
+	public String openIssue(int orderId, int productId, String issue) {
+		String output = "";
+		try {
+			Connection con = connect();
+			if (con == null) {
+				return "Error while connecting to the database for updating.";
+			}
+
+			// create a prepared statement
+			String query = "INSERT INTO OrderedProductIssues(OrderId, ProductId, IssueDescription) VALUES(?, ?, ?)";
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			// binding values
+			preparedStmt.setInt(1, orderId);
+			preparedStmt.setInt(2, productId);
+			preparedStmt.setString(3, issue);
+			// execute the statement
+			preparedStmt.execute();
+
+
+			con.close();
+			output = "Successfully Opned an Issue";
+		} catch (Exception e) {
+			output = "Error while opening an issue";
+			System.err.println(e.getMessage());
+		}
+		return output;
+	}
+	
+	
 }
