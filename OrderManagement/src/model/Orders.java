@@ -733,6 +733,10 @@ public class Orders {
 		return output;
 	}
 
+	/*
+	 * Method for open an issue regarding the order
+	 * 
+	 */
 	public String openIssue(int orderId, int productId, String issue) {
 		String output = "";
 		try {
@@ -742,7 +746,7 @@ public class Orders {
 			}
 
 			// create a prepared statement
-			String query = "INSERT INTO OrderedProductIssues(OrderId, ProductId, IssueDescription) VALUES(?, ?, ?)";
+			String query = "INSERT INTO OrderIssues(OrderId, ProductId, IssueDescription) VALUES(?, ?, ?)";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			// binding values
 			preparedStmt.setInt(1, orderId);
@@ -756,6 +760,36 @@ public class Orders {
 			output = "Successfully Opned an Issue";
 		} catch (Exception e) {
 			output = "Error while opening an issue";
+			System.err.println(e.getMessage());
+		}
+		return output;
+	}
+
+	/*
+	 * Method for changing the status of the issue
+	 * When an issue is solved or dismiss it will change the status
+	 * 
+	 */
+	public String changeIssueStatus(int orderId, String status) {
+		String output = null;
+		try {
+			Connection con = connect();
+			if (con == null) {
+				return "Error while connecting to the database for updating.";
+			}
+			// create a prepared statement
+			String query = "UPDATE OrderIssues SET status = ? WHERE issueId = ?";
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			// binding values
+			preparedStmt.setString(1, status);
+			preparedStmt.setInt(2, orderId);
+			// execute the statement
+			preparedStmt.execute();
+
+			con.close();
+			output = "Issue Status updated successfully";
+		} catch (Exception e) {
+			output = "Error while updating data";
 			System.err.println(e.getMessage());
 		}
 		return output;

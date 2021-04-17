@@ -144,7 +144,7 @@ public class OrderService {
 	}
 	
 	@POST
-	@Path("/openIssue")
+	@Path("/Issue")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String openIssue(String issueDetails) {
@@ -156,6 +156,22 @@ public class OrderService {
 		String issue = itemObject.get("issue").getAsString();
 		
 		String output = orderModel.openIssue(orderId, productId, issue);
+		return output;
+	}
+	
+	
+	@PUT
+	@Path("/Issue")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String changeIssueStatus(String issueDetails) {
+		// Convert the input string to a JSON object
+		JsonObject itemObject = new JsonParser().parse(issueDetails).getAsJsonObject();
+		// Read the values from the JSON object
+		int orderId = itemObject.get("issueId").getAsInt();
+		String status = itemObject.get("status").getAsString();
+		
+		String output = orderModel.changeIssueStatus(orderId, status);
 		return output;
 	}
 }
