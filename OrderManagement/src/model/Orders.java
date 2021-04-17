@@ -794,6 +794,132 @@ public class Orders {
 		}
 		return output;
 	}
-	
-	
+
+	/*
+	 * Method for deleting an issue
+	 * 
+	 */
+	public String deleteIssue(String issueId) {
+		String output = null;
+		try {
+			Connection con = connect();
+			if (con == null) {
+				return "Error while connecting to the database for updating.";
+			}
+		
+			// Delete the record in issue table
+			String query1 = "DELETE FROM orderIssues WHERE issueId = ?";
+			PreparedStatement preparedStmt1 = con.prepareStatement(query1);
+			// binding values
+			preparedStmt1.setInt(1, Integer.parseInt(issueId));
+			// execute the statement
+			preparedStmt1.execute();
+
+			output = "Issue Deleted Successfully";
+
+			// Close the connection
+			con.close();
+
+		} catch (Exception e) {
+			output = "Error while deleting order";
+			System.err.println(e.getMessage());
+		}
+		return output;
+	}
+
+	/*
+	 * Method for getting an issue by its id
+	 * 
+	 */
+	public String getIssueById(int issueId) {
+		String output;
+		try {
+			Connection con = connect();
+			if (con == null) {
+				output = "Error while connecting to the database for reading.";
+				return output;
+			}
+
+			// Prepare the html table to be displayed
+			output = "<table border='1'><tr><th>Issue Id</th><th>Order Id</th>" + "<th>Product Id</th>"+"<th>Issue</th>" + "<th>Date</th>"
+					+ "<th>Status</th></tr>";
+
+			// SQL Query for selecting the issue
+			String query = "select * from orderIssues WHERE issueId = ?";
+			PreparedStatement stmt = con.prepareStatement(query);
+			stmt.setInt(1, issueId);
+			ResultSet rs = stmt.executeQuery();
+			// iterate through the rows in the result set
+			while (rs.next()) {
+
+				String orderId = Integer.toString(rs.getInt("OrderId"));
+				String productId = Integer.toString(rs.getInt("productId"));
+				String date = rs.getDate("Date").toString();
+				String status = rs.getString("Status");
+				String issue = rs.getString("IssueDescription");
+
+				// Add into the html table
+				output += "<tr><td>" + issueId + "</td>";
+				output += "<td>" + orderId + "</td>";
+				output += "<td>" + productId + "</td>";
+				output += "<td>" + issue + "</td>";
+				output += "<td>" + date + "</td>";
+				output += "<td>" + status + "</td></tr>";
+			}
+			con.close();
+			// Complete the html table
+			output += "</table>";
+		} catch (Exception e) {
+			output = "Error while reading the records.";
+			System.err.println(e.getMessage());
+		}
+		return output;
+	}
+
+	/*
+	 * Method for getting an issue in an order
+	 * 
+	 */
+	public String issuesInOrder(String id) {
+		String output;
+		try {
+			Connection con = connect();
+			if (con == null) {
+				output = "Error while connecting to the database for reading.";
+				return output;
+			}
+
+			// Prepare the html table to be displayed
+			output = "<table border='1'><tr><th>Issue Id</th>" + "<th>Product Id</th>"+"<th>Issue</th>" + "<th>Date</th>"
+					+ "<th>Status</th></tr>";
+
+			// SQL Query for selecting the issue
+			String query = "select * from orderIssues WHERE orderId = ?";
+			PreparedStatement stmt = con.prepareStatement(query);
+			stmt.setInt(1, Integer.parseInt(id));
+			ResultSet rs = stmt.executeQuery();
+			// iterate through the rows in the result set
+			while (rs.next()) {
+				String issueId = Integer.toString(rs.getInt("issueId"));
+				String productId = Integer.toString(rs.getInt("productId"));
+				String date = rs.getDate("Date").toString();
+				String status = rs.getString("Status");
+				String issue = rs.getString("IssueDescription");
+
+				// Add into the html table
+				output += "<tr><td>" + issueId + "</td>";
+				output += "<td>" + productId + "</td>";
+				output += "<td>" + issue + "</td>";
+				output += "<td>" + date + "</td>";
+				output += "<td>" + status + "</td></tr>";
+			}
+			con.close();
+			// Complete the html table
+			output += "</table>";
+		} catch (Exception e) {
+			output = "Error while reading the records.";
+			System.err.println(e.getMessage());
+		}
+		return output;
+	}
 }

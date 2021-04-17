@@ -174,5 +174,40 @@ public class OrderService {
 		String output = orderModel.changeIssueStatus(orderId, status);
 		return output;
 	}
+	
+	@DELETE
+	@Path("/Issue")
+	@Consumes(MediaType.APPLICATION_XML)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String deleteIssue(String itemData) {
+		// Convert the input string to an XML document
+		Document doc = Jsoup.parse(itemData, "", Parser.xmlParser());
+
+		// Read the value from the element <itemID>
+		String issueId = doc.select("IssueId").text();
+		String output = orderModel.deleteIssue(issueId);
+		return output;
+	}
+	
+	@GET
+	@Path("/Issue/{issueId}")
+	@Produces(MediaType.TEXT_HTML)
+	public String getIssueById(@PathParam("issueId") String issueId) {
+		return orderModel.getIssueById(Integer.parseInt(issueId));
+	}
+	
+	@GET
+	@Path("/Issue")
+	@Consumes(MediaType.APPLICATION_XML)
+	@Produces(MediaType.TEXT_HTML)
+	public String getIssuesforOrder(String data) {
+		// Convert the input string to an XML document
+				Document doc = Jsoup.parse(data, "", Parser.xmlParser());
+
+				// Read the value from the element <itemID>
+				String id = doc.select("OrderId").text();
+				String output = orderModel.issuesInOrder(id);
+				return output;
+	}
 }
 
