@@ -472,10 +472,9 @@ public class Orders {
 	}
 
 	/*
-	 * Method for confirming an item in the order
-	 * First it will update the status of the item
-	 * Then it will check the status of the other items in the order
-	 * Then update the status of the order also
+	 * Method for confirming an item in the order First it will update the status of
+	 * the item Then it will check the status of the other items in the order Then
+	 * update the status of the order also
 	 */
 	public String confirmOrder(int orderId, int productId) {
 		String output = null;
@@ -536,7 +535,7 @@ public class Orders {
 	 * 
 	 */
 	public String getOrderById(int orderId) {
-		String output;
+		String output = "";
 		try {
 			Connection con = connect();
 			if (con == null) {
@@ -544,31 +543,42 @@ public class Orders {
 				return output;
 			}
 
-			// Prepare the html table to be displayed
-			output = "<table border='1'><tr><th>Order Id</th><th>Buyer Id</th>" + "<th>Date</th>" + "<th>Status</th>"
-					+ "<th>Total Amount</th>";
-
 			// SQL Query for selecting all orders
 			String query = "select * from orders where orderId = ?";
 			PreparedStatement preparedStatement = con.prepareStatement(query);
 			preparedStatement.setInt(1, orderId);
-			
-			System.out.println("dfsad");
-			
 			ResultSet rs = preparedStatement.executeQuery();
+			
+			output += "<h5>Order Details</h5><ul><li>Order Id : " + orderId + "</li><li>Date : " + rs.getDate("Date").toString() + "</li><li>Status : " + rs.getString("Status") + "</li><li>Payment Accepted : " + rs.getString("paymentAccepted") +"</li><li>Shipping Address : " + rs.getString("ShippingAddress") +"</li><li>Total Amount : " + rs.getString("TotalAmount") + "</li></ul><br><br>";
+
+			// Prepare the html table to be displayed
+			output += "<table border='1'><tr><th>Product Id</th><th>Unit Price</th><th>Quantity</th><th>Status</th><th>Shipped Date</th><th>Shipping Company</th><th>Shipped Track Id</th>"
+					+ "<th>Total Amount</th>";
+
+			// SQL Query for selecting all orders
+			String query1 = "select * from orderDetails where orderId = ?";
+			PreparedStatement preparedStatement1 = con.prepareStatement(query1);
+			preparedStatement1.setInt(1, orderId);
+
+			ResultSet rs1 = preparedStatement.executeQuery();
 			// iterate through the rows in the result set
-			while (rs.next()) {
-				String buyerId = Integer.toString(rs.getInt("BuyerId"));
-				String date = rs.getDate("Date").toString();
-				String status = rs.getString("Status");
-				String totalAmount = Double.toString(rs.getDouble("TotalAmount"));
+			while (rs1.next()) {
+				int productId = rs1.getInt("ProductId");
+				String sDate = rs1.getDate("ShippingDate").toString();
+				String status = rs1.getString("Status");
+				String unitPrice = Double.toString(rs1.getDouble("UnitPrice"));
+				String sCompany =  rs1.getString("ShippingCompany");
+				String ShipingTrackId = rs1.getString("ShipingTrackId");
+				int quantity = rs1.getInt("Quantity");
 
 				// Add into the html table
-				output += "<tr><td>" + orderId + "</td>";
-				output += "<td>" + buyerId + "</td>";
-				output += "<td>" + date + "</td>";
+				output += "<tr><td>" + productId + "</td>";
+				output += "<td>" + unitPrice + "</td>";
+				output += "<td>" + quantity + "</td>";
 				output += "<td>" + status + "</td>";
-				output += "<td>" + totalAmount + "</td></tr>";
+				output += "<td>" + sDate + "</td>";
+				output += "<td>" + sCompany + "</td>";
+				output += "<td>" + ShipingTrackId + "</td></tr>";
 			}
 			con.close();
 			// Complete the html table
@@ -594,14 +604,14 @@ public class Orders {
 			}
 
 			// Prepare the html table to be displayed
-			output = "<table border='1'><tr><th>Order Id</th>" + "<th>Date</th>" + "<th>Status</th>"
+			output = "<table border='1'><tr><th>Order Id</th>" + "<th>Status</th>" + "<th>Status</th>"
 					+ "<th>Total Amount</th>";
 
 			// SQL Query for selecting all orders
 			String query = "select * from orders where BuyerId = ?";
 			PreparedStatement preparedStatement = con.prepareStatement(query);
 			preparedStatement.setInt(1, Integer.parseInt(buyerId));
-			
+
 			ResultSet rs = preparedStatement.executeQuery();
 			// iterate through the rows in the result set
 			while (rs.next()) {
@@ -623,6 +633,6 @@ public class Orders {
 			output = "Error while reading the records.";
 			System.err.println(e.getMessage());
 		}
-		return output; 
+		return output;
 	}
 }
