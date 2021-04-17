@@ -376,4 +376,60 @@ public class Orders {
 		}
 		return output;
 	}
+
+	/*
+	 * Method for accepting the payment
+	 * 
+	 */
+	public String acceptPayment(int orderId) {
+		String output = null;
+		try {
+			Connection con = connect();
+			if (con == null) {
+				return "Error while connecting to the database for updating.";
+			}
+			// create a prepared statement
+			String query = "UPDATE Orders SET paymentAccepted = 'YES' WHERE OrderId = ?";
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			// binding values
+			preparedStmt.setInt(1, orderId);
+			// execute the statement
+			preparedStmt.execute();
+
+			con.close();
+			output =  "Payment Accepted Successfully.";
+		} catch (Exception e) {
+			output = "Error while accepting the payment.";
+			System.err.println(e.getMessage());
+		}
+		return output;
+	}
+	
+	/*
+	 * Method for rejecting the payment
+	 * 
+	 */
+	public String rejectPayment(int orderId) {
+		String output = null;
+		try {
+			Connection con = connect();
+			if (con == null) {
+				return "Error while connecting to the database for updating.";
+			}
+			// create a prepared statement
+			String query = "UPDATE Orders SET paymentAccepted = 'NO', status = 'Not Paid' WHERE OrderId = ?";
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			// binding values
+			preparedStmt.setInt(1, orderId);
+			// execute the statement
+			preparedStmt.execute();
+
+			con.close();
+			output =  "Payment Rejected Successfully and the Buyer will get notify to add the payment again.";
+		} catch (Exception e) {
+			output = "Error while rejecting the payment.";
+			System.err.println(e.getMessage());
+		}
+		return output;
+	}
 }

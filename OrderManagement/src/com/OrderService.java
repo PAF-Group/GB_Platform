@@ -86,5 +86,23 @@ public class OrderService {
 		String output = orderModel.addPayment(orderId, paymentSlip);
 		return output;
 	}
+	
+	@PUT
+	@Path("/acceptPayment")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String acceptPayment(@QueryParam("orderId") int OrderId) {
+		String output = orderModel.acceptPayment(OrderId);
+		return output;
+	}
+	
+	@PUT
+	@Path("/reject")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String rejectPayment(@QueryParam("orderId") int OrderId) {
+		String output = orderModel.rejectPayment(OrderId);
+		return output;
+	}
 }
 
