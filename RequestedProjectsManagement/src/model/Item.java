@@ -122,19 +122,20 @@ public class Item { // A common method to connect to the DB
 			if (con == null) {
 				return "Error while connecting to the database for deleting.";
 			}
-			System.out.println(0);
+		
 			// create a prepared statement
 			String query = "delete from project_request where pRequest_id=?";
-			System.out.println(1);
+	
 			PreparedStatement preparedStmt = con.prepareStatement(query);
-			System.out.println(2);
+			
 			// binding values
-			preparedStmt.setInt(1, Integer.parseInt(pRequest_id));
-			System.out.println(3);
+			preparedStmt.setInt(0, Integer.parseInt(pRequest_id));
+	
 			// execute the statement
 			preparedStmt.execute();
 			con.close();
 			output = "Deleted successfully";
+			
 		} catch (Exception e) {
 			output = "Error while deleting the item.";
 			System.err.println(e.getMessage());
