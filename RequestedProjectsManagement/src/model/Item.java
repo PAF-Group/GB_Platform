@@ -25,7 +25,7 @@ public class Item { // A common method to connect to the DB
 			}
 			// create a prepared statement
 			String query = " insert into project_request (`pRequest_id`,`name`,`feild`,`description`,`submission_link`,`fundingbody_id`)"
-					+ " values (?, ?, ?, ?, ?,?)";
+					+ " values (?, ?, ?, ?, ?, ?)";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			// binding values
 			preparedStmt.setInt(1, 0);
@@ -33,7 +33,7 @@ public class Item { // A common method to connect to the DB
 			preparedStmt.setString(3, feild);
 			preparedStmt.setString(4, description);
 			preparedStmt.setString(5, submission_link);
-			preparedStmt.setString(5, fundingbody_id);
+			preparedStmt.setString(6, fundingbody_id);
 			
 // execute the statement
 			preparedStmt.execute();
