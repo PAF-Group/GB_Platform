@@ -24,8 +24,16 @@ public class OrderService {
 	
 	@GET
 	@Path("/")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_HTML)
-	public String getItems() {
+	public String getOrder(@QueryParam("orderId") int orderId) {
+		return orderModel.getOrderById(orderId);
+	}
+	
+	@GET
+	@Path("/")
+	@Produces(MediaType.TEXT_HTML)
+	public String getOrders() {
 		return orderModel.getAllOrders();
 	}
 	
