@@ -97,7 +97,7 @@ public class OrderService {
 	}
 	
 	@PUT
-	@Path("/reject")
+	@Path("/rejectPayment")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String rejectPayment(@QueryParam("orderId") int OrderId) {
