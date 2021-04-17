@@ -104,5 +104,14 @@ public class OrderService {
 		String output = orderModel.rejectPayment(OrderId);
 		return output;
 	}
+	
+	@PUT
+	@Path("/addShipping")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String addShipping(@FormParam("orderId") int OrderId, @FormParam("productId") int productId, @FormParam("date") String date, @FormParam("shippingCompany") String shippingCompany, @FormParam("trackId") String trackId) {
+		String output = orderModel.addShipping(OrderId, productId, date, shippingCompany, trackId);
+		return output;
+	}
 }
 

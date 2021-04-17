@@ -6,6 +6,7 @@ package model;
  * */
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 
 import javax.ws.rs.core.MediaType;
 
@@ -239,8 +240,8 @@ public class Orders {
 	}
 
 	/*
-	 * Method for updating the order details
-	 * If the orders have already shipped it will not allowed to update the details of the order
+	 * Method for updating the order details If the orders have already shipped it
+	 * will not allowed to update the details of the order
 	 * 
 	 */
 	public String updateOrder(int orderId, int buyerId, String shippingAddress, JsonArray orders) {
@@ -286,7 +287,7 @@ public class Orders {
 				int quantity = ord.get("quantity").getAsInt();
 				int qty;
 				double unitPrice;
-				
+
 				// Get the status and quantity of the product in the order
 				String query2 = "SELECT `status`, quantity, unitPrice from orderDetails where orderId = ? and productId = ?";
 				PreparedStatement preparedStmt2 = con.prepareStatement(query2);
@@ -303,18 +304,19 @@ public class Orders {
 				} else {
 					return "Something went wrong in checking products";
 				}
-				
-				//If quantity has not been changed no need to update
+
+				// If quantity has not been changed no need to update
 				if (qty == quantity) {
 					total += qty * unitPrice;
 					break;
 				}
-				
+
 				if (pStatus.equals("SHIPPED")) {
-					output += "<h6>Your product " + productId + " has been shipped therefore you cannot change the quantity now</h6>";
+					output += "<h6>Your product " + productId
+							+ " has been shipped therefore you cannot change the quantity now</h6>";
 					break;
 				}
-				
+
 				// Calculate the amount
 				double amount = quantity * unitPrice;
 
@@ -369,7 +371,7 @@ public class Orders {
 			preparedStmt.execute();
 
 			con.close();
-			output =  "Payment Slip Successfully added to the order. Wait till get accept the payment by GB Online.";
+			output = "Payment Slip Successfully added to the order. Wait till get accept the payment by GB Online.";
 		} catch (Exception e) {
 			output = "Error while inserting data";
 			System.err.println(e.getMessage());
@@ -397,14 +399,14 @@ public class Orders {
 			preparedStmt.execute();
 
 			con.close();
-			output =  "Payment Accepted Successfully.";
+			output = "Payment Accepted Successfully.";
 		} catch (Exception e) {
 			output = "Error while accepting the payment.";
 			System.err.println(e.getMessage());
 		}
 		return output;
 	}
-	
+
 	/*
 	 * Method for rejecting the payment
 	 * 
@@ -425,9 +427,45 @@ public class Orders {
 			preparedStmt.execute();
 
 			con.close();
-			output =  "Payment Rejected Successfully and the Buyer will get notify to add the payment again.";
+			output = "Payment Rejected Successfully and the Buyer will get notify to add the payment again.";
 		} catch (Exception e) {
 			output = "Error while rejecting the payment.";
+			System.err.println(e.getMessage());
+		}
+		return output;
+	}
+
+	/*
+	 * Method for adding shipping details the payment
+	 * 
+	 */
+	public String addShipping(int orderId, int productId, String date, String shippingCompany, String trackId) {
+		String output = null;
+		try {
+			Connection con = connect();
+			if (con == null) {
+				return "Error while connecting to the database for updating.";
+			}
+
+			// Convert String date to Date type
+			java.util.Date dateD = new SimpleDateFormat("dd/MM/yyyy").parse(date);
+
+			// create a prepared statement
+			String query = "UPDATE OrderDetails SET status = 'Shipped', ShippingDate = ?, ShippingCompany = ?, ShippingTrackId = ? WHERE OrderId = ? AND ProductId = ?";
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			// binding values
+			preparedStmt.setDate(1, (Date) dateD);
+			preparedStmt.setString(2, shippingCompany);
+			preparedStmt.setString(3, trackId);
+			preparedStmt.setInt(4, orderId);
+			preparedStmt.setInt(5, productId);
+			// execute the statement
+			preparedStmt.execute();
+
+			con.close();
+			output = "Shipping Details added successfully";
+		} catch (Exception e) {
+			output = "Error while inserting data";
 			System.err.println(e.getMessage());
 		}
 		return output;
