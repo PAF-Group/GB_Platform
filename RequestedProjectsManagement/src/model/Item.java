@@ -115,7 +115,7 @@ public class Item { // A common method to connect to the DB
 		return output;
 	}
 
-	public String deleteItem(int pRequest_id) {
+	public String deleteItem(String pRequest_id) {
 		String output = "";
 		try {
 			Connection con = connect();
@@ -126,7 +126,7 @@ public class Item { // A common method to connect to the DB
 			String query = "delete from project_request where pRequest_id=?";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			// binding values
-			preparedStmt.setInt(1, (pRequest_id));
+			preparedStmt.setInt(1, Integer.parseInt(pRequest_id));
 			// execute the statement
 			preparedStmt.execute();
 			con.close();
