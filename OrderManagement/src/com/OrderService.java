@@ -113,5 +113,14 @@ public class OrderService {
 		String output = orderModel.addShipping(OrderId, productId, date, shippingCompany, trackId);
 		return output;
 	}
+	
+	@PUT
+	@Path("/confirmOrder")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String confirmOrder(@FormParam("orderId") int OrderId, @FormParam("productId") int productId) {
+		String output = orderModel.confirmOrder(OrderId, productId);
+		return output;
+	}
 }
 

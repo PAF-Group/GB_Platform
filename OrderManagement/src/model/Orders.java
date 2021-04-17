@@ -451,10 +451,10 @@ public class Orders {
 			java.util.Date dateD = new SimpleDateFormat("dd/MM/yyyy").parse(date);
 
 			// create a prepared statement
-			String query = "UPDATE OrderDetails SET status = 'Shipped', ShippingDate = ?, ShippingCompany = ?, ShippingTrackId = ? WHERE OrderId = ? AND ProductId = ?";
+			String query = "UPDATE OrderDetails SET status = 'Shipped', ShippingDate = ?, ShippingCompany = ?, ShipingTrackId = ? WHERE OrderId = ? AND ProductId = ?";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			// binding values
-			preparedStmt.setDate(1, (Date) dateD);
+			preparedStmt.setDate(1, new Date(dateD.getTime()));
 			preparedStmt.setString(2, shippingCompany);
 			preparedStmt.setString(3, trackId);
 			preparedStmt.setInt(4, orderId);
@@ -466,6 +466,60 @@ public class Orders {
 			output = "Shipping Details added successfully";
 		} catch (Exception e) {
 			output = "Error while inserting data";
+			System.err.println(e.getMessage());
+		}
+		return output;
+	}
+
+	public String confirmOrder(int orderId, int productId) {
+		String output = null;
+		try {
+			Connection con = connect();
+			if (con == null) {
+				return "Error while connecting to the database for updating.";
+			}
+			// create a prepared statement
+			String query = "UPDATE OrderDetails SET status = 'Received' WHERE OrderId = ? AND ProductId = ?";
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			// binding values
+			preparedStmt.setInt(1, orderId);
+			preparedStmt.setInt(2, productId);
+			// execute the statement
+			preparedStmt.execute();
+
+			// Check the status of other products in the order
+			// create a prepared statement
+			String query1 = "SELECT status FROM OrderDetails WHERE OrderId = ? AND ProductId = ?";
+			PreparedStatement preparedStmt1 = con.prepareStatement(query1);
+			// binding values
+			preparedStmt1.setInt(1, orderId);
+			preparedStmt1.setInt(2, productId);
+			// execute the statement
+			ResultSet rs = preparedStmt1.executeQuery();
+
+			String orderStatus = "Received All";
+			while (rs.next()) {
+				if (!rs.getString(1).equals("Received")) {
+					orderStatus = "Received Some";
+					break;
+				}
+			}
+
+			// Update status in the order table
+			// create a prepared statement
+			String query2 = "UPDATE Orders SET status = ? WHERE OrderId = ? AND ProductId = ?";
+			PreparedStatement preparedStmt2 = con.prepareStatement(query2);
+			// binding values
+			preparedStmt2.setString(1, orderStatus);
+			preparedStmt2.setInt(2, orderId);
+			preparedStmt2.setInt(3, productId);
+			// execute the statement
+			preparedStmt2.execute();
+
+			con.close();
+			output = "Order Status updated successfully";
+		} catch (Exception e) {
+			output = "Error while updating data";
 			System.err.println(e.getMessage());
 		}
 		return output;
