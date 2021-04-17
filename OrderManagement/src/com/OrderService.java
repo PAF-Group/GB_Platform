@@ -37,6 +37,13 @@ public class OrderService {
 	}
 	
 	@GET
+	@Path("/Sellers/{sellerId}")
+	@Produces(MediaType.TEXT_HTML)
+	public String getOrdersBySeller(@PathParam("sellerId") String sellerId) {
+		return orderModel.getOrdersBySeller(sellerId);
+	}
+	
+	@GET
 	@Path("/")
 	@Produces(MediaType.TEXT_HTML)
 	public String getOrders() {
