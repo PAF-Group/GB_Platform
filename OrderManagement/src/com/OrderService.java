@@ -76,5 +76,15 @@ public class OrderService {
 		String output = orderModel.updateOrder(Integer.parseInt(orderId), Integer.parseInt(buyerId), shippingAddress, orderDetails);
 		return output;
 	}
+	
+	
+	@PUT
+	@Path("/addPayment")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String addPayment(@FormParam("orderId") String orderId, @FormParam("paymentSlipUrl") String paymentSlip) {
+		String output = orderModel.addPayment(orderId, paymentSlip);
+		return output;
+	}
 }
 

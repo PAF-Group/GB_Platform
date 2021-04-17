@@ -238,6 +238,11 @@ public class Orders {
 		return output;
 	}
 
+	/*
+	 * Method for updating the order details
+	 * If the orders have already shipped it will not allowed to update the details of the order
+	 * 
+	 */
 	public String updateOrder(int orderId, int buyerId, String shippingAddress, JsonArray orders) {
 		String output = "";
 		double total = 0;
@@ -338,6 +343,35 @@ public class Orders {
 			output += "<h5>Update operation successfully executed. Check whehter some errors in the description<h5>";
 		} catch (Exception e) {
 			output = "Error while updating data";
+			System.err.println(e.getMessage());
+		}
+		return output;
+	}
+
+	/*
+	 * Method for add the payment for the order
+	 * 
+	 */
+	public String addPayment(String orderId, String paymentSlip) {
+		String output = null;
+		try {
+			Connection con = connect();
+			if (con == null) {
+				return "Error while connecting to the database for updating.";
+			}
+			// create a prepared statement
+			String query = "UPDATE Orders SET PaymentSlipUrl = ?, Status = 'Processing', paymentAccepted = 'Pending' WHERE OrderId = ?";
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			// binding values
+			preparedStmt.setString(1, paymentSlip);
+			preparedStmt.setInt(2, Integer.parseInt(orderId));
+			// execute the statement
+			preparedStmt.execute();
+
+			con.close();
+			output =  "Payment Slip Successfully added to the order. Wait till get accept the payment by GB Online.";
+		} catch (Exception e) {
+			output = "Error while inserting data";
 			System.err.println(e.getMessage());
 		}
 		return output;
