@@ -23,11 +23,17 @@ public class OrderService {
 	Orders orderModel = new Orders();
 	
 	@GET
-	@Path("/")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Path("/{orderId}")
 	@Produces(MediaType.TEXT_HTML)
-	public String getOrder(@QueryParam("orderId") int orderId) {
-		return orderModel.getOrderById(orderId);
+	public String getOrder(@PathParam("orderId") String orderId) {
+		return orderModel.getOrderById(Integer.parseInt(orderId));
+	}
+	
+	@GET
+	@Path("/Buyers/{buyerId}")
+	@Produces(MediaType.TEXT_HTML)
+	public String getOrdersByBuyer(@PathParam("buyerId") String buyerId) {
+		return orderModel.getOrdersByBuyer(buyerId);
 	}
 	
 	@GET
@@ -36,7 +42,6 @@ public class OrderService {
 	public String getOrders() {
 		return orderModel.getAllOrders();
 	}
-	
 	
 	@POST
 	@Path("/")
