@@ -11,7 +11,7 @@ public class Submit {
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 
-				// Provide the correct details: DBServer/DBName, username, password
+				// Provide the correct details: DBServer/DBName, user name, password
 				con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/req_project", "root", "okanda");
 			} catch (Exception e) {
 				e.printStackTrace();
