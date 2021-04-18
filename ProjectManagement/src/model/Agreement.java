@@ -53,7 +53,8 @@ public class Agreement {
 	}
 	
 
-	// Read
+	// Read Agreement Details
+	
 	public String readagreements() {
 		String output = "";
 		try {
