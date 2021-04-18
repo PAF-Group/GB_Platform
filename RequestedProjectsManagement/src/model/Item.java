@@ -55,7 +55,7 @@ public class Item { // A common method to connect to the DB
 			}
 			// Prepare the html table to be displayed
 			output = "<table border='1'><tr><th>Name</th><th>Feild</th>" + "<th>Description</th>"
-					+ "<th>Submission_Link</th>" + "<th>Update</th><th>Remove</th></tr>";
+					+ "<th>Submission_Link</th>" ;
 
 			String query = "select * from project_request";
 			Statement stmt = con.createStatement();
@@ -73,10 +73,10 @@ public class Item { // A common method to connect to the DB
 				output += "<td>" + description + "</td>";
 				output += "<td>" + submission_link + "</td>";
 				// buttons
-				output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>"
-						+ "<td><form method='post' action='items.jsp'>"
-						+ "<input name='btnRemove' type='submit' value='Remove'class='btn btn-danger'>"
-						+ "<input name='pRequest_id' type='hidden' value='" + pRequest_id+ "'>" + "</form></td></tr>";
+//				output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>"
+//						+ "<td><form method='post' action='items.jsp'>"
+//						+ "<input name='btnRemove' type='submit' value='Remove'class='btn btn-danger'>"
+//						+ "<input name='pRequest_id' type='hidden' value='" + pRequest_id+ "'>" + "</form></td></tr>";
 			}
 			con.close();
 			// Complete the html table
