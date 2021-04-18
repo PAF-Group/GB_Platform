@@ -100,6 +100,8 @@ public class Agreement {
 		return output;
 	}
 
+	// Update Agreement details when they want
+	
 	public String updateAgreement(String Agreementid, String fundingbodyid, String agreementpath, String status, String projectid ) {
 		String output = "";
 		try {
