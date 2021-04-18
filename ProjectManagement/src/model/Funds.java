@@ -10,7 +10,7 @@ public class Funds {
 				Class.forName("com.mysql.jdbc.Driver");
 
 				// Provide the correct details: DBServer/DBName, username, password
-				con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/test", "root", "admin");
+				con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/paf", "root", "admin");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -19,7 +19,7 @@ public class Funds {
 
 		//Insert Agreement
 		
-		public String insertItem(int fundid, String date, float amount,String bankslip) {
+		public String insertfund(String date, float amount,String bankslip) {
 			String output = "";
 			try {
 				Connection con = connect();
@@ -49,7 +49,7 @@ public class Funds {
 		}
 		
 
-		public String readItems() {
+		public String readfund() {
 			String output = "";
 			try {
 				Connection con = connect();
@@ -94,54 +94,6 @@ public class Funds {
 			return output;
 		}
 
-		public String updateItem(String fundid, String date, String amount, String bankslip ) {
-			String output = "";
-			try {
-				Connection con = connect();
-				if (con == null) {
-					return "Error while connecting to the database for updating.";
-				}
-				// create a prepared statement
-				String query = "UPDATE funds_table SET Date=?,Amount=?,Bank_Slip=? WHERE Funding_ID=?";
-				PreparedStatement preparedStmt = con.prepareStatement(query);
-				// binding values	preparedStmt.setString(2, agreementpath);preparedStmt.setInt(1, Integer.parseInt(fundingbodyid));
-				preparedStmt.setString(1, date);
-				preparedStmt.setFloat(2, Float.parseFloat(amount));
-				preparedStmt.setString(3, bankslip);
-				preparedStmt.setInt(4, Integer.parseInt(fundid));
-				
-				// execute the statement
-				preparedStmt.execute();
-				con.close();
-				output = "Updated successfully";
-			} catch (Exception e) {
-				output = "Error while updating the item.";
-				System.err.println(e.getMessage());
-			}
-			return output;
-		}
-
-		public String deleteItem(String fundid) {
-			String output = "";
-			try {
-				Connection con = connect();
-				if (con == null) {
-					return "Error while connecting to the database for deleting.";
-				}
-				// create a prepared statement
-				String query = "delete from funds_table_table where Funding_ID =?";
-				PreparedStatement preparedStmt = con.prepareStatement(query);
-				// binding values
-				preparedStmt.setInt(1, Integer.parseInt(fundid));
-				// execute the statement
-				preparedStmt.execute();
-				con.close();
-				output = "Deleted successfully";
-			} catch (Exception e) {
-				output = "Error while deleting the item.";
-				System.err.println(e.getMessage());
-			}
-			return output;
-		}
+		
 
 }
