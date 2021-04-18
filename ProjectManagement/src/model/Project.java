@@ -18,7 +18,7 @@ public class Project { // A common method to connect to the DB
 		return con;
 	}
 
-	//Insert Project
+	//Insert Project  
 	
 	public String insertItem(String name, String description, String field,String url,int researcher_id) {
 		String output = "";

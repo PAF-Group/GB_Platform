@@ -27,7 +27,7 @@ public class Funds {
 					return "Error while connecting to the database for inserting.";
 				}
 				// create a prepared statement
-				String query = " insert into project_table (`Funding_ID`,`Date`,`Amount`,`Bank_Slip`)"
+				String query = " insert into funds_table (Funding_ID,Date,Amount,Bank_Slip)"
 						+ " values (?, ?, ?, ?)";
 				PreparedStatement preparedStmt = con.prepareStatement(query);
 				// binding values

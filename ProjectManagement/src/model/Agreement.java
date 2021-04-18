@@ -70,14 +70,14 @@ public class Agreement {
 				String fundingbodyid = Integer.toString(rs.getInt("FundingBody_ID"));
 				String path = rs.getString("Agreement_Path");
 				String Status = rs.getString("Status");
-				String researcherID = Integer.toString(rs.getInt("Researcher_ID"));
+				String ProjectID = Integer.toString(rs.getInt("Project_ID"));
 				
 				// Add into the html table
 				output += "<tr><td>" +  agreementID + "</td>";
 				output += "<td>" + fundingbodyid + "</td>";
 				output += "<td>" + path + "</td>";
 				output += "<td>" + Status + "</td>";
-				output += "<td>" + researcherID + "</td>";
+				output += "<td>" + ProjectID + "</td>";
 				
 				// buttons
 				output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>"
