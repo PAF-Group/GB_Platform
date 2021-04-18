@@ -10,7 +10,7 @@ public class Agreement {
 			Class.forName("com.mysql.jdbc.Driver");
 
 			// Provide the correct details: DBServer/DBName, username, password
-			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/test", "root", "admin");
+			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/paf", "root", "admin");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -19,7 +19,7 @@ public class Agreement {
 
 	//Insert Agreement
 	
-	public String insertItem(int Fundingbodyid, String path, String status,int projectid) {
+	public String insertAgreement(int Fundingbodyid, String path, String status,int projectid) {
 		String output = "";
 		try {
 			Connection con = connect();
@@ -27,7 +27,7 @@ public class Agreement {
 				return "Error while connecting to the database for inserting.";
 			}
 			// create a prepared statement
-			String query = " insert into project_table (`Agreement_ID`,`FundingBody_ID`,`Agreement_Path`,`Status`,`Project_ID`)"
+			String query = " insert into project_table (Agreement_ID,FundingBody_ID,Agreement_Path,Status,Project_ID)"
 					+ " values (?, ?, ?, ?, ?)";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			// binding values
@@ -145,5 +145,7 @@ public class Agreement {
 		}
 		return output;
 	}
+
+	
 
 }

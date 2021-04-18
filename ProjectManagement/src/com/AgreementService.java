@@ -36,8 +36,8 @@ public class AgreementService {
 		@Path("/")
 		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 		@Produces(MediaType.TEXT_PLAIN)
-		public String insertItem(@FormParam("FundingBody_ID") int fundingbodyid, @FormParam("Agreement_Path") String agreementpath,
-				@FormParam("Field") String field, @FormParam("Status") String status,@FormParam("Project_ID") int project_id) {
+		public String insertAgreement(@FormParam("FundingBody_ID") int fundingbodyid, @FormParam("Agreement_Path") String agreementpath,
+				 @FormParam("Status") String status,@FormParam("Project_ID") int project_id) {
 			String output = AgreementObj.insertAgreement( fundingbodyid, agreementpath,  status, project_id);
 			return output;
 		}
