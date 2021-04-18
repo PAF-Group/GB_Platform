@@ -15,12 +15,12 @@ public class FundService {
 
 		Funds fundObj = new Funds();
 
-//		@GET
-//		@Path("/")
-//		@Produces(MediaType.TEXT_HTML)
-//		public String readItems() {
-//			return fundObj.readfund();
-//		}
+		@GET
+		@Path("/")
+		@Produces(MediaType.TEXT_HTML)
+		public String readItems() {
+			return fundObj.readfund();
+		}
 
 		@POST
 		@Path("/")
