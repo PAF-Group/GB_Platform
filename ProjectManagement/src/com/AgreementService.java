@@ -42,23 +42,23 @@ public class AgreementService {
 			return output;
 		}
 
-//		@PUT
-//		@Path("/")
-//		@Consumes(MediaType.APPLICATION_JSON)
-//		@Produces(MediaType.TEXT_PLAIN)
-//		public String updateItem(String projectData) {
-//			// Convert the input string to a JSON object
-//			JsonObject itemObject = new JsonParser().parse(projectData).getAsJsonObject();
-//			// Read the values from the JSON object
-//			String projectID = itemObject.get("Project_ID").getAsString();
-//			String name = itemObject.get("Name").getAsString();
-//			String description = itemObject.get("Description").getAsString();
-//			String filed = itemObject.get("Filed").getAsString();
-//			String url = itemObject.get("Project_Report_Url").getAsString();
-//			String researcherid = itemObject.get("Researcher_ID").getAsString();
-//			String output = AgreementObj.updateItem(projectID, name, description, filed, url,researcherid);
-//			return output;
-//		}
+		@PUT
+		@Path("/")
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Produces(MediaType.TEXT_PLAIN)
+		public String updateItem(String projectData) {
+			// Convert the input string to a JSON object
+			JsonObject itemObject = new JsonParser().parse(projectData).getAsJsonObject();
+			// Read the values from the JSON object
+			String AgreementID = itemObject.get("Agreement_ID").getAsString();
+			String fundingbodyid = itemObject.get("FundingBody_ID").getAsString();
+			String agreementpath = itemObject.get("Agreement_Path").getAsString();
+			String status = itemObject.get("Status").getAsString();
+			String projectid = itemObject.get("Project_ID").getAsString();
+
+			String output = AgreementObj.updateItem(AgreementID ,fundingbodyid, agreementpath, status, projectid);
+			return output;
+		}
 //
 //		@DELETE
 //		@Path("/")
