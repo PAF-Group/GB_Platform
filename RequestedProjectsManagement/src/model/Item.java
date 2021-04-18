@@ -129,7 +129,7 @@ public class Item { // A common method to connect to the DB
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
 			// binding values
-			preparedStmt.setInt(0, Integer.parseInt(pRequest_id));
+			preparedStmt.setInt(1, Integer.parseInt(pRequest_id));
 	
 			// execute the statement
 			preparedStmt.execute();

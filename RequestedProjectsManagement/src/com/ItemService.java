@@ -61,6 +61,7 @@ public class ItemService {
 		// Read the value from the element <pRequest_id>
 		String pRequest_id = doc.select("pRequest_id").text();
 		String output = itemObj.deleteItem(pRequest_id);
+		System.out.println(pRequest_id);
 		return output;
 	}
 
