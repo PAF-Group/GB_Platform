@@ -18,7 +18,7 @@ public class Submit {
 			}
 			return con;
 		}
-		
+		//insert method
 		public String insertSubmission(String name, String descriptiom, String report_url,String researcher_id,String pRequest_id) {
 			String output = "";
 			try {
