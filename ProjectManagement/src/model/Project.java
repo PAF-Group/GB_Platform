@@ -98,7 +98,7 @@ public class Project {
 		return output;
 	}
 
-	
+//Update project details when they want
 
 	public String updateItem(String ID, String name, String description, String filed, String url,String researcherid ) {
 		String output = "";
