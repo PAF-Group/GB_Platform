@@ -1,122 +1,136 @@
-#Users DB creation query
-CREATE DATABASE Users;
+-- Users DB creation query
+CREATE DATABASE userdb;
 
-#User Agreement table creation
-CREATE TABLE UserAgreement (
-  agreement_id VARCHAR(10) NOT NULL,
-  description TEXT(1000),
-  file_location VARCHAR(2083),
-  created_at  DATE NOT NULL,
-  updated_at DATE NOT NULL,
-  PRIMARY KEY(agreement_id)
+-- User Agreement table creation
+CREATE TABLE `userdb`.`user_agreement` (
+  `agreement_id` INT NOT NULL AUTO_INCREMENT,
+  `description` TEXT(1000) NULL,
+  `file_location` VARCHAR(2083) NULL,
+  `created_at` DATE NOT NULL,
+  `updated_at` DATE NOT NULL,
+  PRIMARY KEY (`agreement_id`)
 );
 
-#Researcher table creation
-CREATE TABLE Reseacher (
-  user_id VARCHAR(10) NOT NULL,
-  first_name VARCHAR(20) NOT NULL,
-  last_name VARCHAR(20),
-  user_phone VARCHAR(15),
-  user_agreement VARCHAR(10) NOT NULL,
-  user_email VARCHAR(100) NOT NULL,
-  password VARCHAR(20) NOT NULL,
-  acc_status VARCHAR(10) NOT NULL,
-  created_at  DATE NOT NULL,
-  updated_at DATE NOT NULL,
-  PRIMARY KEY(user_id),
-  CONSTRAINT researcher_fk FORIEGN KEY(user_agreement) 
-  REFERENCES UserAgreement(agreement_id)
-  ON UPDATE CASCADE
+-- Researcher table creation
+CREATE TABLE `userdb`.`researcher` (
+  `user_id` INT NOT NULL AUTO_INCREMENT,
+  `first_name` VARCHAR(20) NOT NULL,
+  `last_name` VARCHAR(20) NULL,
+  `user_phone` VARCHAR(15) NULL,
+  `user_agreement` INT NOT NULL,
+  `user_email` VARCHAR(200) NOT NULL,
+  `password` VARCHAR(20) NOT NULL,
+  `account_status` VARCHAR(10) NOT NULL DEFAULT 'active',
+  `created_at` DATE NOT NULL,
+  `updated_at` DATE NOT NULL,
+  PRIMARY KEY (`user_id`),
+  INDEX `user_agreement_idx` (`user_agreement` ASC) VISIBLE,
+  CONSTRAINT `researcher_fk`
+    FOREIGN KEY (`user_agreement`)
+    REFERENCES `userdb`.`user_agreement` (`agreement_id`)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE
 );
 
-#Researcher - Research Fields table creation
-CREATE TABLE ReseacherFields (
-  user_id VARCHAR(10) NOT NULL,
-  field VARCHAR(20) NOT NULL,
-  created_at  DATE NOT NULL,
-  updated_at DATE NOT NULL,
-  PRIMARY KEY(user_id, field),
-  CONSTRAINT researcher_fields_fk FORIEGN KEY(user_id) 
-  REFERENCES Researcher(user_id)
-  ON UPDATE CASCADE
-  ON DELETE CASCADE
+-- Research Field table creation
+CREATE TABLE `userdb`.`research_field` (
+  `field_id` INT NOT NULL AUTO_INCREMENT,
+  `field_name` VARCHAR(100) NOT NULL,
+  `description` TEXT(1000) NULL,
+  `created_at` DATE NOT NULL,
+  `updated_at` DATE NOT NULL,
+  PRIMARY KEY (`field_id`)
+);
+            
+-- Researcher - Research Field table creation
+CREATE TABLE `userdb`.`researcher_field` (
+  `user_id` INT NOT NULL,
+  `field_id` INT NOT NULL,
+  `created_at` DATE NOT NULL,
+  `updated_at` DATE NOT NULL,
+  PRIMARY KEY (`user_id`, `field_id`),
+  INDEX `researcher_field_fk2_idx` (`field_id` ASC) VISIBLE,
+  CONSTRAINT `researcher_field_fk1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `userdb`.`researcher` (`user_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `researcher_field_fk2`
+    FOREIGN KEY (`field_id`)
+    REFERENCES `userdb`.`research_field` (`field_id`)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE
 );
 
-#Funding Body table creation
-CREATE TABLE Funder (
-  user_id VARCHAR(10) NOT NULL,
-  name VARCHAR(30) NOT NULL,
-  tele VARCHAR(15),
-  type VARCHAR(20),
-  address VARCHAR(100),
-  user_agreement VARCHAR(10),
-  user_email VARCHAR(100) NOT NULL,
-  password VARCHAR(20) NOT NULL,
-  acc_status VARCHAR(10) NOT NULL,
-  created_at  DATE NOT NULL,
-  updated_at DATE NOT NULL,
-  PRIMARY KEY(user_id),
-  CONSTRAINT funder_fk FORIEGN KEY(user_agreement) 
-  REFERENCES UserAgreement(agreement_id)
-  ON UPDATE CASCADE
+-- Funding Body table creation
+CREATE TABLE `userdb`.`funder` (
+  `user_id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(100) NOT NULL,
+  `user_phone` VARCHAR(15) NULL,
+  `user_type` VARCHAR(20) NULL,
+  `address` VARCHAR(150) NULL,
+  `user_agreement` INT NOT NULL,
+  `user_email` VARCHAR(200) NOT NULL,
+  `password` VARCHAR(20) NOT NULL,
+  `account_status` VARCHAR(10) NOT NULL DEFAULT 'active',
+  `created_at` DATE NOT NULL,
+  `updated_at` DATE NOT NULL,
+  PRIMARY KEY (`user_id`),
+  INDEX `user_agreement_idx` (`user_agreement` ASC) VISIBLE,
+  CONSTRAINT `funder_fk`
+    FOREIGN KEY (`user_agreement`)
+    REFERENCES `userdb`.`user_agreement` (`agreement_id`)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE
 );
 
-#Buyer table creation
-CREATE TABLE Buyer (
-  user_id VARCHAR(10) NOT NULL,
-  name VARCHAR(40) NOT NULL,
-  buyer_phone VARCHAR(15),
-  user_agreement VARCHAR(10),
-  user_email VARCHAR(100) NOT NULL,
-  password VARCHAR(20) NOT NULL,
-  acc_status VARCHAR(10) NOT NULL,
-  created_at  DATE NOT NULL,
-  updated_at DATE NOT NULL,
-  PRIMARY KEY(user_id),
-  CONSTRAINT buyer_fk FORIEGN KEY(user_agreement) 
-  REFERENCES UserAgreement(agreement_id)
-  ON UPDATE CASCADE
+-- Buyer table creation
+CREATE TABLE `userdb`.`buyer` (
+  `user_id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(100) NOT NULL,
+  `user_phone` VARCHAR(15) NULL,
+  `user_agreement` INT NOT NULL,
+  `user_email` VARCHAR(200) NOT NULL,
+  `password` VARCHAR(20) NOT NULL,
+  `account_status` VARCHAR(10) NOT NULL DEFAULT 'active',
+  `created_at` DATE NOT NULL,
+  `updated_at` DATE NOT NULL,
+  PRIMARY KEY (`user_id`),
+  INDEX `user_agreement_idx` (`user_agreement` ASC) VISIBLE,
+  CONSTRAINT `buyer_fk`
+    FOREIGN KEY (`user_agreement`)
+    REFERENCES `userdb`.`user_agreement` (`agreement_id`)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE
 );
 
-#Buyer - Interested categories table creation
-CREATE TABLE BuyerCategories (
-  user_id VARCHAR(10) NOT NULL,
-  category VARCHAR(20),
-  created_at  DATE NOT NULL,
-  updated_at DATE NOT NULL,
-  PRIMARY KEY(user_id, category),
-  CONSTRAINT buyer_category_fk FORIEGN KEY(user_id) 
-  REFERENCES Buyer(user_id)
-  ON UPDATE CASCADE
-  ON DELETE CASCADE
+-- GB Management table creation
+CREATE TABLE `userdb`.`gb_member` (
+  `user_id` INT NOT NULL AUTO_INCREMENT,
+  `employee_id` INT NOT NUll,
+  `first_name` VARCHAR(20) NOT NULL,
+  `last_name` VARCHAR(20) NULL,
+  `member_type` VARCHAR(20) NULL,
+  `user_phone` VARCHAR(15) NULL,
+  `user_email` VARCHAR(200) NOT NULL,
+  `password` VARCHAR(20) NOT NULL,
+  `account_status` VARCHAR(10) NOT NULL DEFAULT 'active',
+  `created_at` DATE NOT NULL,
+  `updated_at` DATE NOT NULL,
+  PRIMARY KEY (`user_id`)
 );
 
-#GB Management table creation
-CREATE TABLE GBMemeber (
-  user_id VARCHAR(10) NOT NULL,
-  emp_id VARCHAR(10) NOT NULL,
-  first_name VARCHAR(20) NOT NULL,
-  last_name VARCHAR(20),
-  type VARCHAR(20),
-  phone VARCHAR(15),
-  user_email VARCHAR(100) NOT NULL,
-  password VARCHAR(20) NOT NULL,
-  acc_status VARCHAR(10) NOT NULL,
-  created_at  DATE NOT NULL,
-  updated_at DATE NOT NULL,
-  PRIMARY KEY(user_id)
-);
-
-#Administrator table creation
-CREATE TABLE Administrator(
-  user_id VARCHAR(10) NOT NULL,
-  first_name VARCHAR(20) NOT NULL,
-  last_name VARCHAR(20),
-  phone VARCHAR(15),
-  user_email VARCHAR(100) NOT NULL,
-  password VARCHAR(20) NOT NULL,
-  acc_status VARCHAR(10) NOT NULL,
-  created_at  DATE NOT NULL,
-  updated_at DATE NOT NULL,
-  PRIMARY KEY(user_id)
+-- Administrator table creation
+CREATE TABLE `userdb`.`administrator` (
+  `user_id` INT NOT NULL AUTO_INCREMENT,
+  `employee_id` INT NOT NUll,
+  `first_name` VARCHAR(20) NOT NULL,
+  `last_name` VARCHAR(20) NULL,
+  `user_phone` VARCHAR(15) NULL,
+  `user_email` VARCHAR(200) NOT NULL,
+  `password` VARCHAR(20) NOT NULL,
+  `account_status` VARCHAR(10) NOT NULL DEFAULT 'active',
+  `created_at` DATE NOT NULL,
+  `updated_at` DATE NOT NULL,
+  PRIMARY KEY (`user_id`)
 );
