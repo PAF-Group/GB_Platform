@@ -3,8 +3,10 @@ package model;
 import java.sql.*;
 
 public class Agreement {
-	// A common method to connect to the DB
+	
 	private Connection connect() {
+		
+	//DB connection 
 		Connection con = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -17,7 +19,7 @@ public class Agreement {
 		return con;
 	}
 
-	//Insert Agreement
+	//Insert Agreement when funding body like to the project
 	
 	public String insertAgreement(int Fundingbodyid, String path, String status,int projectid) {
 		String output = "";
@@ -30,6 +32,7 @@ public class Agreement {
 			String query = " insert into agreement_table (Agreement_ID,FundingBody_ID,Agreement_Path,Status,Project_ID)"
 					+ " values (?, ?, ?, ?, ?)";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
+			System.out.println(preparedStmt);
 			// binding values
 			preparedStmt.setInt(1, 0);
 			preparedStmt.setInt(2, Fundingbodyid);
@@ -50,6 +53,7 @@ public class Agreement {
 	}
 	
 
+	// Read
 	public String readagreements() {
 		String output = "";
 		try {

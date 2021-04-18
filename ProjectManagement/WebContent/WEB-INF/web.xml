@@ -9,7 +9,7 @@
 </servlet>
 <servlet-mapping>
  <servlet-name>Jersey Web Application</servlet-name>
- <url-pattern>/ItemService/*</url-pattern>
+ <url-pattern>/ProjectService/*</url-pattern>
   <url-pattern>/AgreementService/*</url-pattern>
    <url-pattern>/FundService/*</url-pattern>
 </servlet-mapping>
