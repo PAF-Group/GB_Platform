@@ -1,6 +1,6 @@
 package com;
 
-import model.Item;
+import model.Project;
 //For REST Service
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -12,8 +12,8 @@ import org.jsoup.parser.*;
 import org.jsoup.nodes.Document;
 
 @Path("/Items")
-public class ItemService {
-	Item itemObj = new Item();
+public class ProjectService {
+	Project itemObj = new Project();
 
 	@GET
 	@Path("/")

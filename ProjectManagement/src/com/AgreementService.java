@@ -17,19 +17,19 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import model.Agreement;
-import model.Item;
 
+
+@Path("/Agreements")
 public class AgreementService {
 	
-	@Path("/Agreements")
-	public class ItemService {
+
 		Agreement AgreementObj = new Agreement();
 
 		@GET
 		@Path("/")
 		@Produces(MediaType.TEXT_HTML)
 		public String readItems() {
-			return AgreementObj.readItems();
+			return AgreementObj.readagreements();
 		}
 
 		@POST
@@ -64,16 +64,16 @@ public class AgreementService {
 		@Path("/")
 		@Consumes(MediaType.APPLICATION_XML)
 		@Produces(MediaType.TEXT_PLAIN)
-		public String deleteItem(String projectData) {
+		public String deleteAgreement(String projectData) {
 			// Convert the input string to an XML document
 			Document doc = Jsoup.parse(projectData, "", Parser.xmlParser());
 
 			// Read the value from the element <itemID>
 			String agreementID = doc.select("Agreement_ID").text();
-			String output = AgreementObj.deleteItem(agreementID);
+			String output = AgreementObj.deleteAgreement(agreementID);
 			return output;
 		}
 
 
 }
-}
+

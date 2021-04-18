@@ -4,7 +4,7 @@ import java.sql.*;
 
 
 
-public class Item { // A common method to connect to the DB
+public class Project { // A common method to connect to the DB
 	private Connection connect() {
 		Connection con = null;
 		try {
@@ -104,7 +104,7 @@ public class Item { // A common method to connect to the DB
 				return "Error while connecting to the database for updating.";
 			}
 			// create a prepared statement
-			String query = "UPDATE project_table SET Name=?,Description=?,Filed=?,Project_Report_Url=?,Researcher_ID WHERE Project_ID=?";
+			String query = "UPDATE project_table SET Name=?,Description=?,Filed=?,Project_Report_Url=?,Researcher_ID=? WHERE Project_ID=?";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			// binding values
 			preparedStmt.setString(1, name);

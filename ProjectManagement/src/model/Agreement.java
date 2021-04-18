@@ -50,7 +50,7 @@ public class Agreement {
 	}
 	
 
-	public String readItems() {
+	public String readagreements() {
 		String output = "";
 		try {
 			Connection con = connect();
@@ -123,7 +123,7 @@ public class Agreement {
 		return output;
 	}
 
-	public String deleteItem(String agreementid) {
+	public String deleteAgreement(String agreementid) {
 		String output = "";
 		try {
 			Connection con = connect();
