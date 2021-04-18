@@ -4,7 +4,8 @@ import java.sql.*;
 
 
 
-public class Project { // A common method to connect to the DB
+public class Project { 
+	// get the connection
 	private Connection connect() {
 		Connection con = null;
 		try {
@@ -18,7 +19,7 @@ public class Project { // A common method to connect to the DB
 		return con;
 	}
 
-	//Insert Project  
+	//Insert Project  to the sysytem and funding body can see those projects
 	
 	public String insertItem(String name, String description, String field,String url,int researcher_id) {
 		String output = "";
@@ -50,6 +51,7 @@ public class Project { // A common method to connect to the DB
 		return output;
 	}
 
+	// Read the projects when researcher add to the system
 	public String readItems() {
 		String output = "";
 		try {
@@ -95,6 +97,8 @@ public class Project { // A common method to connect to the DB
 		}
 		return output;
 	}
+
+	
 
 	public String updateItem(String ID, String name, String description, String filed, String url,String researcherid ) {
 		String output = "";
