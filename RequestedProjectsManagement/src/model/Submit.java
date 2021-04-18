@@ -49,7 +49,7 @@ public class Submit {
 			return output;
 		}
 		
-		public String readSubmissions() {  //data retrive method
+		public String readSubmissions() {  //data read method
 			String output = "";
 			try {
 				Connection con = connect();
