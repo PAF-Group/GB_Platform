@@ -95,7 +95,7 @@ public class Agreement {
 		return output;
 	}
 
-	public String updateItem(String Agreementid, String fundingbodyid, String agreementpath, String status, String projectid ) {
+	public String updateAgreement(String Agreementid, String fundingbodyid, String agreementpath, String status, String projectid ) {
 		String output = "";
 		try {
 			Connection con = connect();

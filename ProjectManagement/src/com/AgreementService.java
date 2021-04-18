@@ -46,7 +46,7 @@ public class AgreementService {
 		@Path("/")
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Produces(MediaType.TEXT_PLAIN)
-		public String updateItem(String projectData) {
+		public String updateAgreement(String projectData) {
 			// Convert the input string to a JSON object
 			JsonObject itemObject = new JsonParser().parse(projectData).getAsJsonObject();
 			// Read the values from the JSON object
@@ -56,24 +56,24 @@ public class AgreementService {
 			String status = itemObject.get("Status").getAsString();
 			String projectid = itemObject.get("Project_ID").getAsString();
 
-			String output = AgreementObj.updateItem(AgreementID ,fundingbodyid, agreementpath, status, projectid);
+			String output = AgreementObj.updateAgreement(AgreementID ,fundingbodyid, agreementpath, status, projectid);
 			return output;
 		}
-//
-//		@DELETE
-//		@Path("/")
-//		@Consumes(MediaType.APPLICATION_XML)
-//		@Produces(MediaType.TEXT_PLAIN)
-//		public String deleteItem(String projectData) {
-//			// Convert the input string to an XML document
-//			Document doc = Jsoup.parse(projectData, "", Parser.xmlParser());
-//
-//			// Read the value from the element <itemID>
-//			String projectID = doc.select("Project_ID").text();
-//			String output = itemObj.deleteItem(projectID);
-//			return output;
-//		}
-//
+
+		@DELETE
+		@Path("/")
+		@Consumes(MediaType.APPLICATION_XML)
+		@Produces(MediaType.TEXT_PLAIN)
+		public String deleteItem(String projectData) {
+			// Convert the input string to an XML document
+			Document doc = Jsoup.parse(projectData, "", Parser.xmlParser());
+
+			// Read the value from the element <itemID>
+			String agreementID = doc.select("Agreement_ID").text();
+			String output = AgreementObj.deleteItem(agreementID);
+			return output;
+		}
+
 
 }
 }
