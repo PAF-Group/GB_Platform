@@ -128,6 +128,7 @@ public class Project {
 		return output;
 	}
 
+	//Delete  project when they want
 	public String deleteItem(String projectid) {
 		String output = "";
 		try {
