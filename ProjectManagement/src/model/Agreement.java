@@ -64,7 +64,7 @@ public class Agreement {
 			}
 			// Prepare the html table to be displayed
 			output = "<table border='1'><tr><th>Agreement_ID</th><th>FundingBody_ID</th>" + "<th>Agreement_Path</th>"
-					+ "<th>Status</th>" +"<th>Project_IDL</th>"+ "<th>Update</th><th>Remove</th></tr>";
+					+ "<th>Status</th>" +"<th>Project_IDL</th></tr>";
 
 			String query = "select * from agreement_table";
 			Statement stmt = con.createStatement();
@@ -85,9 +85,9 @@ public class Agreement {
 				output += "<td>" + ProjectID + "</td>";
 				
 				// buttons
-				output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>"
-						+ "<td><form method='post' action='items.jsp'>"
-						+ "<input name='btnRemove' type='submit' value='Remove'class='btn btn-danger'>"
+				output += 
+						 "<td><form method='post' action='items.jsp'>"
+						
 						+ "<input name='itemID' type='hidden' value='" + agreementID + "'>" + "</form></td></tr>";
 			}
 			con.close();

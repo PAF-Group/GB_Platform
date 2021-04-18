@@ -58,7 +58,7 @@ public class Funds {
 				}
 				// Prepare the html table to be displayed
 				output = "<table border='1'><tr><th>Funding_ID</th><th>Date</th>" + "<th>Amount</th>"
-						+ "<th>Bank_Slip</th>" + "<th>Update</th><th>Remove</th></tr>";
+						+ "<th>Bank_Slip</th></tr>";
 
 				String query = "select * from funds_table";
 				Statement stmt = con.createStatement();
@@ -79,9 +79,9 @@ public class Funds {
 					
 					
 					// buttons
-					output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>"
-							+ "<td><form method='post' action='items.jsp'>"
-							+ "<input name='btnRemove' type='submit' value='Remove'class='btn btn-danger'>"
+					output += 
+							 "<td><form method='post' action='items.jsp'>"
+							
 							+ "<input name='itemID' type='hidden' value='" + fundingID + "'>" + "</form></td></tr>";
 				}
 				con.close();

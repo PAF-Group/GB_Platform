@@ -61,7 +61,7 @@ public class Project {
 			}
 			// Prepare the html table to be displayed
 			output = "<table border='1'><tr><th>Project_ID</th><th>Project Name</th>" + "<th>Description</th>"
-					+ "<th>Field</th>" +"<th>URL</th>"+"<th>Researcher_ID</th>"+ "<th>Update</th><th>Remove</th></tr>";
+					+ "<th>Field</th>" +"<th>URL</th>"+"<th>Researcher_ID</th></tr>";
 
 			String query = "select * from project_table";
 			Statement stmt = con.createStatement();
@@ -83,9 +83,9 @@ public class Project {
 				output += "<td>" + url + "</td>";
 				output += "<td>" + researcherID + "</td>";
 				// buttons
-				output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>"
-						+ "<td><form method='post' action='items.jsp'>"
-						+ "<input name='btnRemove' type='submit' value='Remove'class='btn btn-danger'>"
+				output += 
+						 "<td><form method='post' action='items.jsp'>"
+						
 						+ "<input name='itemID' type='hidden' value='" + projectID + "'>" + "</form></td></tr>";
 			}
 			con.close();
