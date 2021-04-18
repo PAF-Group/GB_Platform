@@ -27,7 +27,7 @@ public class Agreement {
 				return "Error while connecting to the database for inserting.";
 			}
 			// create a prepared statement
-			String query = " insert into project_table (Agreement_ID,FundingBody_ID,Agreement_Path,Status,Project_ID)"
+			String query = " insert into agreement_table (Agreement_ID,FundingBody_ID,Agreement_Path,Status,Project_ID)"
 					+ " values (?, ?, ?, ?, ?)";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			// binding values

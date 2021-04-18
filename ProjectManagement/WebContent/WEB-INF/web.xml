@@ -10,6 +10,8 @@
 <servlet-mapping>
  <servlet-name>Jersey Web Application</servlet-name>
  <url-pattern>/ItemService/*</url-pattern>
+  <url-pattern>/AgreementService/*</url-pattern>
+   <url-pattern>/FundService/*</url-pattern>
 </servlet-mapping>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
