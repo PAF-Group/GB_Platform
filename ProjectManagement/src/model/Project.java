@@ -21,7 +21,7 @@ public class Project {
 
 	//Insert Project  to the sysytem and funding body can see those projects
 	
-	public String insertItem(String name, String description, String field,String url,int researcher_id) {
+	public String insertProject(String name, String description, String field,String url,int researcher_id) {
 		String output = "";
 		try {
 			Connection con = connect();
@@ -52,7 +52,7 @@ public class Project {
 	}
 
 	// Read the projects when researcher add to the system
-	public String readItems() {
+	public String readProjects() {
 		String output = "";
 		try {
 			Connection con = connect();
@@ -100,7 +100,7 @@ public class Project {
 
 //Update project details when they want
 
-	public String updateItem(String ID, String name, String description, String filed, String url,String researcherid ) {
+	public String updateProject(String ID, String name, String description, String filed, String url,String researcherid ) {
 		String output = "";
 		try {
 			Connection con = connect();
@@ -129,7 +129,7 @@ public class Project {
 	}
 
 	//Delete  project when they want
-	public String deleteItem(String projectid) {
+	public String deleteProject(String projectid) {
 		String output = "";
 		try {
 			Connection con = connect();

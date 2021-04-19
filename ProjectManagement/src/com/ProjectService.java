@@ -19,7 +19,7 @@ public class ProjectService {
 	@Path("/")
 	@Produces(MediaType.TEXT_HTML)
 	public String readItems() {
-		return itemObj.readItems();
+		return itemObj.readProjects();
 	}
 
 	@POST
@@ -28,7 +28,7 @@ public class ProjectService {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String insertItem(@FormParam("Name") String name, @FormParam("Description") String description,
 			@FormParam("Field") String field, @FormParam("Project_Report_Url") String url,@FormParam("Researcher_ID") int researcher_id) {
-		String output = itemObj.insertItem( name, description,  field, url, researcher_id);
+		String output = itemObj.insertProject( name, description,  field, url, researcher_id);
 		return output;
 	}
 
@@ -46,7 +46,7 @@ public class ProjectService {
 		String filed = itemObject.get("Filed").getAsString();
 		String url = itemObject.get("Project_Report_Url").getAsString();
 		String researcherid = itemObject.get("Researcher_ID").getAsString();
-		String output = itemObj.updateItem(projectID, name, description, filed, url,researcherid);
+		String output = itemObj.updateProject(projectID, name, description, filed, url,researcherid);
 		return output;
 	}
 
@@ -60,7 +60,7 @@ public class ProjectService {
 
 		// Read the value from the element <itemID>
 		String projectID = doc.select("Project_ID").text();
-		String output = itemObj.deleteItem(projectID);
+		String output = itemObj.deleteProject(projectID);
 		return output;
 	}
 
