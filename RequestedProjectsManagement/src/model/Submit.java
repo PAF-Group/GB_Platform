@@ -99,7 +99,7 @@ public class Submit {
 					return "Error while connecting to the database for updating.";
 				}
 				// create a prepared statement
-				String query = "UPDATE request_proposal SET name=?,descriptiom=?,report_url=?,researcher_id WHERE project_id=?";
+				String query = "UPDATE request_proposal SET name=?,descriptiom=?,report_url=?,researcher_id=? WHERE project_id=?";
 				PreparedStatement preparedStmt = con.prepareStatement(query);
 				// binding values
 				preparedStmt.setString(1, name);
