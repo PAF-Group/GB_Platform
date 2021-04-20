@@ -13,8 +13,8 @@ import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
+//import com.sun.jersey.api.client.Client;
+//import com.sun.jersey.api.client.WebResource;
 
 public class Orders {
 	/*
@@ -85,7 +85,7 @@ public class Orders {
 	/*
 	 * Add order to the database
 	 * 
-	 */
+	 *
 	public String addOrder(int buyerId, String shippingAddress, JsonArray orders) {
 		String output = "";
 		int orderId;
@@ -172,14 +172,14 @@ public class Orders {
 			System.err.println(e.getMessage());
 		}
 		return output;
-	}
+	}*/
 
 	/*
 	 * Get the shipping address from for the order If the user has mentioned same
 	 * then the shipping address is taken from User Management via API call Else use
 	 * the address provided by the user at the order placement
 	 * 
-	 */
+	 *
 	private String getShippingAddress(String shippingAddress, String buyerId) {
 		String sAdr;
 		if (shippingAddress.equals("Same Address")) {
@@ -190,7 +190,7 @@ public class Orders {
 			sAdr = shippingAddress;
 		}
 		return sAdr;
-	}
+	}*/
 
 	/*
 	 * Delete a order When deleting the order it will check the stage of the order
@@ -273,7 +273,8 @@ public class Orders {
 			ResultSet rs = preparedStmt.executeQuery();
 
 			// Get the shipping address
-			sAdr = getShippingAddress(shippingAddress, String.valueOf(buyerId));
+			sAdr = "";
+			//getShippingAddress(shippingAddress, String.valueOf(buyerId));
 
 			if (rs.next()) {
 				orStatus = rs.getString(1);

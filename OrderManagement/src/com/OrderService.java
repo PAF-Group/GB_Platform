@@ -7,6 +7,7 @@ package com;
 
 import model.Orders;
 
+import javax.annotation.security.RolesAllowed;
 //For REST Service
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -24,6 +25,7 @@ public class OrderService {
 	
 	@GET
 	@Path("/{orderId}")
+	@RolesAllowed({"Buyer","Admin", "Researcher"})
 	@Produces(MediaType.TEXT_HTML)
 	public String getOrder(@PathParam("orderId") String orderId) {
 		return orderModel.getOrderById(Integer.parseInt(orderId));
@@ -45,6 +47,7 @@ public class OrderService {
 	
 	@GET
 	@Path("/")
+	@RolesAllowed(value = { "Admin" })
 	@Produces(MediaType.TEXT_HTML)
 	public String getOrders() {
 		return orderModel.getAllOrders();
@@ -62,7 +65,8 @@ public class OrderService {
 		String shippingAddress = itemObject.get("shippingAddress").getAsString();
 		JsonArray orderDetails = itemObject.get("orderDetails").getAsJsonArray();
 		
-		String output = orderModel.addOrder(Integer.parseInt(buyerId), shippingAddress, orderDetails);
+		String output = "";
+		//orderModel.addOrder(Integer.parseInt(buyerId), shippingAddress, orderDetails);
 		return output;
 	}
 	
