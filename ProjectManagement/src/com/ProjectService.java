@@ -1,6 +1,7 @@
 package com;
 
 import model.Project;
+import javax.annotation.security.RolesAllowed;
 //For REST Service
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -11,12 +12,13 @@ import org.jsoup.*;
 import org.jsoup.parser.*;
 import org.jsoup.nodes.Document;
 
-@Path("/Items")
+@Path("/Projects")
 public class ProjectService {
 	Project itemObj = new Project();
 
 	@GET
 	@Path("/")
+	@RolesAllowed({"Funder", "Researcher"})
 	@Produces(MediaType.TEXT_HTML)
 	public String readItems() {
 		return itemObj.readProjects();
