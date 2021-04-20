@@ -2,8 +2,11 @@ package com;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.client.Client;
@@ -65,22 +68,29 @@ public class ServiceFilter implements ContainerRequestFilter {
 			String userName = decodedString.split(":")[0];
 			String password = decodedString.split(":")[1];
 			
+			//Get the allowed user roles from Annotation
+			RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
+
+			Set<String> user_role = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
+			
 			ClientConfig clientC = new ClientConfig();
 
 			Client client = ClientBuilder.newClient(clientC);
-		 
-			Response response = client.target("http://localhost:8080/Lab05Rest/ItemService/Items").request()
-				      .property("userName", "joe")
-				      .property("password", "p1swd745").get();
+
+			Response response = client.target("http://localhost:8080/Lab05Rest/ItemService/Items")
+				      .queryParam("userName", userName)
+				      .queryParam("password", password).request().get();
+			
+			String currentUser = response.readEntity(String.class);
+			System.out.println(currentUser);
 		    
-		    if(response.getStatus() != 200) {
+		    if(response.getStatus() != 200 || !user_role.contains(currentUser)) {
 		    	Response unauthoriazedStatus = Response.status(Response.Status.UNAUTHORIZED)
 						.entity("You are not authorized").build();
 
 				requestContext.abortWith(unauthoriazedStatus);
-		    }
-		    
-		    
+		    }  
+		    return;
 		}
 		return;
 	}
