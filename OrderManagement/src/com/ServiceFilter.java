@@ -44,7 +44,6 @@ public class ServiceFilter implements ContainerRequestFilter {
 		Method method = resourceInfo.getResourceMethod();
 		
 		if (method.isAnnotationPresent(RolesAllowed.class)) {
-			System.out.println(requestContext.getHeaders());
 			
 			//Get the authorization in request header
 			List<String> authHeader = requestContext.getHeaders().get("Authorization");

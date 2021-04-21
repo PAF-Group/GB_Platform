@@ -6,11 +6,9 @@ package model;
  * */
 
 import java.sql.*;
-import java.text.SimpleDateFormat;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.client.ClientConfig;
@@ -50,7 +48,7 @@ public class Orders {
 
 				String orderId = Integer.toString(rs.getInt("OrderId"));
 				String buyerId = Integer.toString(rs.getInt("BuyerId"));
-				String date = rs.getDate("Date").toString();
+				String date = rs.getDate("created_at").toString();
 				String status = rs.getString("Status");
 				String totalAmount = Double.toString(rs.getDouble("TotalAmount"));
 
@@ -426,7 +424,7 @@ public class Orders {
 
 			if (rs.next()) {
 				output += "<h5>Order Details</h5><ul><li>Order Id : " + orderId + "</li><li>Date : "
-						+ rs.getDate("Date").toString() + "</li><li>Status : " + rs.getString("Status")
+						+ rs.getDate("created_at").toString() + "</li><li>Status : " + rs.getString("Status")
 						+ "</li><li>Payment Accepted : " + rs.getString("paymentAccepted")
 						+ "</li><li>Shipping Address : " + rs.getString("ShippingAddress") + "</li><li>Total Amount : "
 						+ rs.getString("TotalAmount") + "</li></ul><br><br>";
