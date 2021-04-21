@@ -6,7 +6,7 @@
 package model;
 
 import java.sql.*;
-import com.DatabaseConnectivity;
+import utility.DatabaseConnectivity;
 
 public class Buyer {
 //	The method to create a new Buyer => Buyer registration ------------------------------------------------------------------------------------------------------
@@ -27,33 +27,37 @@ public class Buyer {
 			PreparedStatement preparedStmt1 = con.prepareStatement(query1);
 						
 			// binding values
-			preparedStmt1.setString(5, email);
-			preparedStmt1.setString(6, password);
-			preparedStmt1.setString(7, role);
-			preparedStmt1.setString(8, accStatus);
+			preparedStmt1.setString(1, email);
+			preparedStmt1.setString(2, password);
+			preparedStmt1.setString(3, role);
+			preparedStmt1.setString(4, accStatus);
 						
 			// execute the statement
 			preparedStmt1.execute();
 			
-			// The query to get the newly created User/Administrator ID
-			String query2 = "SELECT `user_id` FROM `userdb`.`user` WHERE `user_email` = " + email;
+			// The query to get the newly created User/Buyer ID
+			String query2 = "SELECT `user_id` FROM `userdb`.`user` WHERE `user_email`=?";
 			
-			Statement stmt = con.createStatement();
-			ResultSet set = stmt.executeQuery(query2);
-			
-			String userID = set.getString("user_id");
-			
-			// The query to insert a new record to the Buyer table & prepared statements
-			String query3 = " INSERT INTO `userdb`.`buyer` (`name`, `user_phone`, `address`, `user_id`, `user_agreement`) VALUES (?, ?, ?," + userID + ", ?)";
-			
-			PreparedStatement preparedStmt2 = con.prepareStatement(query3);
+			PreparedStatement preparedStmt2 = con.prepareStatement(query2);
 			
 			// binding values
-			//preparedStmt.setInt(1, 0);
-			preparedStmt2.setString(1, name);
-			preparedStmt2.setString(2, userPhone);
-			preparedStmt2.setString(3, address);
-			preparedStmt2.setInt(4, Integer.parseInt(userAgreement));
+			preparedStmt2.setString(1, email);
+			
+			ResultSet set = preparedStmt2.executeQuery();
+			
+			String userID = Integer.toString(set.getInt("user_id"));
+			
+			// The query to insert a new record to the Buyer table & prepared statements
+			String query3 = " INSERT INTO `userdb`.`buyer` (`name`, `user_phone`, `address`, `user_id`, `user_agreement`) VALUES (?, ?, ?, ?, ?)";
+			
+			PreparedStatement preparedStmt3 = con.prepareStatement(query3);
+			
+			// binding values
+			preparedStmt3.setString(1, name);
+			preparedStmt3.setString(2, userPhone);
+			preparedStmt3.setString(3, address);
+			preparedStmt3.setInt(4, Integer.parseInt(userID));
+			preparedStmt3.setInt(5, Integer.parseInt(userAgreement));
 			
 			// execute the statement
 			preparedStmt2.execute();
@@ -62,11 +66,11 @@ public class Buyer {
 			con.close();
 			
 			// Success
-			output = "A new Buyer created successfully!...";
+			output = "A new Buyer has created successfully!...";
 			
 		} catch (Exception e) {
 			// Failure
-			output = "An error occurred while creating the user.";
+			output = "An error has occurred while creating the user.";
 			System.err.println(e.getMessage());
 			
 		}
@@ -76,7 +80,7 @@ public class Buyer {
 	}
 //	-------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
-//  The method to read all the Buyer records => for the Administrator & GB Member to View all Buyers --------------------------------------------------------
+//  The method to read all the Buyer records => for the Administrator & GB Member to View all Buyers ------------------------------------------------------------
 	public String getBuyers() {
 		String output = "";
 		
@@ -102,6 +106,7 @@ public class Buyer {
 			
 			// Iterate through all the records in the result set
 			while (set1.next()) {
+				// Reading values from the Result Set - set1
 				String name = set1.getString("name");
 				String phone = set1.getString("user_phone");
 				String address = set1.getString("address");
@@ -111,11 +116,16 @@ public class Buyer {
 				String updatedAt = set1.getTimestamp("updated_at").toString();
 				
 				// The query to select the certain Buyer record from the User table
-				String query2 = "SELECT `user_email`, `accStatus` FROM `userdb`.`user` WHERE `user_id` = " + userID;
+				String query2 = "SELECT `user_email`, `accStatus` FROM `userdb`.`user` WHERE `user_id`=?";
 				
-				Statement stmt2 = con.createStatement();
-				ResultSet set2 = stmt2.executeQuery(query2);
+				PreparedStatement preparedStmt = con.prepareStatement(query2);
 				
+				// binding values
+				preparedStmt.setInt(1, Integer.parseInt(userID));
+				
+				ResultSet set2 = preparedStmt.executeQuery();
+				
+				// Reading values from the Result Set - set2
 				String email = set2.getString("user_email");
 				String accStatus = set2.getString("accStatus");
 				
@@ -139,7 +149,7 @@ public class Buyer {
 			
 		} catch (Exception e) {
 			// Failure
-			output = "An error occurred while reading the Buyer records.";
+			output = "An error has occurred while reading the Buyer records.";
 			System.err.println(e.getMessage());
 			
 		}
@@ -168,11 +178,11 @@ public class Buyer {
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
 			// binding values
-			preparedStmt.setString(2, name);
-			preparedStmt.setString(3, userPhone);
-			preparedStmt.setString(4, address);
-			preparedStmt.setInt(5, Integer.parseInt(userAgreement));
-			preparedStmt.setInt(1, Integer.parseInt(buyerID));
+			preparedStmt.setString(1, name);
+			preparedStmt.setString(2, userPhone);
+			preparedStmt.setString(3, address);
+			preparedStmt.setInt(4, Integer.parseInt(userAgreement));
+			preparedStmt.setInt(5, Integer.parseInt(buyerID));
 			
 			// execute the statement
 			preparedStmt.execute();
@@ -181,7 +191,7 @@ public class Buyer {
 			con.close();
 			
 			// Success
-			output = "Buyer record was Updated successfully!...";
+			output = "Buyer record has Updated successfully!...";
 			
 		} catch (Exception e) {
 			// Failure
@@ -196,7 +206,7 @@ public class Buyer {
 	
 //	-------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
-//	The method to update a Buyer's User-email & Password => a service for Buyer ----------------------------------------------------------------
+//	The method to update a Buyer's User-email & Password => a service for Buyer ---------------------------------------------------------------------------------
 	public String updateBuyerEmailPassword(String userID, String userEmail, String password) {
 		String output = "";
 		
@@ -214,9 +224,9 @@ public class Buyer {
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
 			// binding values
-			preparedStmt.setString(2, userEmail);
-			preparedStmt.setString(3, password);
-			preparedStmt.setInt(1, Integer.parseInt(userID));
+			preparedStmt.setString(1, userEmail);
+			preparedStmt.setString(2, password);
+			preparedStmt.setInt(3, Integer.parseInt(userID));
 			
 			// execute the statement
 			preparedStmt.execute();
@@ -225,7 +235,7 @@ public class Buyer {
 			con.close();
 			
 			// Success
-			output = "Buyer User-email & Password records was Updated successfully!...";
+			output = "Buyer User-email & Password records has Updated successfully!...";
 			
 		} catch (Exception e) {
 			// Failure
@@ -253,29 +263,35 @@ public class Buyer {
 			}
 			
 			// The query to retrieve user ID from the Buyer table
-			String query1 = "SELECT `user_id` FROM `userdb`.`buyer` WHERE `buyer_id` = " + buyerID;
+			String query1 = "SELECT `user_id` FROM `userdb`.`buyer` WHERE `buyer_id`=?";
 			
-			Statement stmt = con.createStatement();
-			ResultSet set = stmt.executeQuery(query1);
-			
-			String userID = set.getString("user_id");
-			
-			// The query to disable a Buyer & prepared statements
-			String query2 = "UPDATE `userdb`.`buyer` SET `account_status`=? WHERE `user_id` = " + userID;
-			
-			PreparedStatement preparedStmt = con.prepareStatement(query2);
+			PreparedStatement preparedStmt1 = con.prepareStatement(query1);
 			
 			// binding values
-			preparedStmt.setString(2, accStatus);
+			preparedStmt1.setInt(1, Integer.parseInt(buyerID));
+			
+			ResultSet set = preparedStmt1.executeQuery();
+			
+			// Reading values from the Result Set - set
+			String userID = Integer.toString(set.getInt("user_id"));
+			
+			// The query to disable a Buyer & prepared statements
+			String query2 = "UPDATE `userdb`.`user` SET `account_status`=? WHERE `user_id`=?";
+			
+			PreparedStatement preparedStmt2 = con.prepareStatement(query2);
+			
+			// binding values
+			preparedStmt2.setString(1, accStatus);
+			preparedStmt2.setInt(2, Integer.parseInt(userID));
 			
 			// execute the statement
-			preparedStmt.execute();
+			preparedStmt2.execute();
 			
 			// Close the database connection
 			con.close();
 			
 			// Success
-			output = "Buyer was disabled successfully!...";
+			output = "Buyer has disabled successfully!...";
 			
 		} catch (Exception e) {
 			// Failure
