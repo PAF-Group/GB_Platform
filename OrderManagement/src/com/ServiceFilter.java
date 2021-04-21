@@ -88,7 +88,7 @@ public class ServiceFilter implements ContainerRequestFilter {
 			
 			String currentUser = response.readEntity(String.class);
 			
-		    if(response.getStatus() != 200 || !user_role.contains(currentUser)) {
+		    if(response.getStatus() != 200 && !user_role.contains(currentUser)) {
 		    	Response unauthoriazedStatus = Response.status(Response.Status.UNAUTHORIZED)
 						.entity("You are not authorized").build();
 

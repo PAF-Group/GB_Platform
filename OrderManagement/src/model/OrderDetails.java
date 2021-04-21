@@ -25,7 +25,6 @@ import util.ConnectDB;
  * */
 
 public class OrderDetails {
-	ConnectDB connectDB = new ConnectDB();
 
 	/*
 	 * Method for adding the products in the order to the database
@@ -34,7 +33,7 @@ public class OrderDetails {
 	public double addProductsInOrder(int OrderId, JsonArray orders) {
 		double total = 0;
 		try {
-			Connection con = connectDB.connect();
+			Connection con = ConnectDB.connect();
 			if (con == null) {
 				return -1;
 			}
@@ -50,7 +49,7 @@ public class OrderDetails {
 
 				Client client = ClientBuilder.newClient(clientC);
 
-				Response response = client.target("http://localhost:8080/Lab05Rest/ItemService/Items")
+				Response response = client.target("http://localhost:8080/Lab05Rest/ItemService/Items/price")
 						.queryParam("id", productId).request().get();
 
 				String res = response.readEntity(String.class);
@@ -92,7 +91,7 @@ public class OrderDetails {
 		String output = null;
 		double total = 0;
 		try {
-			Connection con = connectDB.connect();
+			Connection con = ConnectDB.connect();
 			if (con == null) {
 				return "-1";
 			}
@@ -114,13 +113,14 @@ public class OrderDetails {
 				preparedStmt2.setInt(2, Integer.parseInt(productId));
 				// execute the statement
 				ResultSet rs2 = preparedStmt2.executeQuery();
+				
 
 				if (rs2.next()) {
 					pStatus = rs2.getString(1);
 					qty = rs2.getInt(2);
 					unitPrice = rs2.getDouble(3);
 				} else {
-					return "{\"total\" : " + total + ", \"msg\" : " + "-1" + "}";
+					return "{'total' : " + total + ", 'msg' : " + "-1" + "}";
 				}
 
 				// If quantity has not been changed no need to update
@@ -129,7 +129,7 @@ public class OrderDetails {
 					break;
 				}
 
-				if (pStatus.equals("SHIPPED")) {
+				if (pStatus.equals("Shipped")) {
 					output += "<h6>Your product " + productId
 							+ " has been shipped therefore you cannot change the quantity now</h6>";
 					break;
@@ -148,11 +148,13 @@ public class OrderDetails {
 				// execute the statement
 				preparedStmt3.execute();
 			}
+			con.close();
+			output += "Executed Successully";
 		} catch (Exception e) {
-			return "{\"total\" : " + total + ", \"msg\" : " + "-1" + "}";
+			return "{'total' : " + total + ", 'msg' : " + "-1" + "}";
 		}
 
-		return "{\"total\" : " + total + ", \"msg\" : " + output + "}";
+		return "{'total' : " + total + ", 'msg' : '" + output + "'}";
 	}
 	
 	/*
@@ -201,7 +203,7 @@ public class OrderDetails {
 	public String confirmOrder(int orderId, int productId) {
 		String output = null;
 		try {
-			Connection con = connectDB.connect();
+			Connection con = ConnectDB.connect();
 			if (con == null) {
 				return "Error while connecting to the database for updating.";
 			}

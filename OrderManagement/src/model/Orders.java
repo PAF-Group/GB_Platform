@@ -256,13 +256,17 @@ public class Orders {
 			// Update order details in order detail table
 			OrderDetails orderDetails = new OrderDetails();
 			String res = orderDetails.updateProductsInOrder(orderId, orders);
+			
+			System.out.println(res);
 
 			JsonObject data = new JsonParser().parse(res).getAsJsonObject();
+			
+			System.out.println(data);
 
 			String msg = data.get("msg").getAsString();
 
 			if (msg.equals("-1")) {
-				return "Erro occured while processing";
+				return "Error occured while processing";
 			} else {
 				output += msg;
 			}

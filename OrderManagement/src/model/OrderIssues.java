@@ -126,7 +126,7 @@ public class OrderIssues {
 
 				String orderId = Integer.toString(rs.getInt("OrderId"));
 				String productId = Integer.toString(rs.getInt("productId"));
-				String date = rs.getDate("Date").toString();
+				String date = rs.getDate("created_at").toString();
 				String status = rs.getString("Status");
 				String issue = rs.getString("IssueDescription");
 
@@ -174,7 +174,7 @@ public class OrderIssues {
 			while (rs.next()) {
 				String issueId = Integer.toString(rs.getInt("issueId"));
 				String productId = Integer.toString(rs.getInt("productId"));
-				String date = rs.getDate("Date").toString();
+				String date = rs.getDate("created_at").toString();
 				String status = rs.getString("Status");
 				String issue = rs.getString("IssueDescription");
 
