@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -43,52 +44,63 @@ public class ServiceFilter implements ContainerRequestFilter {
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		Method method = resourceInfo.getResourceMethod();
 		
-		if (method.isAnnotationPresent(RolesAllowed.class)) {
-			
-			//Get the authorization in request header
-			List<String> authHeader = requestContext.getHeaders().get("Authorization");
-			
-			//If authHeader is null or its size is not greater than zero will sent not authorized
-			if (authHeader == null || authHeader.size() <= 0) {
-				Response unauthoriazedStatus = Response.status(Response.Status.UNAUTHORIZED)
-						.entity("You are not authorized").build();
+		//If allowed for all return 
+		if (method.isAnnotationPresent(PermitAll.class)) {
+			return;
+		}
+		
+		//Get the authorization in request header
+		List<String> authHeader = requestContext.getHeaders().get("Authorization");
+		
+		//If authHeader is null or its size is not greater than zero will sent not authorized
+		if (authHeader == null || authHeader.size() <= 0) {
+			Response unauthoriazedStatus = Response.status(Response.Status.UNAUTHORIZED)
+					.entity("You are not authorized").build();
 
-				requestContext.abortWith(unauthoriazedStatus);
-			}
-			
-			//Get the userName and password for decoding
-			String authDetailsEnco = authHeader.get(0).split(" ")[1];
-			
-			String decodedString = "";
-			
-			//Decode the user name and password
-			try {
-				byte[] decodedBytes = Base64.getDecoder().decode(authDetailsEnco);
-				decodedString = new String(decodedBytes, "UTF-8");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			//Get the user name and password by splitting the decoded string
-			String userName = decodedString.split(":")[0];
-			String password = decodedString.split(":")[1];
-			
+			requestContext.abortWith(unauthoriazedStatus);
+		}
+		
+		//Get the userName and password for decoding
+		String authDetailsEnco = authHeader.get(0).split(" ")[1];
+		
+		String decodedString = "";
+		
+		//Decode the user name and password
+		try {
+			byte[] decodedBytes = Base64.getDecoder().decode(authDetailsEnco);
+			decodedString = new String(decodedBytes, "UTF-8");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		//Get the user name and password by splitting the decoded string
+		String userName = decodedString.split(":")[0];
+		String password = decodedString.split(":")[1];
+		
+		ClientConfig clientC = new ClientConfig();
+
+		Client client = ClientBuilder.newClient(clientC);
+
+		Response response = client.target("http://localhost:8080/Lab05Rest/ItemService/Items")
+			      .queryParam("userName", userName)
+			      .queryParam("password", password).request().get();
+		
+		String currentUser = response.readEntity(String.class);
+		
+		if(response.getStatus() != 200) {
+	    	Response unauthoriazedStatus = Response.status(Response.Status.UNAUTHORIZED)
+					.entity("You are not authorized").build();
+
+			requestContext.abortWith(unauthoriazedStatus);
+	    } 
+		
+		if (method.isAnnotationPresent(RolesAllowed.class)) {
 			//Get the allowed user roles from Annotation
 			RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
 
 			Set<String> user_role = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
 			
-			ClientConfig clientC = new ClientConfig();
-
-			Client client = ClientBuilder.newClient(clientC);
-
-			Response response = client.target("http://localhost:8080/Lab05Rest/ItemService/Items")
-				      .queryParam("userName", userName)
-				      .queryParam("password", password).request().get();
-			
-			String currentUser = response.readEntity(String.class);
-			
-		    if(response.getStatus() != 200 && !user_role.contains(currentUser)) {
+		    if(!user_role.contains(currentUser)) {
 		    	Response unauthoriazedStatus = Response.status(Response.Status.UNAUTHORIZED)
 						.entity("You are not authorized").build();
 
