@@ -1,138 +1,236 @@
+/*
+ * @author Vishwa Gunathilake J.D.B. - IT19110158
+ * 
+ * */
+
 package model;
 
 import java.sql.*;
 
-public class Item { // A common method to connect to the DB
+public class Researcher {
+//	Database/UserDB Connectivity; @return Connection ------------------------------------------------------------------------------------------------------------
 	private Connection connect() {
 		Connection con = null;
+		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 
-			// Provide the correct details: DBServer/DBName, username, password
-			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/test", "root", "");
+			// Provide the UserDB details: DBServer/DBName, user-name, password
+			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/userdb", "root", "qwerty");
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 		}
+		
 		return con;
+		
 	}
+//	-------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	public String insertItem(String code, String name, String price, String desc) {
+//	The method to create a new Researcher => Researcher registration --------------------------------------------------------------------------------------------
+	public String createResearcher(String firstName, String lastName, String userPhone, String userAgreement, String email, String password, String accStatus) {
 		String output = "";
+		
 		try {
 			Connection con = connect();
+			
 			if (con == null) {
-				return "Error while connecting to the database for inserting.";
+				return "An error has occurred while connecting to the database.";
+				
 			}
-			// create a prepared statement
-			String query = " insert into items (`itemID`,`itemCode`,`itemName`,`itemPrice`,`itemDesc`)"
-					+ " values (?, ?, ?, ?, ?)";
+			
+			// The query to insert a new record to the Researcher table & prepared statements
+			String query = " INSERT INTO `userdb`.`researcher` (`first_name`,`last_name`,`user_phone`,`user_agreement`, `user_email`, `password`, `account_status`)"
+					+ " VALUES (?, ?, ?, ?, ?, ?, ?)";
+			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
+			
 			// binding values
-			preparedStmt.setInt(1, 0);
-			preparedStmt.setString(2, code);
-			preparedStmt.setString(3, name);
-			preparedStmt.setDouble(4, Double.parseDouble(price));
-			preparedStmt.setString(5, desc);
-// execute the statement
+			//preparedStmt.setInt(1, 0);
+			preparedStmt.setString(1, firstName);
+			preparedStmt.setString(2, lastName);
+			preparedStmt.setString(3, userPhone);
+			preparedStmt.setInt(4, Integer.parseInt(userAgreement));
+			preparedStmt.setString(5, email);
+			preparedStmt.setString(6, password);
+			preparedStmt.setString(7, accStatus);
+			
+			// execute the statement
 			preparedStmt.execute();
+			
+			// Close the database connection
 			con.close();
-			output = "Inserted successfully";
+			
+			// Success
+			output = "A new Researcher created successfully!...";
+			
 		} catch (Exception e) {
-			output = "Error while inserting the item.";
+			// Failure
+			output = "An error has occurred while creating the user.";
 			System.err.println(e.getMessage());
+			
 		}
+		
 		return output;
+		
 	}
-
-	public String readItems() {
+//	-------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+//  The method to read all the Researcher records => for the Administrator & GB Member to View all Researchers ----------------------------------------------------
+	public String getResearchers() {
 		String output = "";
+		
 		try {
 			Connection con = connect();
+			
 			if (con == null) {
-				return "Error while connecting to the database for reading.";
+				return "An error has occurred while connecting to the database.";
+				
 			}
-			// Prepare the html table to be displayed
-			output = "<table border='1'><tr><th>Item Code</th><th>Item Name</th>" + "<th>Item Price</th>"
-					+ "<th>Item Description</th>" + "<th>Update</th><th>Remove</th></tr>";
+			
+			// Prepare a HTML table to display the Researchers
+			output = "<table border='1'>" + "<tr>" + "<th>First Name</th>" + "<th>Last Name</th>" + "<th>Phone</th>"
+					+ "<th>Agreement ID</th>" + "<th>Email</th>" + "<th>Account Status</th>" + "<th>Created At</th>" + "<th>Updated At</th>" 
+					+ "</tr>";
 
-			String query = "select * from items";
+			// The query to select all records from Researcher table
+			String query = "SELECT `first_name`,`last_name`,`user_phone`,`user_agreement`, `user_email`, `account_status`," 
+							+ " `created_at`, `updated_at` FROM `userdb`.`researcher`";
+			
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
-			// iterate through the rows in the result set
+			
+			// Iterate through all the records in the result set
 			while (rs.next()) {
-				String itemID = Integer.toString(rs.getInt("itemID"));
-				String itemCode = rs.getString("itemCode");
-				String itemName = rs.getString("itemName");
-				String itemPrice = Double.toString(rs.getDouble("itemPrice"));
-				String itemDesc = rs.getString("itemDesc");
-				// Add into the html table
-				output += "<tr><td>" + itemCode + "</td>";
-				output += "<td>" + itemName + "</td>";
-				output += "<td>" + itemPrice + "</td>";
-				output += "<td>" + itemDesc + "</td>";
-				// buttons
-				output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>"
-						+ "<td><form method='post' action='items.jsp'>"
-						+ "<input name='btnRemove' type='submit' value='Remove'class='btn btn-danger'>"
-						+ "<input name='itemID' type='hidden' value='" + itemID + "'>" + "</form></td></tr>";
+				//String userID = Integer.toString(rs.getInt("user_id"));
+				String firstName = rs.getString("first_name");
+				String lastName = rs.getString("last_name");
+				String phone = rs.getString("user_phone");
+				String agreementID = Integer.toString(rs.getInt("user_agreement"));
+				String email = rs.getString("user_email");
+				//String password = rs.getString("password");
+				String accStatus = rs.getString("account_status");
+				String createdAt = rs.getTimestamp("created_at").toString();
+				String updatedAt = rs.getTimestamp("updated_at").toString();
+				
+				// Add the record in to the HTML table
+				output += "<tr><td>" + firstName + "</td>";
+				output += "<td>" + lastName + "</td>";
+				output += "<td>" + phone + "</td>";
+				output += "<td>" + agreementID + "</td>";
+				output += "<td>" + email + "</td>";
+				output += "<td>" + accStatus + "</td>";
+				output += "<td>" + createdAt + "</td>";
+				output += "<td>" + updatedAt + "</td></tr>";
+				
 			}
+			
+			// Close the database connection
 			con.close();
-			// Complete the html table
+			
+			// End of the HTML table
 			output += "</table>";
+			
 		} catch (Exception e) {
-			output = "Error while reading the items.";
+			// Failure
+			output = "An error has occurred while reading the Researcher records.";
 			System.err.println(e.getMessage());
+			
 		}
+		
 		return output;
+		
 	}
+	
+//	-------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	public String updateItem(String ID, String code, String name, String price, String desc) {
+//	The method to update a Researcher => a service for both Administrator & Researcher --------------------------------------------------------------------------
+	public String updateResearcher(String userID, String firstName, String lastName, String phone, String userAgreement, String email) {
 		String output = "";
+		
 		try {
 			Connection con = connect();
+			
 			if (con == null) {
-				return "Error while connecting to the database for updating.";
+				return "An error has while connecting to the database for updating.";
+				
 			}
-			// create a prepared statement
-			String query = "UPDATE items SET itemCode=?,itemName=?,itemPrice=?,itemDesc=? WHERE itemID=?";
+			
+			// The query to Update the certain record in the Researcher table & prepared statements
+			String query = "UPDATE `userdb`.`researcher` SET `first_name`=?, `last_name`=?, `user_phone`=?, `user_agreement`=?, `user_email`=?"
+							+ " WHERE `user_id`=?";
+			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
+			
 			// binding values
-			preparedStmt.setString(1, code);
-			preparedStmt.setString(2, name);
-			preparedStmt.setDouble(3, Double.parseDouble(price));
-			preparedStmt.setString(4, desc);
-			preparedStmt.setInt(5, Integer.parseInt(ID));
+			preparedStmt.setString(2, firstName);
+			preparedStmt.setString(3, lastName);
+			preparedStmt.setString(4, phone);
+			preparedStmt.setInt(5, Integer.parseInt(userAgreement));
+			preparedStmt.setString(6, email);
+			preparedStmt.setInt(1, Integer.parseInt(userID));
+			
 			// execute the statement
 			preparedStmt.execute();
+			
+			// Close the database connection
 			con.close();
-			output = "Updated successfully";
+			
+			// Success
+			output = "Researcher record was Updated successfully!...";
+			
 		} catch (Exception e) {
-			output = "Error while updating the item.";
+			// Failure
+			output = "An error has occurred while updating the Researcher record.";
 			System.err.println(e.getMessage());
+			
 		}
+		
 		return output;
+		
 	}
+	
+//	-------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	public String deleteItem(String itemID) {
+//	The method to disable an existing Researcher by using user ID => for Administrator --------------------------------------------------------------------------
+	public String disableResearcher(String userID, String accStatus) {
 		String output = "";
+		
 		try {
 			Connection con = connect();
+			
 			if (con == null) {
-				return "Error while connecting to the database for deleting.";
+				return "An error has occurred while connecting to the database for deleting.";
+				
 			}
-			// create a prepared statement
-			String query = "delete from items where itemID=?";
+			
+			// The query to disable a Researcher
+			String query = "UPDATE `userdb`.`researcher` SET `account_status`=? WHERE `user_id`=?";
+			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
+			
 			// binding values
-			preparedStmt.setInt(1, Integer.parseInt(itemID));
+			preparedStmt.setString(2, accStatus);
+			preparedStmt.setInt(1, Integer.parseInt(userID));
+			
 			// execute the statement
 			preparedStmt.execute();
+			
+			// Close the database connection
 			con.close();
-			output = "Deleted successfully";
+			
+			// Success
+			output = "Researcher was disabled successfully!...";
+			
 		} catch (Exception e) {
-			output = "Error while deleting the item.";
+			// Failure
+			output = "An error has occurred while disabling the Funder.";
 			System.err.println(e.getMessage());
+			
 		}
+		
 		return output;
+		
 	}
 }

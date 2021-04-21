@@ -1,66 +1,93 @@
+/* 
+ * @author Vishwa Gunathilake J.D.B. - IT19110158
+ * 
+ * */
+
 package com;
 
-import model.Item;
-//For REST Service
+import model.Researcher;
+
+//For REST Services
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+
 //For JSON
 import com.google.gson.*;
+
 //For XML
-import org.jsoup.*;
+import org.jsoup.Jsoup;
 import org.jsoup.parser.*;
 import org.jsoup.nodes.Document;
 
-@Path("/Items")
-public class ItemService {
-	Item itemObj = new Item();
+@Path("/researcher")
+public class ResearcherService {
+	Researcher researcherObj = new Researcher();
 
+//	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@GET
 	@Path("/")
 	@Produces(MediaType.TEXT_HTML)
-	public String readItems() {
-		return itemObj.readItems();
+	public String getAllResearchers() {
+		return researcherObj.getResearchers();
+		
 	}
+	
+//	------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	@POST
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String insertItem(@FormParam("itemCode") String itemCode, @FormParam("itemName") String itemName,
-			@FormParam("itemPrice") String itemPrice, @FormParam("itemDesc") String itemDesc) {
-		String output = itemObj.insertItem(itemCode, itemName, itemPrice, itemDesc);
+	public String insertResearcher(@FormParam("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("userPhone") String userPhone, 
+			@FormParam("userAgreement") String userAgreement, @FormParam("email") String email, @FormParam("password") String password, @FormParam("accStatus") String accStatus) {
+		String output = researcherObj.createResearcher(firstName, lastName, userPhone, userAgreement, email, password, accStatus);
+		
 		return output;
+		
 	}
+	
+//	------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	@PUT
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String updateItem(String itemData) {
+	public String updateResearcher(String researcherData) {
 		// Convert the input string to a JSON object
-		JsonObject itemObject = new JsonParser().parse(itemData).getAsJsonObject();
+		JsonObject researcherObject = new JsonParser().parse(researcherData).getAsJsonObject();
+		
 		// Read the values from the JSON object
-		String itemID = itemObject.get("itemID").getAsString();
-		String itemCode = itemObject.get("itemCode").getAsString();
-		String itemName = itemObject.get("itemName").getAsString();
-		String itemPrice = itemObject.get("itemPrice").getAsString();
-		String itemDesc = itemObject.get("itemDesc").getAsString();
-		String output = itemObj.updateItem(itemID, itemCode, itemName, itemPrice, itemDesc);
+		String userID = researcherObject.get("userID").getAsString();
+		String firstName = researcherObject.get("firstName").getAsString();
+		String lastName = researcherObject.get("lastName").getAsString();
+		String userPhone = researcherObject.get("userPhone").getAsString();
+		String userAgreement = researcherObject.get("userAgreement").getAsString();
+		String email = researcherObject.get("email").getAsString();
+		
+		String output = researcherObj.updateResearcher(userID, firstName, lastName, userPhone, userAgreement, email);
+		
 		return output;
+		
 	}
+	
+//	------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	@DELETE
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String deleteItem(String itemData) {
+	public String disableResearcher(String researcherData) {
 		// Convert the input string to an XML document
-		Document doc = Jsoup.parse(itemData, "", Parser.xmlParser());
+		Document doc = Jsoup.parse(researcherData, "", Parser.xmlParser());
 
-		// Read the value from the element <itemID>
-		String itemID = doc.select("itemID").text();
-		String output = itemObj.deleteItem(itemID);
+		// Read the value from the element <userID> & <accStatus>
+		String userID = doc.select("userID").text();
+		String accStatus = doc.select("accStatus").text();
+		
+		String output = researcherObj.disableResearcher(userID, accStatus);
+		
 		return output;
+		
 	}
 
 }
