@@ -20,7 +20,7 @@ public class ProjectService {
 	@Path("/")
 	@RolesAllowed({"Funder", "Researcher"})
 	@Produces(MediaType.TEXT_HTML)
-	public String readItems() {
+	public String readprojects() {
 		return itemObj.readProjects();
 	}
 
@@ -28,7 +28,7 @@ public class ProjectService {
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String insertItem(@FormParam("Name") String name, @FormParam("Description") String description,
+	public String insertproject(@FormParam("Name") String name, @FormParam("Description") String description,
 			@FormParam("Field") String field, @FormParam("Project_Report_Url") String url,@FormParam("Researcher_ID") int researcher_id) {
 		String output = itemObj.insertProject( name, description,  field, url, researcher_id);
 		return output;
@@ -38,7 +38,7 @@ public class ProjectService {
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String updateItem(String projectData) {
+	public String updateprojects(String projectData) {
 		// Convert the input string to a JSON object
 		JsonObject itemObject = new JsonParser().parse(projectData).getAsJsonObject();
 		// Read the values from the JSON object
@@ -56,7 +56,7 @@ public class ProjectService {
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String deleteItem(String projectData) {
+	public String deleteproject(String projectData) {
 		// Convert the input string to an XML document
 		Document doc = Jsoup.parse(projectData, "", Parser.xmlParser());
 

@@ -18,6 +18,8 @@ import com.google.gson.JsonParser;
 
 import model.Agreement;
 
+import javax.annotation.security.RolesAllowed;
+
 
 @Path("/Agreements")
 public class AgreementService {
@@ -27,6 +29,7 @@ public class AgreementService {
 
 		@GET
 		@Path("/")
+		@RolesAllowed({"Funder", "Researcher"})
 		@Produces(MediaType.TEXT_HTML)
 		public String readItems() {
 			return AgreementObj.readagreements();

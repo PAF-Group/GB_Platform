@@ -1,6 +1,7 @@
 package com;
 
 import javax.ws.rs.Consumes;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -17,6 +18,7 @@ public class FundService {
 
 		@GET
 		@Path("/")
+		@RolesAllowed({"Funder"})
 		@Produces(MediaType.TEXT_HTML)
 		public String readItems() {
 			return fundObj.readfund();
