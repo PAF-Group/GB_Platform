@@ -19,12 +19,14 @@ import org.jsoup.Jsoup;
 import org.jsoup.parser.*;
 import org.jsoup.nodes.Document;
 
+import javax.annotation.security.RolesAllowed;
+
 @Path("/user-agreement")
 public class UserAgreementService {
 	UserAgreement agreementObj = new UserAgreement();
 
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+	@RolesAllowed(value = { "Admin", "Member" })
 	@GET
 	@Path("/")
 	@Produces(MediaType.TEXT_HTML)
@@ -34,13 +36,20 @@ public class UserAgreementService {
 	}
 	
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+	@RolesAllowed(value = { "Admin", "Researcher" })
 	@POST
 	@Path("/")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String insertUserAgreement(@FormParam("agreementName") String agreementName, @FormParam("description") String description, 
-			@FormParam("fileLocation") String fileLocation) {
+	public String insertUserAgreement(String agreementData) {
+		// Convert the input string to a JSON object
+		JsonObject agreementObject = new JsonParser().parse(agreementData).getAsJsonObject();
+		
+		// Read the values from the JSON object
+		String agreementName = agreementObject.get("agreementName").getAsString();
+		String description = agreementObject.get("description").getAsString();
+		String fileLocation = agreementObject.get("fileLocation").getAsString();
+		
 		String output = agreementObj.createAgreement(agreementName, description, fileLocation);
 		
 		return output;
@@ -48,7 +57,7 @@ public class UserAgreementService {
 	}
 	
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+	@RolesAllowed(value = { "Admin", "Researcher" })
 	@PUT
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -70,7 +79,7 @@ public class UserAgreementService {
 	}
 	
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+	@RolesAllowed(value = { "Admin", "Researcher" })
 	@DELETE
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_XML)
