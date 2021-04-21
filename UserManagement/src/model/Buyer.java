@@ -6,58 +6,57 @@
 package model;
 
 import java.sql.*;
+import com.DatabaseConnectivity;
 
 public class Buyer {
-//	Database/UserDB Connectivity; @return Connection ------------------------------------------------------------------------------------------------------------
-	private Connection connect() {
-		Connection con = null;
-		
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-
-			// Provide the UserDB details: DBServer/DBName, user-name, password
-			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/userdb", "root", "qwerty");
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			
-		}
-		
-		return con;
-		
-	}
-//	-------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 //	The method to create a new Buyer => Buyer registration ------------------------------------------------------------------------------------------------------
-	public String createBuyer(String name, String userPhone, String address, String userAgreement, String email, String password, String accStatus) {
+	public String createBuyer(String name, String userPhone, String address, String userAgreement, String email, String password, String role, String accStatus) {
 		String output = "";
 		
 		try {
-			Connection con = connect();
+			Connection con = DatabaseConnectivity.connect();
 			
 			if (con == null) {
 				return "An error has occurred while connecting to the database.";
 				
 			}
 			
-			// The query to insert a new record to the Buyer table & prepared statements
-			String query = " INSERT INTO `userdb`.`buyer` (`name`, `user_phone`, `address`, `user_agreement`,"
-					+ " `user_email`, `password`, `account_status`)" + " VALUES (?, ?, ?, ?, ?, ?, ?)";
+			// The query to insert a new record to the User table & prepared statements
+			String query1 = "INSERT INTO `userdb`.`user` (`user_email`, `password`, `user_role`, `accStatus`)" + " VALUES (?, ?, ?, ?)";
+						
+			PreparedStatement preparedStmt1 = con.prepareStatement(query1);
+						
+			// binding values
+			preparedStmt1.setString(5, email);
+			preparedStmt1.setString(6, password);
+			preparedStmt1.setString(7, role);
+			preparedStmt1.setString(8, accStatus);
+						
+			// execute the statement
+			preparedStmt1.execute();
 			
-			PreparedStatement preparedStmt = con.prepareStatement(query);
+			// The query to get the newly created User/Administrator ID
+			String query2 = "SELECT `user_id` FROM `userdb`.`user` WHERE `user_email` = " + email;
+			
+			Statement stmt = con.createStatement();
+			ResultSet set = stmt.executeQuery(query2);
+			
+			String userID = set.getString("user_id");
+			
+			// The query to insert a new record to the Buyer table & prepared statements
+			String query3 = " INSERT INTO `userdb`.`buyer` (`name`, `user_phone`, `address`, `user_id`, `user_agreement`) VALUES (?, ?, ?," + userID + ", ?)";
+			
+			PreparedStatement preparedStmt2 = con.prepareStatement(query3);
 			
 			// binding values
 			//preparedStmt.setInt(1, 0);
-			preparedStmt.setString(1, name);
-			preparedStmt.setString(2, userPhone);
-			preparedStmt.setString(3, address);
-			preparedStmt.setInt(4, Integer.parseInt(userAgreement));
-			preparedStmt.setString(5, email);
-			preparedStmt.setString(6, password);
-			preparedStmt.setString(7, accStatus);
+			preparedStmt2.setString(1, name);
+			preparedStmt2.setString(2, userPhone);
+			preparedStmt2.setString(3, address);
+			preparedStmt2.setInt(4, Integer.parseInt(userAgreement));
 			
 			// execute the statement
-			preparedStmt.execute();
+			preparedStmt2.execute();
 			
 			// Close the database connection
 			con.close();
@@ -82,7 +81,7 @@ public class Buyer {
 		String output = "";
 		
 		try {
-			Connection con = connect();
+			Connection con = DatabaseConnectivity.connect();
 			
 			if (con == null) {
 				return "An error has occurred while connecting to the database.";
@@ -95,29 +94,33 @@ public class Buyer {
 					+ "</tr>";
 
 			// The query to select all records from Researcher table
-			String query = "SELECT `name`, `user_phone`, `address`, `user_agreement`, `user_email`, `account_status`, `created_at`,"
+			String query1 = "SELECT `name`, `user_phone`, `address`, `user_id`, `user_agreement`, `created_at`,"
 					+ " `updated_at` FROM `userdb`.`buyer`";
 			
-			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
+			Statement stmt1 = con.createStatement();
+			ResultSet set1 = stmt1.executeQuery(query1);
 			
 			// Iterate through all the records in the result set
-			while (rs.next()) {
-				//String userID = Integer.toString(rs.getInt("user_id"));
-				String firstName = rs.getString("first_name");
-				String lastName = rs.getString("last_name");
-				String phone = rs.getString("user_phone");
-				String address = rs.getString("address");
-				String agreementID = Integer.toString(rs.getInt("user_agreement"));
-				String email = rs.getString("user_email");
-				//String password = rs.getString("password");
-				String accStatus = rs.getString("account_status");
-				String createdAt = rs.getTimestamp("created_at").toString();
-				String updatedAt = rs.getTimestamp("updated_at").toString();
+			while (set1.next()) {
+				String name = set1.getString("name");
+				String phone = set1.getString("user_phone");
+				String address = set1.getString("address");
+				String userID = Integer.toString(set1.getInt("user_id"));
+				String agreementID = Integer.toString(set1.getInt("user_agreement"));
+				String createdAt = set1.getTimestamp("created_at").toString();
+				String updatedAt = set1.getTimestamp("updated_at").toString();
+				
+				// The query to select the certain Buyer record from the User table
+				String query2 = "SELECT `user_email`, `accStatus` FROM `userdb`.`user` WHERE `user_id` = " + userID;
+				
+				Statement stmt2 = con.createStatement();
+				ResultSet set2 = stmt2.executeQuery(query2);
+				
+				String email = set2.getString("user_email");
+				String accStatus = set2.getString("accStatus");
 				
 				// Add the record in to the HTML table
-				output += "<tr><td>" + firstName + "</td>";
-				output += "<td>" + lastName + "</td>";
+				output += "<tr><td>" + name + "</td>";
 				output += "<td>" + phone + "</td>";
 				output += "<td>" + address + "</td>";
 				output += "<td>" + agreementID + "</td>";
@@ -148,11 +151,11 @@ public class Buyer {
 //	-------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 //	The method to update a Buyer => a service for both Administrator & Buyer ------------------------------------------------------------------------------------
-	public String updateBuyer(String userID, String name, String userPhone, String address, String userAgreement, String email) {
+	public String updateBuyer(String buyerID, String name, String userPhone, String address, String userAgreement) {
 		String output = "";
 		
 		try {
-			Connection con = connect();
+			Connection con = DatabaseConnectivity.connect();
 			
 			if (con == null) {
 				return "An error has occurred while connecting to the database for updating.";
@@ -160,8 +163,7 @@ public class Buyer {
 			}
 			
 			// The query to Update the certain record in the Buyer table & prepared statements
-			String query = "UPDATE `userdb`.`buyer` SET `name`=?, `user_phone`=?, `address`=?, `user_agreement`=?, `user_email`=?"
-							+ " WHERE `user_id`=?";
+			String query = "UPDATE `userdb`.`buyer` SET `name`=?, `user_phone`=?, `address`=?, `user_agreement`=? WHERE `buyer_id`=?";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
@@ -170,8 +172,7 @@ public class Buyer {
 			preparedStmt.setString(3, userPhone);
 			preparedStmt.setString(4, address);
 			preparedStmt.setInt(5, Integer.parseInt(userAgreement));
-			preparedStmt.setString(6, email);
-			preparedStmt.setInt(1, Integer.parseInt(userID));
+			preparedStmt.setInt(1, Integer.parseInt(buyerID));
 			
 			// execute the statement
 			preparedStmt.execute();
@@ -194,27 +195,78 @@ public class Buyer {
 	}
 	
 //	-------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-//	The method to disable an existing Buyer by using user ID => for Administrator -------------------------------------------------------------------------------
-	public String disableBuyer(String userID, String accStatus) {
+	
+//	The method to update a Buyer's User-email & Password => a service for Buyer ----------------------------------------------------------------
+	public String updateBuyerEmailPassword(String userID, String userEmail, String password) {
 		String output = "";
 		
 		try {
-			Connection con = connect();
+			Connection con = DatabaseConnectivity.connect();
+			
+			if (con == null) {
+				return "An error has occurred while connecting to the database for updating.";
+				
+			}
+			
+			// The query to Update the certain record in the User table & prepared statements
+			String query = "UPDATE `userdb`.`user` SET `user_email`=?, `password`=? WHERE `user_id`=?";
+			
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			
+			// binding values
+			preparedStmt.setString(2, userEmail);
+			preparedStmt.setString(3, password);
+			preparedStmt.setInt(1, Integer.parseInt(userID));
+			
+			// execute the statement
+			preparedStmt.execute();
+			
+			// Close the database connection
+			con.close();
+			
+			// Success
+			output = "Buyer User-email & Password records was Updated successfully!...";
+			
+		} catch (Exception e) {
+			// Failure
+			output = "An error has occurred while updating the Buyer record.";
+			System.err.println(e.getMessage());
+			
+		}
+		
+		return output;
+		
+	}
+	
+//	-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//	The method to disable an existing Buyer by using user ID => for Administrator -------------------------------------------------------------------------------
+	public String disableBuyer(String buyerID, String accStatus) {
+		String output = "";
+		
+		try {
+			Connection con = DatabaseConnectivity.connect();
 			
 			if (con == null) {
 				return "An error has occurred while connecting to the database for disabling.";
 				
 			}
 			
-			// The query to disable a Buyer & prepared statements
-			String query = "UPDATE `userdb`.`buyer` SET `account_status`=? WHERE `user_id`=?";
+			// The query to retrieve user ID from the Buyer table
+			String query1 = "SELECT `user_id` FROM `userdb`.`buyer` WHERE `buyer_id` = " + buyerID;
 			
-			PreparedStatement preparedStmt = con.prepareStatement(query);
+			Statement stmt = con.createStatement();
+			ResultSet set = stmt.executeQuery(query1);
+			
+			String userID = set.getString("user_id");
+			
+			// The query to disable a Buyer & prepared statements
+			String query2 = "UPDATE `userdb`.`buyer` SET `account_status`=? WHERE `user_id` = " + userID;
+			
+			PreparedStatement preparedStmt = con.prepareStatement(query2);
 			
 			// binding values
 			preparedStmt.setString(2, accStatus);
-			preparedStmt.setInt(1, Integer.parseInt(userID));
 			
 			// execute the statement
 			preparedStmt.execute();
