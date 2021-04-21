@@ -8,51 +8,7 @@ package model;
 import java.sql.*;
 import utility.DatabaseConnectivity;
 
-public class User {
-//	The method to create a new User => User registration --------------------------------------------------------------------------------------------------------
-	public String createUser(String userEmail, String password, String userRole, String accStatus) {
-		String output = "";
-		
-		try {
-			Connection con = DatabaseConnectivity.connect();
-			
-			if (con == null) {
-				return "An error has occurred while connecting to the database.";
-				
-			}
-			
-			// The query to insert a new record to the User table & prepared statements
-			String query = "INSERT INTO `userdb`.`user` (`user_email`, `password`, `user_role`, `account_status`)" + " VALUES (?, ?, ?, ?)";
-			
-			PreparedStatement preparedStmt = con.prepareStatement(query);
-			
-			// binding values
-			preparedStmt.setString(1, userEmail);
-			preparedStmt.setString(2, password);
-			preparedStmt.setString(3, userRole);
-			preparedStmt.setString(4, accStatus);
-			
-			// execute the statement
-			preparedStmt.execute();
-			
-			// Close the database connection
-			con.close();
-			
-			// Success
-			output = "A new User created successfully!...";
-			
-		} catch (Exception e) {
-			// Failure
-			output = "An error occurred while creating the user.";
-			System.err.println(e.getMessage());
-			
-		}
-		
-		return output;
-		
-	}
-//	-------------------------------------------------------------------------------------------------------------------------------------------------------------
-	
+public class User {	
 //  The method to read all the Users => for the Administrator & GB Member to View all Users ---------------------------------------------------------------------
 	public String getUsers() {
 		String output = "";
@@ -109,91 +65,67 @@ public class User {
 		return output;
 		
 	}
-//	-------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
-//	The method to update a User => a service for all Users ------------------------------------------------------------------------------------------------------
-	public String updateUser(String userID, String userEmail, String password, String role) {
+//	------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+//	The method to return the user role of a user after confirming user-email, password -------------------------------------------------------------------------
+	public String getUserRole(String userEmail, String password) {
 		String output = "";
+		String userRole = "";
 		
 		try {
 			Connection con = DatabaseConnectivity.connect();
 			
 			if (con == null) {
-				return "An error has occurred while connecting to the database for updating.";
+				return "An error has occurred while connecting to the database.";
 				
 			}
 			
-			// The query to Update the certain record in the User table & prepared statements
-			String query = "UPDATE `userdb`.`user` SET `user_email`=?, `password`=?, `user_role`=? WHERE `user_id`=?";
+			// The query to select a specific user using user-email & password
+			String query = "SELECT `user_role`, `account_status` FROM `userdb`.`user` WHERE `user_email`=? AND `password`=?";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
 			// binding values
-			preparedStmt.setString(2, userEmail);
-			preparedStmt.setString(3, password);
-			preparedStmt.setString(4, role);
-			preparedStmt.setInt(1, Integer.parseInt(userID));
-			
+			preparedStmt.setString(1, userEmail);
+			preparedStmt.setString(2, password);
+						
 			// execute the statement
-			preparedStmt.execute();
+			ResultSet set = preparedStmt.executeQuery();
 			
-			// Close the database connection
-			con.close();
-			
-			// Success
-			output = "User record was Updated successfully!...";
-			
-		} catch (Exception e) {
-			// Failure
-			output = "An error has occurred while updating the User record.";
-			System.err.println(e.getMessage());
-			
-		}
-		
-		return output;
-		
-	}
-	
-//	-------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-//	The method to disable an existing User by using user ID => for Administrator --------------------------------------------------------------------------------
-	public String disableUser(String userID, String accStatus) {
-		String output = "";
-		
-		try {
-			Connection con = DatabaseConnectivity.connect();
-			
-			if (con == null) {
-				return "An error has occurred while connecting to the database for disabling.";
+			if(set.next() == true) {
+				String accStatus = set.getString("account_status");
+				
+				if(accStatus.equals("active")) {
+					userRole = set.getString("user_role");
+					
+				} else {
+					output = "Unregistered User!...";
+					
+				}
+				
+			} else {
+				output = "Unregistered User!...";
 				
 			}
 			
-			// The query to disable User & prepared statements
-			String query = "UPDATE `userdb`.`user` SET `account_status`=? WHERE `user_id`=?";
-			
-			PreparedStatement preparedStmt = con.prepareStatement(query);
-			
-			// binding values
-			preparedStmt.setString(2, accStatus);
-			preparedStmt.setInt(1, Integer.parseInt(userID));
-			
-			// execute the statement
-			preparedStmt.execute();
-			
-			// Close the database connection
+			// Close Database connection
 			con.close();
-			
-			// Success
-			output = "User was disabled successfully!...";
 			
 		} catch (Exception e) {
 			// Failure
-			output = "An error has occurred while disabling the User.";
+			output = "An error has occurred while reading the User records.";
 			System.err.println(e.getMessage());
 			
 		}
 		
-		return output;
+		if(!userRole.equals("")) {
+			return userRole;
+			
+		} else {
+			return output;
+			
+		}
 		
 	}
 
