@@ -33,6 +33,7 @@ public class OrderService {
 	
 	@GET
 	@Path("/Buyers/{buyerId}")
+	@RolesAllowed(value = { "Buyer", "Admin"})
 	@Produces(MediaType.TEXT_HTML)
 	public String getOrdersByBuyer(@PathParam("buyerId") String buyerId) {
 		return orderModel.getOrdersByBuyer(buyerId);
@@ -40,6 +41,7 @@ public class OrderService {
 	
 	@GET
 	@Path("/Sellers/{sellerId}")
+	@RolesAllowed(value = { "Researcher", "Admin" })
 	@Produces(MediaType.TEXT_HTML)
 	public String getOrdersBySeller(@PathParam("sellerId") String sellerId) {
 		return orderModel.getOrdersBySeller(sellerId);
@@ -55,6 +57,7 @@ public class OrderService {
 	
 	@POST
 	@Path("/")
+	@RolesAllowed(value = { "Buyer"})
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_HTML)
 	public String addOrder(String itemData) {
@@ -65,16 +68,16 @@ public class OrderService {
 		String shippingAddress = itemObject.get("shippingAddress").getAsString();
 		JsonArray orderDetails = itemObject.get("orderDetails").getAsJsonArray();
 		
-		String output = "";
-		//orderModel.addOrder(Integer.parseInt(buyerId), shippingAddress, orderDetails);
+		String output = orderModel.addOrder(Integer.parseInt(buyerId), shippingAddress, orderDetails);
 		return output;
 	}
 	
 	@DELETE
 	@Path("/")
+	@RolesAllowed(value = { "Buyer" })
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String deleteItem(String itemData) {
+	public String deleteOrder(String itemData) {
 		// Convert the input string to an XML document
 		Document doc = Jsoup.parse(itemData, "", Parser.xmlParser());
 
@@ -86,6 +89,7 @@ public class OrderService {
 	
 	@PUT
 	@Path("/")
+	@RolesAllowed(value = { "Buyer", "Admin" })
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_HTML)
 	public String updateOrder(String itemData) {
@@ -104,6 +108,7 @@ public class OrderService {
 	
 	@PUT
 	@Path("/addPayment")
+	@RolesAllowed(value = { "Buyer"})
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String addPayment(@FormParam("orderId") String orderId, @FormParam("paymentSlipUrl") String paymentSlip) {
@@ -113,6 +118,7 @@ public class OrderService {
 	
 	@PUT
 	@Path("/acceptPayment")
+	@RolesAllowed(value = { "Admin" })
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String acceptPayment(@QueryParam("orderId") int OrderId) {
@@ -122,96 +128,12 @@ public class OrderService {
 	
 	@PUT
 	@Path("/rejectPayment")
+	@RolesAllowed(value = { "Admin" })
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String rejectPayment(@QueryParam("orderId") int OrderId) {
 		String output = orderModel.rejectPayment(OrderId);
 		return output;
-	}
-	
-	@PUT
-	@Path("/addShipping")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces(MediaType.TEXT_PLAIN)
-	public String addShipping(@FormParam("orderId") int OrderId, @FormParam("productId") int productId, @FormParam("date") String date, @FormParam("shippingCompany") String shippingCompany, @FormParam("trackId") String trackId) {
-		String output = orderModel.addShipping(OrderId, productId, date, shippingCompany, trackId);
-		return output;
-	}
-	
-	@PUT
-	@Path("/confirmOrder")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces(MediaType.TEXT_PLAIN)
-	public String confirmOrder(@FormParam("orderId") int OrderId, @FormParam("productId") int productId) {
-		String output = orderModel.confirmOrder(OrderId, productId);
-		return output;
-	}
-	
-	@POST
-	@Path("/Issue")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.TEXT_PLAIN)
-	public String openIssue(String issueDetails) {
-		// Convert the input string to a JSON object
-		JsonObject itemObject = new JsonParser().parse(issueDetails).getAsJsonObject();
-		// Read the values from the JSON object
-		int orderId = itemObject.get("orderId").getAsInt();
-		int productId = itemObject.get("productId").getAsInt();
-		String issue = itemObject.get("issue").getAsString();
-		
-		String output = orderModel.openIssue(orderId, productId, issue);
-		return output;
-	}
-	
-	
-	@PUT
-	@Path("/Issue")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.TEXT_PLAIN)
-	public String changeIssueStatus(String issueDetails) {
-		// Convert the input string to a JSON object
-		JsonObject itemObject = new JsonParser().parse(issueDetails).getAsJsonObject();
-		// Read the values from the JSON object
-		int orderId = itemObject.get("issueId").getAsInt();
-		String status = itemObject.get("status").getAsString();
-		
-		String output = orderModel.changeIssueStatus(orderId, status);
-		return output;
-	}
-	
-	@DELETE
-	@Path("/Issue")
-	@Consumes(MediaType.APPLICATION_XML)
-	@Produces(MediaType.TEXT_PLAIN)
-	public String deleteIssue(String itemData) {
-		// Convert the input string to an XML document
-		Document doc = Jsoup.parse(itemData, "", Parser.xmlParser());
-
-		// Read the value from the element <itemID>
-		String issueId = doc.select("IssueId").text();
-		String output = orderModel.deleteIssue(issueId);
-		return output;
-	}
-	
-	@GET
-	@Path("/Issue/{issueId}")
-	@Produces(MediaType.TEXT_HTML)
-	public String getIssueById(@PathParam("issueId") String issueId) {
-		return orderModel.getIssueById(Integer.parseInt(issueId));
-	}
-	
-	@GET
-	@Path("/Issue")
-	@Consumes(MediaType.APPLICATION_XML)
-	@Produces(MediaType.TEXT_HTML)
-	public String getIssuesforOrder(String data) {
-		// Convert the input string to an XML document
-				Document doc = Jsoup.parse(data, "", Parser.xmlParser());
-
-				// Read the value from the element <itemID>
-				String id = doc.select("OrderId").text();
-				String output = orderModel.issuesInOrder(id);
-				return output;
 	}
 }
 

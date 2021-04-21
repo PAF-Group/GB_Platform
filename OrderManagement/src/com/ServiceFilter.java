@@ -1,5 +1,11 @@
 package com;
 
+/* 
+ * @author W.G. YASIRU RANDIKA 
+ * IT19131184
+ * 
+ * */
+
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -82,8 +88,7 @@ public class ServiceFilter implements ContainerRequestFilter {
 				      .queryParam("password", password).request().get();
 			
 			String currentUser = response.readEntity(String.class);
-			System.out.println(currentUser);
-		    
+			
 		    if(response.getStatus() != 200 || !user_role.contains(currentUser)) {
 		    	Response unauthoriazedStatus = Response.status(Response.Status.UNAUTHORIZED)
 						.entity("You are not authorized").build();
