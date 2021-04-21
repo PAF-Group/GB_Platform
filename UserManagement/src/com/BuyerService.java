@@ -36,7 +36,6 @@ public class BuyerService {
 	}
 	
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
-	@RolesAllowed(value = { "Admin", "Buyer" })
 	@POST
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
