@@ -83,7 +83,7 @@ public class ServiceFilter implements ContainerRequestFilter {
 
 		Client client = ClientBuilder.newClient(clientC);
 
-		Response response = client.target("http://localhost:8080/UserManagement/user-management-service/authentication")
+		Response response = client.target("http://localhost:8080/UserManagement/user-management-service/user/authentication")
 			      .queryParam("userEmail", userEmail)
 			      .queryParam("password", password).request().get();
 		
