@@ -13,6 +13,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 
 @Path("/user")
@@ -22,7 +23,7 @@ public class UserService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin", "Member" })
 	@GET
-	@Path("/")
+	@Path("/view")
 	@Produces(MediaType.TEXT_HTML)
 	public String getAllUsers() {
 		return userObj.getUsers();
@@ -30,11 +31,11 @@ public class UserService {
 	}
 	
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
+	@PermitAll
 	@GET
 	@Path("/authentication")
-//	@QueryParam("userEmail"), @QueryParam("password")
 	public Response getUserRoleForAuthentication( @Context UriInfo uriInfo ) {
-		// Read user-email & password
+		// Read user-email & password from the request URI info
 		String userEmail = uriInfo.getQueryParameters().getFirst("userEmail");
 		String password = uriInfo.getQueryParameters().getFirst("password");
 		
