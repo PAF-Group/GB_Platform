@@ -304,4 +304,42 @@ public class Buyer {
 		
 	}
 	
+//	-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//  The method to read a Buyer address using buyer ID => for the Order Management microservice ------------------------------------------------------------------
+	public String getBuyerAddress(String buyerID) {
+		String output = "";
+		
+		try {
+			Connection con = DatabaseConnectivity.connect();
+			
+			if (con == null) {
+				return "An error has occurred while connecting to the database for disabling.";
+				
+			}
+			
+			// The query to retrieve address from the Buyer table
+			String query = "SELECT `address` FROM `userdb`.`buyer` WHERE `buyer_id`=?";
+			
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			
+			// binding values
+			preparedStmt.setInt(1, Integer.parseInt(buyerID));
+			
+			ResultSet set = preparedStmt.executeQuery();
+			
+			// Reading values from the Result Set - set
+			output = set.getString("address");
+			
+		} catch (Exception e) {
+			// Failure
+			output = "An error has occurred while disabling the Buyer.";
+			System.err.println(e.getMessage());
+			
+		}
+		
+		return output;
+		
+	}
+	
 }
