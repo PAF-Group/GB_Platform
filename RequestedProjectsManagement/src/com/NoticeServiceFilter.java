@@ -44,7 +44,7 @@ public class NoticeServiceFilter implements ContainerRequestFilter {
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		Method method = resourceInfo.getResourceMethod();
 		
-		//If allowed for all return 
+		//If Allowed for all Return 
 		if (method.isAnnotationPresent(PermitAll.class)) {
 			return;
 		}
