@@ -18,7 +18,7 @@ public class FundService {
 		Funds fundObj = new Funds();
 
 		@GET
-		@Path("/")
+		@Path("/view")
 		@RolesAllowed({"Funder","Researcher"})
 		@Produces(MediaType.TEXT_HTML)
 		public String readItems() {
@@ -26,7 +26,7 @@ public class FundService {
 		}
 
 		@POST
-		@Path("/")
+		@Path("/insert")
 		@RolesAllowed({"Funder"})
 		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 		@Produces(MediaType.TEXT_PLAIN)
