@@ -2,6 +2,8 @@
 package com;
 
 import model.Project;
+
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 //For REST Service
 import javax.ws.rs.*;
@@ -18,7 +20,7 @@ public class ProjectService {
 	Project itemObj = new Project();
 
 	@GET
-	@Path("/")
+	@Path("/view")
 	@RolesAllowed({"Funder", "Researcher"})
 	@Produces(MediaType.TEXT_HTML)
 	public String readprojects() {
@@ -26,7 +28,7 @@ public class ProjectService {
 	}
 
 	@POST
-	@Path("/")
+	@Path("/insert")
 	@RolesAllowed({"Researcher"})
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
@@ -37,7 +39,7 @@ public class ProjectService {
 	}
 
 	@PUT
-	@Path("/")
+	@Path("/update")
 	@RolesAllowed({"Researcher"})
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
@@ -56,7 +58,7 @@ public class ProjectService {
 	}
 
 	@DELETE
-	@Path("/")
+	@Path("/delete")
 	@RolesAllowed({"Researcher"})
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)

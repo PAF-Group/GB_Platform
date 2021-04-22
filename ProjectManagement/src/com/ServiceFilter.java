@@ -3,8 +3,11 @@ package com;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.client.Client;
@@ -72,9 +75,9 @@ public class ServiceFilter implements ContainerRequestFilter{
 
 			Client client = ClientBuilder.newClient(clientC);
 		 
-			Response response = client.target("http://localhost:8080//UserManagement/user-management-service/user/authentication").request()
-				      .property("userName", userEmail)
-				      .property("password", password).get();
+			Response response = client.target("http://localhost:8081//UserManagement/user-management-service/user/authentication")
+				      .queryParam("userEmail", userEmail)
+				      .queryParam("password", password).request().get();
 		    
 		    if(response.getStatus() != 200) {
 		    	Response unauthoriazedStatus = Response.status(Response.Status.UNAUTHORIZED)
@@ -82,6 +85,32 @@ public class ServiceFilter implements ContainerRequestFilter{
 
 				requestContext.abortWith(unauthoriazedStatus);
 		    }
+		    
+		    
+	    String role = response.readEntity(String.class);
+		    
+			if (method.isAnnotationPresent(RolesAllowed.class)) {
+				//Get the allowed user roles from Annotation
+				RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
+
+			Set<String> user_role = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
+//				user_role.contains(role) == false
+				
+//				String role = "Funder";
+				
+				
+			
+			    if(user_role.contains(role) == false) {
+			    	Response unauthoriazedStatus = Response.status(Response.Status.UNAUTHORIZED)
+							.entity("Unauthorized User!...").build();
+
+					requestContext.abortWith(unauthoriazedStatus);
+			    } 
+			    
+			    return;
+			    
+			}
+			
 		    
 		    
 		}
