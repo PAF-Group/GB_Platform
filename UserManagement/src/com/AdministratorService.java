@@ -28,7 +28,7 @@ public class AdministratorService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin" })
 	@GET
-	@Path("/")
+	@Path("/view")
 	@Produces(MediaType.TEXT_HTML)
 	public String getAllAdministrators() {
 		return adminObj.getAdministrators();
@@ -38,7 +38,7 @@ public class AdministratorService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin" })
 	@POST
-	@Path("/")
+	@Path("/create-admin")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String insertAdministrator(String adminData) {
@@ -64,7 +64,7 @@ public class AdministratorService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin" })
 	@PUT
-	@Path("/")
+	@Path("/update-admin")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateAdministrator(String adminData) {
@@ -87,7 +87,7 @@ public class AdministratorService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin" })
 	@PUT
-	@Path("/")
+	@Path("/update-user-admin")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateAdminEmailPassword(String adminData) {
@@ -108,7 +108,7 @@ public class AdministratorService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin" })
 	@DELETE
-	@Path("/")
+	@Path("/disable-admin")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String disableAdministrator(String adminData) {
