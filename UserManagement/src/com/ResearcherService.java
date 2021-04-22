@@ -19,6 +19,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.parser.*;
 import org.jsoup.nodes.Document;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 
 @Path("/researcher")
@@ -36,9 +37,10 @@ public class ResearcherService {
 	}
 	
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
+	@PermitAll
 	@POST
 	@Path("/create-researcher")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String insertResearcher(String researcherData) {
 		// Convert the input string to a JSON object
