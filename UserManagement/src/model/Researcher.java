@@ -98,7 +98,7 @@ public class Researcher {
 					+ "</tr>";
 
 			// The query to select all records from Researcher table
-			String query1 = "SELECT `first_name`,`last_name`,`user_phone`, ``user_id`, user_agreement`, `created_at`, `updated_at` FROM `userdb`.`researcher`";
+			String query1 = "SELECT `first_name`, `last_name`, `user_phone`, `user_id`, `user_agreement`, `created_at`, `updated_at` FROM `userdb`.`researcher`";
 			
 			Statement stmt = con.createStatement();
 			ResultSet set1 = stmt.executeQuery(query1);
