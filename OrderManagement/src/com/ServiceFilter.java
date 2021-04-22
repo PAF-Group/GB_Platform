@@ -18,21 +18,14 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-import org.glassfish.jersey.jackson.JacksonFeature;
-import org.json.JSONObject;
 
 @Provider
 public class ServiceFilter implements ContainerRequestFilter {
@@ -82,7 +75,7 @@ public class ServiceFilter implements ContainerRequestFilter {
 		Client client = ClientBuilder.newClient(clientC);
 
 		Response response = client.target("http://localhost:8080/UserManagement/UserService/user/authentication")
-			      .queryParam("userName", userName)
+			      .queryParam("userEmail", userName)
 			      .queryParam("password", password).request().get();
 		
 		String currentUser = response.readEntity(String.class);
