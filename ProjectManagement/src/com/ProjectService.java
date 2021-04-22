@@ -1,4 +1,7 @@
-//IT19160580 Maddumage T.A.R
+/* 
+ * @author  IT19160580 Maddumage T.A.R
+ * 
+ * */
 package com;
 
 import model.Project;
@@ -18,7 +21,7 @@ import org.jsoup.nodes.Document;
 @Path("/Projects")
 public class ProjectService {
 	Project itemObj = new Project();
-
+//------------------------------------------------------------------------------------------------------------------------
 	@GET
 	@Path("/view")
 	@RolesAllowed({"Funder", "Researcher"})
@@ -26,7 +29,7 @@ public class ProjectService {
 	public String readprojects() {
 		return itemObj.readProjects();
 	}
-
+//------------------------------------------------------------------------------------------------------------------------
 	@POST
 	@Path("/insert")
 	@RolesAllowed({"Researcher"})
@@ -37,7 +40,7 @@ public class ProjectService {
 		String output = itemObj.insertProject( name, description,  field, url, researcher_id);
 		return output;
 	}
-
+//------------------------------------------------------------------------------------------------------------------------
 	@PUT
 	@Path("/update")
 	@RolesAllowed({"Researcher"})
@@ -56,7 +59,7 @@ public class ProjectService {
 		String output = itemObj.updateProject(projectID, name, description, filed, url,researcherid);
 		return output;
 	}
-
+//------------------------------------------------------------------------------------------------------------------------
 	@DELETE
 	@Path("/delete")
 	@RolesAllowed({"Researcher"})
