@@ -1,3 +1,4 @@
+//IT19160580 Maddumage T.A.R
 package com;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -26,7 +27,7 @@ public class AgreementService {
 	
 
 		Agreement AgreementObj = new Agreement();
-
+//
 		@GET
 		@Path("/")
 		@RolesAllowed({"Funder", "Researcher"})
