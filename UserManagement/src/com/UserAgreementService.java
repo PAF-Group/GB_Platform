@@ -26,9 +26,9 @@ public class UserAgreementService {
 	UserAgreement agreementObj = new UserAgreement();
 
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
-	@RolesAllowed(value = { "Admin", "Member" })
+	@RolesAllowed( "Admin" )
 	@GET
-	@Path("/")
+	@Path("/view")
 	@Produces(MediaType.TEXT_HTML)
 	public String getAllUserAgreements() {
 		return agreementObj.getAgreements();
@@ -38,7 +38,7 @@ public class UserAgreementService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin", "Researcher" })
 	@POST
-	@Path("/")
+	@Path("/create-agreement")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String insertUserAgreement(String agreementData) {
@@ -59,7 +59,7 @@ public class UserAgreementService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin", "Researcher" })
 	@PUT
-	@Path("/")
+	@Path("/update-agreement")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateUserAgreement(String agreementData) {
@@ -81,7 +81,7 @@ public class UserAgreementService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin", "Researcher" })
 	@DELETE
-	@Path("/")
+	@Path("/delete-agreement")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String deleteUserAgreement(String agreementData) {
