@@ -20,7 +20,7 @@
 </servlet>
 <servlet-mapping>
  <servlet-name>Jersey Web Application</servlet-name>
- <url-pattern>/item-management-service/*</url-pattern>
+ <url-pattern>/product-management-service/*</url-pattern>
 </servlet-mapping>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
