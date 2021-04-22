@@ -28,7 +28,7 @@ public class FunderService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin", "Member" })
 	@GET
-	@Path("/")
+	@Path("/view")
 	@Produces(MediaType.TEXT_HTML)
 	public String getAllFunders() {
 		return funderObj.getFunders();
@@ -37,7 +37,7 @@ public class FunderService {
 	
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@POST
-	@Path("/")
+	@Path("/create-funder")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String insertFunder(String funderData) {
@@ -64,7 +64,7 @@ public class FunderService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin", "Funder" })
 	@PUT
-	@Path("/")
+	@Path("/update-funder")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateFunder(String funderData) {
@@ -88,7 +88,7 @@ public class FunderService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Funder" })
 	@PUT
-	@Path("/")
+	@Path("/update-user-funder")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateFunderEmailPassword(String funderData) {
@@ -109,7 +109,7 @@ public class FunderService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin" })
 	@DELETE
-	@Path("/")
+	@Path("/disable-funder")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String disableFunder(String funderData) {
