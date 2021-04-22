@@ -1,4 +1,7 @@
-//IT19160580 Maddumage T.A.R
+/* 
+ * @author  IT19160580 Maddumage T.A.R
+ * 
+ * */
 package com;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -27,7 +30,7 @@ public class AgreementService {
 	
 
 		Agreement AgreementObj = new Agreement();
-//
+//------------------------------------------------------------------------------------------------------------------------
 		@GET
 		@Path("/view")
 		@RolesAllowed({"Funder", "Researcher"})
@@ -35,7 +38,8 @@ public class AgreementService {
 		public String readItems() {
 			return AgreementObj.readagreements();
 		}
-
+		
+//------------------------------------------------------------------------------------------------------------------------
 		@POST
 		@Path("/insert")
 		@RolesAllowed({"Funder"})
@@ -46,7 +50,8 @@ public class AgreementService {
 			String output = AgreementObj.insertAgreement( fundingbodyid, agreementpath,  status, project_id);
 			return output;
 		}
-
+		
+//------------------------------------------------------------------------------------------------------------------------
 		@PUT
 		@Path("/update")
 		@RolesAllowed({"Funder"})
@@ -65,7 +70,8 @@ public class AgreementService {
 			String output = AgreementObj.updateAgreement(AgreementID ,fundingbodyid, agreementpath, status, projectid);
 			return output;
 		}
-
+		
+//------------------------------------------------------------------------------------------------------------------------
 		@DELETE
 		@Path("/delete")
 		@RolesAllowed({"Funder"})
