@@ -28,7 +28,7 @@ public class ResearcherService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin", "Member" })
 	@GET
-	@Path("/")
+	@Path("/view")
 	@Produces(MediaType.TEXT_HTML)
 	public String getAllResearchers() {
 		return researcherObj.getResearchers();
@@ -37,7 +37,7 @@ public class ResearcherService {
 	
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@POST
-	@Path("/")
+	@Path("/create-researcher")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String insertResearcher(String researcherData) {
@@ -63,7 +63,7 @@ public class ResearcherService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin", "Researcher" })
 	@PUT
-	@Path("/")
+	@Path("/update-researcher")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateResearcher(String researcherData) {
@@ -86,7 +86,7 @@ public class ResearcherService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Researcher" })
 	@PUT
-	@Path("/")
+	@Path("/update-user-researcher")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateResearcherEmailPassword(String researcherData) {
@@ -107,7 +107,7 @@ public class ResearcherService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin" })
 	@DELETE
-	@Path("/")
+	@Path("/disable-researcher")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String disableResearcher(String researcherData) {
