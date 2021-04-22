@@ -26,6 +26,7 @@ public class ProjectService {
 
 	@POST
 	@Path("/")
+	@RolesAllowed({"Researcher"})
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String insertproject(@FormParam("Name") String name, @FormParam("Description") String description,
@@ -36,6 +37,7 @@ public class ProjectService {
 
 	@PUT
 	@Path("/")
+	@RolesAllowed({"Researcher"})
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateprojects(String projectData) {
@@ -54,6 +56,7 @@ public class ProjectService {
 
 	@DELETE
 	@Path("/")
+	@RolesAllowed({"Researcher"})
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String deleteproject(String projectData) {

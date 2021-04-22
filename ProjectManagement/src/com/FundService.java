@@ -18,7 +18,7 @@ public class FundService {
 
 		@GET
 		@Path("/")
-		@RolesAllowed({"Funder"})
+		@RolesAllowed({"Funder","Researcher"})
 		@Produces(MediaType.TEXT_HTML)
 		public String readItems() {
 			return fundObj.readfund();
@@ -26,6 +26,7 @@ public class FundService {
 
 		@POST
 		@Path("/")
+		@RolesAllowed({"Funder"})
 		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 		@Produces(MediaType.TEXT_PLAIN)
 		public String insertfund(@FormParam("Date") String date, @FormParam("Amount") float amount,

@@ -64,15 +64,15 @@ public class ServiceFilter implements ContainerRequestFilter{
 			}
 			
 			//Get the user name and password by splitting the decoded string
-			String userName = decodedString.split(":")[0];
+			String userEmail = decodedString.split(":")[0];
 			String password = decodedString.split(":")[1];
 			
 			ClientConfig clientC = new ClientConfig();
 
 			Client client = ClientBuilder.newClient(clientC);
 		 
-			Response response = client.target("http://localhost:8081/ProjectManagement/ProjectService/Projects").request()
-				      .property("userName", userName)
+			Response response = client.target("http://localhost:8080//UserManagement/user-management-service/user/authentication").request()
+				      .property("userName", userEmail)
 				      .property("password", password).get();
 		    
 		    if(response.getStatus() != 200) {

@@ -37,6 +37,7 @@ public class AgreementService {
 
 		@POST
 		@Path("/")
+		@RolesAllowed({"Funder"})
 		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 		@Produces(MediaType.TEXT_PLAIN)
 		public String insertAgreement(@FormParam("FundingBody_ID") int fundingbodyid, @FormParam("Agreement_Path") String agreementpath,
@@ -47,6 +48,7 @@ public class AgreementService {
 
 		@PUT
 		@Path("/")
+		@RolesAllowed({"Funder"})
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Produces(MediaType.TEXT_PLAIN)
 		public String updateAgreement(String projectData) {
@@ -65,6 +67,7 @@ public class AgreementService {
 
 		@DELETE
 		@Path("/")
+		@RolesAllowed({"Funder"})
 		@Consumes(MediaType.APPLICATION_XML)
 		@Produces(MediaType.TEXT_PLAIN)
 		public String deleteAgreement(String projectData) {
