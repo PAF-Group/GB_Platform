@@ -9,7 +9,9 @@ import model.Buyer;
 
 //For REST Services
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
 //For JSON
 import com.google.gson.*;
@@ -19,6 +21,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.parser.*;
 import org.jsoup.nodes.Document;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 
 @Path("/buyer")
@@ -28,7 +31,7 @@ public class BuyerService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin", "Member" })
 	@GET
-	@Path("/")
+	@Path("/view")
 	@Produces(MediaType.TEXT_HTML)
 	public String getAllBuyers() {
 		return buyerObj.getBuyers();
@@ -37,7 +40,7 @@ public class BuyerService {
 	
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@POST
-	@Path("/")
+	@Path("/create-buyer")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String insertBuyer(String buyerData) {
@@ -63,7 +66,7 @@ public class BuyerService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin", "Buyer" })
 	@PUT
-	@Path("/")
+	@Path("/update-buyer")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateBuyer(String buyerData) {
@@ -86,7 +89,7 @@ public class BuyerService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Buyer" })
 	@PUT
-	@Path("/")
+	@Path("/update-user-buyer")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateBuyerEmailPassword(String buyerData) {
@@ -107,7 +110,7 @@ public class BuyerService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin" })
 	@DELETE
-	@Path("/")
+	@Path("/disable-buyer")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String disableBuyer(String buyerData) {
@@ -119,6 +122,21 @@ public class BuyerService {
 		String accStatus = doc.select("accStatus").text();
 		
 		String output = buyerObj.disableBuyer(buyerID, accStatus);
+		
+		return output;
+		
+	}
+	
+//	------------------------------------------------------------------------------------------------------------------------------------------------------------
+	@PermitAll
+	@GET
+	@Path("/get-address")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getBuyerAddress( @Context UriInfo uriInfo ) {
+		// Read buyer ID from the request URI info
+		String buyerID = uriInfo.getQueryParameters().getFirst("buyerID");
+		
+		String output = buyerObj.getBuyerAddress(buyerID);
 		
 		return output;
 		
