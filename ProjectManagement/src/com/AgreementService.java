@@ -29,7 +29,7 @@ public class AgreementService {
 		Agreement AgreementObj = new Agreement();
 //
 		@GET
-		@Path("/")
+		@Path("/view")
 		@RolesAllowed({"Funder", "Researcher"})
 		@Produces(MediaType.TEXT_HTML)
 		public String readItems() {
@@ -37,7 +37,7 @@ public class AgreementService {
 		}
 
 		@POST
-		@Path("/")
+		@Path("/insert")
 		@RolesAllowed({"Funder"})
 		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 		@Produces(MediaType.TEXT_PLAIN)
@@ -48,7 +48,7 @@ public class AgreementService {
 		}
 
 		@PUT
-		@Path("/")
+		@Path("/update")
 		@RolesAllowed({"Funder"})
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Produces(MediaType.TEXT_PLAIN)
@@ -67,7 +67,7 @@ public class AgreementService {
 		}
 
 		@DELETE
-		@Path("/")
+		@Path("/delete")
 		@RolesAllowed({"Funder"})
 		@Consumes(MediaType.APPLICATION_XML)
 		@Produces(MediaType.TEXT_PLAIN)
