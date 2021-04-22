@@ -128,5 +128,60 @@ public class User {
 		}
 		
 	}
+	
+//	------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+//	The method to check whether a user is active or inactive ---------------------------------------------------------------------------------------------------
+	public String checkUserValidity(String userID) {
+		String output = "";
+		
+		try {
+			Connection con = DatabaseConnectivity.connect();
+			
+			if (con == null) {
+				return "An error has occurred while connecting to the database.";
+				
+			}
+			
+			// The query to get the account status using user
+			String query = "SELECT `account_status` FROM `userdb`.`user` WHERE `user_id`=?";
+			
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			
+			// binding values
+			preparedStmt.setInt(1, Integer.parseInt(userID));
+			
+			// execute the statement
+			ResultSet set = preparedStmt.executeQuery();
+			
+			if(set.next() == true) {
+				String accStatus = set.getString("account_status");
+				
+				if(accStatus.equals("active")) {
+					output = "valid";
+					
+				} else {
+					output = "invalid";
+					
+				}
+				
+			} else {
+				output = "invalid";
+				
+			}
+			
+			// Close Database connection
+			con.close();
+			
+		} catch (Exception e) {
+			// Failure
+			output = "An error has occurred while reading the User records.";
+			System.err.println(e.getMessage());
+			
+		}
+		
+		return output;
+		
+	}
 
 }
