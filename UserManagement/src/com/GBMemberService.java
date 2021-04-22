@@ -28,7 +28,7 @@ public class GBMemberService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin", "Member" })
 	@GET
-	@Path("/")
+	@Path("/view")
 	@Produces(MediaType.TEXT_HTML)
 	public String getAllGBMembers() {
 		return memberObj.getMembers();
@@ -38,7 +38,7 @@ public class GBMemberService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin" })
 	@POST
-	@Path("/")
+	@Path("/create-member")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String insertGBMember(String memberData) {
@@ -65,7 +65,7 @@ public class GBMemberService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin", "Member" })
 	@PUT
-	@Path("/")
+	@Path("/update-member")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateGBMember(String memberData) {
@@ -89,7 +89,7 @@ public class GBMemberService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Member" })
 	@PUT
-	@Path("/")
+	@Path("/update-user-member")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateMemberEmailPassword(String memberData) {
@@ -110,7 +110,7 @@ public class GBMemberService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@RolesAllowed(value = { "Admin" })
 	@DELETE
-	@Path("/")
+	@Path("/disable-member")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String disableGBMember(String memberData) {
