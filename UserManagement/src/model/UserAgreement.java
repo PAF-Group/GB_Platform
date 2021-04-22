@@ -6,34 +6,15 @@
 package model;
 
 import java.sql.*;
+import utility.DatabaseConnectivity;
 
 public class UserAgreement {
-//	Database/UserDB Connectivity; @return Connection ------------------------------------------------------------------------------------------------------------
-	private Connection connect() {
-		Connection con = null;
-		
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-
-			// Provide the UserDB details: DBServer/DBName, user-name, password
-			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/userdb", "root", "qwerty");
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			
-		}
-		
-		return con;
-		
-	}
-//	-------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 //	The method to create a new User Agreement => User Agreement creation ----------------------------------------------------------------------------------------
 	public String createAgreement(String agreementName, String description, String fileLocation) {
 		String output = "";
 		
 		try {
-			Connection con = connect();
+			Connection con = DatabaseConnectivity.connect();
 			
 			if (con == null) {
 				return "An error has occurred while connecting to the database.";
@@ -78,7 +59,7 @@ public class UserAgreement {
 		String output = "";
 		
 		try {
-			Connection con = connect();
+			Connection con = DatabaseConnectivity.connect();
 			
 			if (con == null) {
 				return "An error has occurred while connecting to the database.";
@@ -137,7 +118,7 @@ public class UserAgreement {
 		String output = "";
 		
 		try {
-			Connection con = connect();
+			Connection con = DatabaseConnectivity.connect();
 			
 			if (con == null) {
 				return "An error has occurred while connecting to the database for updating.";
@@ -182,7 +163,7 @@ public class UserAgreement {
 		String output = "";
 		
 		try {
-			Connection con = connect();
+			Connection con = DatabaseConnectivity.connect();
 			
 			if (con == null) {
 				return "An error has occurred while connecting to the database for disabling.";

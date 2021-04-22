@@ -19,13 +19,16 @@ import org.jsoup.Jsoup;
 import org.jsoup.parser.*;
 import org.jsoup.nodes.Document;
 
+import javax.annotation.security.RolesAllowed;
+
 @Path("/funder")
 public class FunderService {
 	Funder funderObj = new Funder();
 
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
+	@RolesAllowed(value = { "Admin", "Member" })
 	@GET
-	@Path("/")
+	@Path("/view")
 	@Produces(MediaType.TEXT_HTML)
 	public String getAllFunders() {
 		return funderObj.getFunders();
@@ -33,23 +36,35 @@ public class FunderService {
 	}
 	
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 	@POST
-	@Path("/")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Path("/create-funder")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String insertFunder(@FormParam("name") String name, @FormParam("userPhone") String userPhone, @FormParam("userType") String userType, @FormParam("address") String address,
-			@FormParam("userAgreement") String userAgreement, @FormParam("email") String email, @FormParam("password") String password, @FormParam("accStatus") String accStatus) {
-		String output = funderObj.createFunder(name, userPhone, userType, address, userAgreement, email, password, accStatus);
+	public String insertFunder(String funderData) {
+		// Convert the input string to a JSON object
+		JsonObject funderObject = new JsonParser().parse(funderData).getAsJsonObject();
+		
+		// Read the values from the JSON object
+		String name = funderObject.get("name").getAsString();
+		String userPhone = funderObject.get("userPhone").getAsString();
+		String userType = funderObject.get("userType").getAsString();
+		String address = funderObject.get("address").getAsString();
+		String userAgreement = funderObject.get("userAgreement").getAsString();
+		String email = funderObject.get("email").getAsString();
+		String password = funderObject.get("password").getAsString();
+		String userRole = funderObject.get("userRole").getAsString();
+		String accStatus = funderObject.get("accStatus").getAsString();
+		
+		String output = funderObj.createFunder(name, userPhone, userType, address, userAgreement, email, password, userRole, accStatus);
 		
 		return output;
 		
 	}
 	
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+	@RolesAllowed(value = { "Admin", "Funder" })
 	@PUT
-	@Path("/")
+	@Path("/update-funder")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateFunder(String funderData) {
@@ -57,24 +72,44 @@ public class FunderService {
 		JsonObject funderObject = new JsonParser().parse(funderData).getAsJsonObject();
 		
 		// Read the values from the JSON object
-		String userID = funderObject.get("userID").getAsString();
+		String funderID = funderObject.get("funderID").getAsString();
 		String name = funderObject.get("name").getAsString();
 		String userPhone = funderObject.get("userPhone").getAsString();
 		String userType = funderObject.get("userType").getAsString();
 		String address = funderObject.get("address").getAsString();
 		String userAgreement = funderObject.get("userAgreement").getAsString();
-		String email = funderObject.get("email").getAsString();
 		
-		String output = funderObj.updateFunder(userID, name, userPhone, userType, address, userAgreement, email);
+		String output = funderObj.updateFunder(funderID, name, userPhone, userType, address, userAgreement);
 		
 		return output;
 		
 	}
 	
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+	@RolesAllowed(value = { "Funder" })
+	@PUT
+	@Path("/update-user-funder")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String updateFunderEmailPassword(String funderData) {
+		// Convert the input string to a JSON object
+		JsonObject funderObject = new JsonParser().parse(funderData).getAsJsonObject();
+		
+		// Read the values from the JSON object
+		String userID = funderObject.get("userID").getAsString();
+		String userEmail = funderObject.get("userEmail").getAsString();
+		String password = funderObject.get("password").getAsString();
+		
+		String output = funderObj.updateFunderEmailPassword(userID, userEmail, password);
+		
+		return output;
+		
+	}
+	
+//	------------------------------------------------------------------------------------------------------------------------------------------------------------
+	@RolesAllowed(value = { "Admin" })
 	@DELETE
-	@Path("/")
+	@Path("/disable-funder")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String disableFunder(String funderData) {
@@ -82,10 +117,10 @@ public class FunderService {
 		Document doc = Jsoup.parse(funderData, "", Parser.xmlParser());
 
 		// Read the value from the element <userID> & <accStatus>
-		String userID = doc.select("userID").text();
+		String funderID = doc.select("funderID").text();
 		String accStatus = doc.select("accStatus").text();
 		
-		String output = funderObj.disableFunder(userID, accStatus);
+		String output = funderObj.disableFunder(funderID, accStatus);
 		
 		return output;
 		
