@@ -2,6 +2,8 @@ package com;
 
 
 import model.Submit;
+
+import javax.annotation.security.PermitAll;
 //For REST Service
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -19,6 +21,7 @@ public class SubmissionService {
 
 	@GET                             //add a get method to get data 
 	@Path("/")
+	@PermitAll
 	@Produces(MediaType.TEXT_HTML)
 	public String readSubmissions() {
 		return itemObj.readSubmissions();
@@ -26,6 +29,7 @@ public class SubmissionService {
 
 	@POST                  //add data insert annotation
 	@Path("/")
+	@PermitAll
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String insertSubmission(@FormParam("name") String name, @FormParam("descriptiom") String descriptiom,
@@ -36,6 +40,7 @@ public class SubmissionService {
 
 	@PUT                           //add update annotation
 	@Path("/")
+	@PermitAll
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateSubmission(String itemData) {
@@ -55,6 +60,7 @@ public class SubmissionService {
 
 	@DELETE                     //delete annotation
 	@Path("/")
+	@PermitAll
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String deleteSubmission(String itemData) {

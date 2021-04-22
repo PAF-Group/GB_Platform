@@ -1,6 +1,9 @@
 package com;
 
-import model.Item;
+import model.NoticeItem;
+
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 //For REST Service
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -12,18 +15,20 @@ import org.jsoup.parser.*;
 import org.jsoup.nodes.Document;
 
 @Path("/Items")
-public class ItemService {
-	Item itemObj = new Item();
+public class NoticeItemService {
+	NoticeItem itemObj = new NoticeItem();
 
 	@GET                             //add a get method to get data 
-	@Path("/")
+	@Path("/view")
+	@RolesAllowed({"Funder", "Researcher"})
 	@Produces(MediaType.TEXT_HTML)
 	public String readItems() {
 		return itemObj.readItems();
 	}
 
 	@POST                  //add data insert annotation
-	@Path("/")
+	@Path("/insert")
+	@RolesAllowed({"Funder"})
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String insertItem(@FormParam("name") String name, @FormParam("feild") String feild,
@@ -33,7 +38,8 @@ public class ItemService {
 	}
 
 	@PUT                           //add update annotation
-	@Path("/")
+	@Path("/update")
+	@RolesAllowed({"Funder"})
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateItem(String itemData) {
@@ -51,7 +57,8 @@ public class ItemService {
 	}
 
 	@DELETE                     //delete annotation
-	@Path("/")
+	@Path("/delete")
+	@RolesAllowed({"Funder"})
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String deleteItem(String itemData) {
