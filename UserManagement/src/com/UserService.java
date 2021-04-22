@@ -53,5 +53,28 @@ public class UserService {
 		}
 		
 	}
+	
+//	------------------------------------------------------------------------------------------------------------------------------------------------------------
+	@PermitAll
+	@GET
+	@Path("/user-status")
+	public Response checkUserValidityForStatusRole( @Context UriInfo uriInfo ) {
+		// Read user ID & user-role from the request URI info
+		String userID = uriInfo.getQueryParameters().getFirst("userID");
+		
+		String output = userObj.checkUserValidity(userID);
+		
+		if(output.equals("valid")) {
+			return Response.status(Response.Status.OK).entity("valid").build();
+			
+		} else if(output.equals("invalid")){
+			return Response.status(Response.Status.UNAUTHORIZED).entity("invalid").build();
+			
+		} else {
+			return Response.status(Response.Status.BAD_GATEWAY).entity("Bad Gateway!...").build();
+			
+		}
+		
+	}
 
 }
