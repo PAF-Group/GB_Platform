@@ -1,4 +1,7 @@
-//IT19160580 Maddumage T.A.R
+/* 
+ * @author  IT19160580 Maddumage T.A.R
+ * 
+ * */
 package com;
 
 import javax.ws.rs.Consumes;
@@ -16,7 +19,7 @@ import model.Funds;
 public class FundService {
 
 		Funds fundObj = new Funds();
-
+//------------------------------------------------------------------------------------------------------------------------
 		@GET
 		@Path("/view")
 		@RolesAllowed({"Funder","Researcher"})
@@ -24,7 +27,7 @@ public class FundService {
 		public String readItems() {
 			return fundObj.readfund();
 		}
-
+//------------------------------------------------------------------------------------------------------------------------
 		@POST
 		@Path("/insert")
 		@RolesAllowed({"Funder"})
