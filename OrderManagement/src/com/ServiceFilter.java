@@ -81,11 +81,13 @@ public class ServiceFilter implements ContainerRequestFilter {
 
 		Client client = ClientBuilder.newClient(clientC);
 
-		Response response = client.target("http://localhost:8080/Lab05Rest/ItemService/Items")
+		Response response = client.target("http://localhost:8080/UserManagement/UserService/user/authentication")
 			      .queryParam("userName", userName)
 			      .queryParam("password", password).request().get();
 		
 		String currentUser = response.readEntity(String.class);
+		
+		System.out.println(currentUser);
 		
 		if(response.getStatus() != 200) {
 	    	Response unauthoriazedStatus = Response.status(Response.Status.UNAUTHORIZED)
