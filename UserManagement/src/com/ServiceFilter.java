@@ -9,17 +9,16 @@ import java.util.*;
 import java.util.Base64.Decoder;
 import java.lang.reflect.Method;
 
-import javax.ws.rs.client.*;
 import javax.ws.rs.container.*;
 import javax.ws.rs.core.*;
 import javax.ws.rs.ext.*;
-
-import org.glassfish.jersey.client.ClientConfig;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 
 import java.io.IOException;
+
+import model.User;
 
 @Provider
 public class ServiceFilter implements ContainerRequestFilter {
@@ -65,7 +64,7 @@ public class ServiceFilter implements ContainerRequestFilter {
 		try {
 			byte[] byteString = decoder.decode(authToken);
 			
-			decodedAuthToken = new String(byteString);
+			decodedAuthToken = new String(byteString, "UTF-8");
 			
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
@@ -76,47 +75,41 @@ public class ServiceFilter implements ContainerRequestFilter {
 		String userEmail = tokenizer.nextToken();
 		String password = tokenizer.nextToken();
 		
-		ClientConfig clientC = new ClientConfig();
-
-		Client client = ClientBuilder.newClient(clientC);
+		User userObj = new User();
 		
-		String currentUser = "";
+		String currentUser = userObj.getUserRole(userEmail, password);
+		
+		if(currentUser.equals("Unregistered User!...")) {
+			Response unauthoriazedStatus = Response.status(Response.Status.UNAUTHORIZED)
+			.entity("Invalid User!...").build();
 
-		try {
-			Response response = client.target("http://localhost:8080/user-management-service/user/authentication")
-				      .queryParam("userEmail", userEmail)
-				      .queryParam("password", password).request().get();
+			requestContext.abortWith(unauthoriazedStatus);
 			
-			currentUser = response.readEntity(String.class);
+		} else if(currentUser.equals("An error has occurred while reading the User records.") || currentUser.equals("An error has occurred while connecting to the database.")) {
+			Response badGatewayStatus = Response.status(Response.Status.BAD_GATEWAY).entity("Bad Gateway ...").build();
 			
-			if(response.getStatus() != 200) {
-		    	Response unauthoriazedStatus = Response.status(Response.Status.UNAUTHORIZED)
-						.entity(currentUser).build();
-	
-				requestContext.abortWith(unauthoriazedStatus);
+			requestContext.abortWith(badGatewayStatus);
+			
+		} else {
+			if (method.isAnnotationPresent(RolesAllowed.class)) {
+				//Get the allowed user roles from Annotation
+				RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
+
+				Set<String> user_role = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
 				
-		    } 
-			
-		} catch (NullPointerException e) {
-			e.printStackTrace();
+			    if(user_role.contains(currentUser) == false) {
+			    	Response unauthoriazedStatus = Response.status(Response.Status.UNAUTHORIZED)
+							.entity("Unauthorized User!...").build();
+
+					requestContext.abortWith(unauthoriazedStatus);
+			    } 
+			    
+			    return;
+			    
+			}
 			
 		}
-		
-		if (method.isAnnotationPresent(RolesAllowed.class)) {
-			//Get the allowed user roles from Annotation
-			RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
-
-			Set<String> user_role = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
-			
-		    if(!user_role.contains(currentUser)) {
-		    	Response unauthoriazedStatus = Response.status(Response.Status.UNAUTHORIZED)
-						.entity("Unauthorized User!...").build();
-
-				requestContext.abortWith(unauthoriazedStatus);
-		    }  
-		    return;
-		}
-		
+				
 		return;
 			
 	}
