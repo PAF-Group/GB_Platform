@@ -49,11 +49,11 @@ public class OrderDetails {
 
 				Client client = ClientBuilder.newClient(clientC);
 
-				Response response = client.target("http://localhost:8080/Lab05Rest/ItemService/Items/price")
+				Response response = client.target("http://localhost:8080/Lab06REST/ItemService/Items/price")
 						.queryParam("id", productId).request().get();
 
 				String res = response.readEntity(String.class);
-
+				
 				JsonObject itemObject = new JsonParser().parse(res).getAsJsonObject();
 				// Read the values from the JSON object
 				String unitPrice = itemObject.get("unitPrice").getAsString();
