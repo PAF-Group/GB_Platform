@@ -179,7 +179,7 @@ public class Product {
 				String description = set.getString("description");
 				String unitPrice = Double.toString(set.getDouble("unit_price"));
 				String category = set.getString("category");
-				String productStatus = Integer.toString(set.getInt("status"));
+				String productStatus = set.getString("status");
 				String createdAt = set.getTimestamp("created_at").toString();
 				String updatedAt = set.getTimestamp("updated_at").toString();
 				
