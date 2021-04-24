@@ -22,13 +22,11 @@ public class UserAgreement {
 			}
 			
 			// The query to insert a new record to the User Agreement table & prepared statements
-			String query = " INSERT INTO `userdb`.`user_agreement` (`agreement_name`, `description`,`file_location`)"
-					+ " VALUES (?, ?, ?)";
+			String query = "INSERT INTO `userdb`.`user_agreement` (`agreement_name`, `description`, `file_location`) VALUES (?, ?, ?)";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
 			// binding values
-			//preparedStmt.setInt(1, 0);
 			preparedStmt.setString(1, agreementName);
 			preparedStmt.setString(2, description);
 			preparedStmt.setString(3, fileLocation);
@@ -71,22 +69,23 @@ public class UserAgreement {
 					+ "<th>Created At</th>" + "<th>Updated At</th>" + "</tr>";
 
 			// The query to select all records from User Agreement table
-			String query = "SELECT `agreement_name`, `description`,`file_location`, `created_at`, `updated_at` FROM `userdb`.`user_agreement`";
+			String query = "SELECT `agreement_name`, `description`, `file_location`, `created_at`, `updated_at` FROM `userdb`.`user_agreement`";
 			
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
+			
+			// Store all the retrieved records in a result set
+			ResultSet set = stmt.executeQuery(query);
 			
 			// Iterate through all the records in the result set
-			while (rs.next()) {
-				//String userID = Integer.toString(rs.getInt("user_id"));
-				String agreementName = rs.getString("agreement_name");
-				String description = rs.getString("description");
-				String url = rs.getString("file_location");
-				String createdAt = rs.getTimestamp("created_at").toString();
-				String updatedAt = rs.getTimestamp("updated_at").toString();
+			while (set.next()) {
+				String agreementName = set.getString("agreement_name");
+				String description = set.getString("description");
+				String url = set.getString("file_location");
+				String createdAt = set.getTimestamp("created_at").toString();
+				String updatedAt = set.getTimestamp("updated_at").toString();
 				
 				// Add the record in to the HTML table
-				output += "<td>" + agreementName + "</td>";
+				output += "<tr><td>" + agreementName + "</td>";
 				output += "<td>" + description + "</td>";
 				output += "<td>" + url + "</td>";
 				output += "<td>" + createdAt + "</td>";

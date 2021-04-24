@@ -1,22 +1,31 @@
+/* 
+ * @author  IT19160580 Maddumage T.A.R
+ * 
+ * */
 package model;
 
 import java.sql.*;
 
-public class Item { // A common method to connect to the DB
+public class Agreement {
+	
 	private Connection connect() {
+		
+	//DB connection 
 		Connection con = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 
 			// Provide the correct details: DBServer/DBName, username, password
-			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/test", "root", "");
+			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/paf", "root", "admin");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return con;
 	}
 
-	public String insertItem(String code, String name, String price, String desc) {
+	//Insert Agreement when funding body like to the project
+	
+	public String insertAgreement(int Fundingbodyid, String path, String status,int projectid) {
 		String output = "";
 		try {
 			Connection con = connect();
@@ -24,27 +33,33 @@ public class Item { // A common method to connect to the DB
 				return "Error while connecting to the database for inserting.";
 			}
 			// create a prepared statement
-			String query = " insert into items (`itemID`,`itemCode`,`itemName`,`itemPrice`,`itemDesc`)"
+			String query = " insert into agreement_table (Agreement_ID,FundingBody_ID,Agreement_Path,Status,Project_ID)"
 					+ " values (?, ?, ?, ?, ?)";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
+			System.out.println(preparedStmt);
 			// binding values
 			preparedStmt.setInt(1, 0);
-			preparedStmt.setString(2, code);
-			preparedStmt.setString(3, name);
-			preparedStmt.setDouble(4, Double.parseDouble(price));
-			preparedStmt.setString(5, desc);
+			preparedStmt.setInt(2, Fundingbodyid);
+			preparedStmt.setString(3,  path);
+			preparedStmt.setString(4, status);
+			preparedStmt.setInt(5, projectid);
+		
+			
 // execute the statement
 			preparedStmt.execute();
 			con.close();
 			output = "Inserted successfully";
 		} catch (Exception e) {
-			output = "Error while inserting the item.";
+			output = "Inserted Unsuccessfully.";
 			System.err.println(e.getMessage());
 		}
 		return output;
 	}
+	
 
-	public String readItems() {
+	// Read Agreement Details
+	
+	public String readagreements() {
 		String output = "";
 		try {
 			Connection con = connect();
@@ -52,29 +67,32 @@ public class Item { // A common method to connect to the DB
 				return "Error while connecting to the database for reading.";
 			}
 			// Prepare the html table to be displayed
-			output = "<table border='1'><tr><th>Item Code</th><th>Item Name</th>" + "<th>Item Price</th>"
-					+ "<th>Item Description</th>" + "<th>Update</th><th>Remove</th></tr>";
+			output = "<table border='1'><tr><th>Agreement_ID</th><th>FundingBody_ID</th>" + "<th>Agreement_Path</th>"
+					+ "<th>Status</th>" +"<th>Project_IDL</th></tr>";
 
-			String query = "select * from items";
+			String query = "select * from agreement_table";
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			// iterate through the rows in the result set
 			while (rs.next()) {
-				String itemID = Integer.toString(rs.getInt("itemID"));
-				String itemCode = rs.getString("itemCode");
-				String itemName = rs.getString("itemName");
-				String itemPrice = Double.toString(rs.getDouble("itemPrice"));
-				String itemDesc = rs.getString("itemDesc");
+				String agreementID = Integer.toString(rs.getInt("Agreement_ID"));
+				String fundingbodyid = Integer.toString(rs.getInt("FundingBody_ID"));
+				String path = rs.getString("Agreement_Path");
+				String Status = rs.getString("Status");
+				String ProjectID = Integer.toString(rs.getInt("Project_ID"));
+				
 				// Add into the html table
-				output += "<tr><td>" + itemCode + "</td>";
-				output += "<td>" + itemName + "</td>";
-				output += "<td>" + itemPrice + "</td>";
-				output += "<td>" + itemDesc + "</td>";
+				output += "<tr><td>" +  agreementID + "</td>";
+				output += "<td>" + fundingbodyid + "</td>";
+				output += "<td>" + path + "</td>";
+				output += "<td>" + Status + "</td>";
+				output += "<td>" + ProjectID + "</td>";
+				
 				// buttons
-				output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>"
-						+ "<td><form method='post' action='items.jsp'>"
-						+ "<input name='btnRemove' type='submit' value='Remove'class='btn btn-danger'>"
-						+ "<input name='itemID' type='hidden' value='" + itemID + "'>" + "</form></td></tr>";
+				output += 
+						 "<td><form method='post' action='items.jsp'>"
+						
+						+ "<input name='itemID' type='hidden' value='" + agreementID + "'>" + "</form></td></tr>";
 			}
 			con.close();
 			// Complete the html table
@@ -86,7 +104,9 @@ public class Item { // A common method to connect to the DB
 		return output;
 	}
 
-	public String updateItem(String ID, String code, String name, String price, String desc) {
+	// Update Agreement details when they want
+	
+	public String updateAgreement(String Agreementid, String fundingbodyid, String agreementpath, String status, String projectid ) {
 		String output = "";
 		try {
 			Connection con = connect();
@@ -94,14 +114,15 @@ public class Item { // A common method to connect to the DB
 				return "Error while connecting to the database for updating.";
 			}
 			// create a prepared statement
-			String query = "UPDATE items SET itemCode=?,itemName=?,itemPrice=?,itemDesc=? WHERE itemID=?";
+			String query = "UPDATE agreement_table SET FundingBody_ID=?,Agreement_Path=?,Status=?,Project_ID=? WHERE Agreement_ID=?";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			// binding values
-			preparedStmt.setString(1, code);
-			preparedStmt.setString(2, name);
-			preparedStmt.setDouble(3, Double.parseDouble(price));
-			preparedStmt.setString(4, desc);
-			preparedStmt.setInt(5, Integer.parseInt(ID));
+			preparedStmt.setInt(1, Integer.parseInt(fundingbodyid));
+			preparedStmt.setString(2, agreementpath);
+			preparedStmt.setString(3, status);
+			preparedStmt.setInt(4, Integer.parseInt(projectid));
+			preparedStmt.setInt(5, Integer.parseInt(Agreementid));
+			
 			// execute the statement
 			preparedStmt.execute();
 			con.close();
@@ -113,7 +134,7 @@ public class Item { // A common method to connect to the DB
 		return output;
 	}
 
-	public String deleteItem(String itemID) {
+	public String deleteAgreement(String agreementid) {
 		String output = "";
 		try {
 			Connection con = connect();
@@ -121,10 +142,10 @@ public class Item { // A common method to connect to the DB
 				return "Error while connecting to the database for deleting.";
 			}
 			// create a prepared statement
-			String query = "delete from items where itemID=?";
+			String query = "delete from agreement_table where Agreement_ID =?";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			// binding values
-			preparedStmt.setInt(1, Integer.parseInt(itemID));
+			preparedStmt.setInt(1, Integer.parseInt(agreementid));
 			// execute the statement
 			preparedStmt.execute();
 			con.close();
@@ -135,4 +156,7 @@ public class Item { // A common method to connect to the DB
 		}
 		return output;
 	}
+
+	
+
 }

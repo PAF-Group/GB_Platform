@@ -147,7 +147,7 @@ public class Orders {
 
 			Client client = ClientBuilder.newClient(clientC);
 
-			Response response = client.target("http://localhost:8080/Lab05Rest/ItemService/Items")
+			Response response = client.target("http://localhost:8080/UserManagement/UserService/buyer/get-address")
 					.queryParam("id", buyerId).request().get();
 
 			sAdr = response.readEntity(String.class);
