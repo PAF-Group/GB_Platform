@@ -31,16 +31,13 @@ public class ProductService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@PermitAll
 	@GET
-	@Path("/products-by-category")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/category")
 	@Produces(MediaType.TEXT_HTML)
-	public String getProductsByCategory(String productData) {
-		// Convert the input string to a JSON object
-		JsonObject productObject = new JsonParser().parse(productData).getAsJsonObject();
+	public String getProductsByCategory(@Context UriInfo uriInfo) {
+		// Read category from the request URI info
+		String category = uriInfo.getQueryParameters().getFirst("category");
 		
-		// Read the values from the JSON object
-		String category = productObject.get("category").getAsString();
-		
+		// Get products by category
 		String output = productObj.getProductsByCategory(category);
 		
 		return output;
@@ -50,16 +47,13 @@ public class ProductService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
 	@PermitAll
 	@GET
-	@Path("/product-by-pid")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/product")
 	@Produces(MediaType.TEXT_HTML)
-	public String getProductByID(String productData) {
-		// Convert the input string to a JSON object
-		JsonObject productObject = new JsonParser().parse(productData).getAsJsonObject();
+	public String getProductByID(@Context UriInfo uriInfo) {
+		// Read product ID from the request URI info
+		String productID = uriInfo.getQueryParameters().getFirst("productID");
 		
-		// Read the values from the JSON object
-		String productID = productObject.get("productID").getAsString();
-		
+		// Get products by category
 		String output = productObj.getProductByID(productID);
 		
 		return output;
@@ -69,16 +63,13 @@ public class ProductService {
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------	
 	@RolesAllowed(value = { "Admin", "Researcher" })
 	@GET
-	@Path("/products-by-sid")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/seller-products")
 	@Produces(MediaType.TEXT_HTML)
-	public String getProductsBySellerID(String productData) {
-		// Convert the input string to a JSON object
-		JsonObject productObject = new JsonParser().parse(productData).getAsJsonObject();
+	public String getProductsBySellerID(@Context UriInfo uriInfo) {
+		// Read seller ID from the request URI info
+		String sellerID = uriInfo.getQueryParameters().getFirst("sellerID");
 		
-		// Read the values from the JSON object
-		String sellerID = productObject.get("sellerID").getAsString();
-		
+		// Get products by category
 		String output = productObj.getProductsBySellerID(sellerID);
 		
 		return output;
@@ -158,14 +149,10 @@ public class ProductService {
 	@RolesAllowed(value = { "Admin", "Researcher" })
 	@DELETE
 	@Path("/remove")
-	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String removeProductByID(String productData) {
-		// Convert the input string to a JSON object
-		JsonObject productObject = new JsonParser().parse(productData).getAsJsonObject();
-
-		// Read the values from the JSON object
-		String productID = productObject.get("productID").getAsString();
+	public String removeProductByID(@Context UriInfo uriInfo) {
+		// Read product ID from the request URI info
+		String productID = uriInfo.getQueryParameters().getFirst("productID");
 		
 		String output = productObj.removeProductByID(productID);
 		
