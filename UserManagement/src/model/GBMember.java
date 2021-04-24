@@ -10,7 +10,7 @@ import utility.DatabaseConnectivity;
 
 public class GBMember {
 //	The method to create a new GB Member => Member registration -------------------------------------------------------------------------------------------------
-	public String createMember(String empID, String firstName, String lastName, String memberType, String userPhone, String email, String password, String role, String accStatus) {
+	public String createMember(String empID, String firstName, String lastName, String memberType, String userPhone, String userEmail, String password, String role, String accStatus) {
 		String output = "";
 		
 		try {
@@ -21,13 +21,33 @@ public class GBMember {
 				
 			}
 			
+			// The query to retrieve all the user-email & password records
+			String query1 = "SELECT `user_email`, `password` FROM `userdb`.`user`";
+			
+			Statement stmt = con.createStatement();
+			
+			// Retrieve records and store it in a ResultSet
+			ResultSet set1 = stmt.executeQuery(query1);
+			
+			// Check whether the new user-email & password are already existing in the DB
+			while(set1.next()) {
+				String email = set1.getString("user_email");
+				String pwd = set1.getString("password");
+				
+				if(userEmail.equals(email) && password.equals(pwd)) {
+					return "This User-email or Password has already taken. Please try again!...";
+					
+				}
+				
+			}
+			
 			// The query to insert a new record to the User table & prepared statements
-			String query1 = "INSERT INTO `userdb`.`user` (`user_email`, `password`, `user_role`, `accStatus`)" + " VALUES (?, ?, ?, ?)";
+			String query2 = "INSERT INTO `userdb`.`user` (`user_email`, `password`, `user_role`, `account_status`) VALUES (?, ?, ?, ?)";
 						
-			PreparedStatement preparedStmt1 = con.prepareStatement(query1);
+			PreparedStatement preparedStmt1 = con.prepareStatement(query2);
 						
 			// binding values
-			preparedStmt1.setString(1, email);
+			preparedStmt1.setString(1, userEmail);
 			preparedStmt1.setString(2, password);
 			preparedStmt1.setString(3, role);
 			preparedStmt1.setString(4, accStatus);
@@ -36,33 +56,35 @@ public class GBMember {
 			preparedStmt1.execute();
 			
 			// The query to get the newly created User/GBMember ID
-			String query2 = "SELECT `user_id` FROM `userdb`.`user` WHERE `user_email`=?";
+			String query3 = "SELECT `user_id` FROM `userdb`.`user` WHERE `user_email`=?";
 			
-			PreparedStatement preparedStmt2 = con.prepareStatement(query2);
+			PreparedStatement preparedStmt2 = con.prepareStatement(query3);
 			
 			// binding values
-			preparedStmt2.setString(1, email);
+			preparedStmt2.setString(1, userEmail);
 			
-			ResultSet set = preparedStmt2.executeQuery();
+			// Retrieve records and store it in a ResultSet
+			ResultSet set2 = preparedStmt2.executeQuery();
 			
-			String userID = Integer.toString(set.getInt("user_id"));
+			set2.next();
+			
+			int userID = set2.getInt("user_id");
 			
 			// The query to insert a new record to the GB Member table & prepared statements
-			String query = " INSERT INTO `userdb`.`gb_member` (`employee_id`, `first_name`, `last_name`, `member_type`, `user_phone`, `user_id`) VALUES (?, ?, ?, ?, ?, ?)";
+			String query4 = "INSERT INTO `userdb`.`gb_member` (`employee_id`, `first_name`, `last_name`, `member_type`, `user_phone`, `user_id`) VALUES (?, ?, ?, ?, ?, ?)";
 			
-			PreparedStatement preparedStmt = con.prepareStatement(query);
+			PreparedStatement preparedStmt3 = con.prepareStatement(query4);
 			
 			// binding values
-			//preparedStmt.setInt(1, 0);
-			preparedStmt.setInt(1, Integer.parseInt(empID));
-			preparedStmt.setString(2, firstName);
-			preparedStmt.setString(3, lastName);
-			preparedStmt.setString(4, memberType);
-			preparedStmt.setString(5, userPhone);
-			preparedStmt.setInt(6, Integer.parseInt(userID));
+			preparedStmt3.setInt(1, Integer.parseInt(empID));
+			preparedStmt3.setString(2, firstName);
+			preparedStmt3.setString(3, lastName);
+			preparedStmt3.setString(4, memberType);
+			preparedStmt3.setString(5, userPhone);
+			preparedStmt3.setInt(6, userID);
 			
 			// execute the statement
-			preparedStmt.execute();
+			preparedStmt3.execute();
 			
 			// Close the database connection
 			con.close();
@@ -100,10 +122,10 @@ public class GBMember {
 					+ "</tr>";
 
 			// The query to select all records from GB Member table
-			String query = "SELECT `employee_id`, `first_name`, `last_name`, `member_type`, `user_phone`, `user_id`, `created_at`, `updated_at` FROM `userdb`.`gb_member`";
+			String query1 = "SELECT `employee_id`, `first_name`, `last_name`, `member_type`, `user_phone`, `user_id`, `created_at`, `updated_at` FROM `userdb`.`gb_member`";
 			
 			Statement stmt = con.createStatement();
-			ResultSet set1 = stmt.executeQuery(query);
+			ResultSet set1 = stmt.executeQuery(query1);
 			
 			// Iterate through all the records in the result set
 			while (set1.next()) {
@@ -113,23 +135,25 @@ public class GBMember {
 				String lastName = set1.getString("last_name");
 				String memberType = set1.getString("member_type");
 				String phone = set1.getString("user_phone");
-				String userID = Integer.toString(set1.getInt("user_id"));
+				int userID = set1.getInt("user_id");
 				String createdAt = set1.getTimestamp("created_at").toString();
 				String updatedAt = set1.getTimestamp("updated_at").toString();
 				
 				// The query to select the certain GB Member record from the User table
-				String query2 = "SELECT `user_email`, `accStatus` FROM `userdb`.`user` WHERE `user_id`=?";
+				String query2 = "SELECT `user_email`, `account_status` FROM `userdb`.`user` WHERE `user_id`=?";
 				
 				PreparedStatement preparedStmt = con.prepareStatement(query2);
 				
 				// binding values
-				preparedStmt.setInt(1, Integer.parseInt(userID));
+				preparedStmt.setInt(1, userID);
 				
 				ResultSet set2 = preparedStmt.executeQuery();
 				
+				set2.next();
+				
 				// Reading values from the Result Set - set2
 				String email = set2.getString("user_email");
-				String accStatus = set2.getString("accStatus");
+				String accStatus = set2.getString("account_status");
 				
 				// Add the record in to the HTML table
 				output += "<tr><td>" + empID + "</td>";
@@ -222,6 +246,26 @@ public class GBMember {
 				
 			}
 			
+			// The query to retrieve all the user-email & password records
+			String query1 = "SELECT `user_email`, `password` FROM `userdb`.`user`";
+			
+			Statement stmt = con.createStatement();
+			
+			// Retrieve records and store it in a ResultSet
+			ResultSet set = stmt.executeQuery(query1);
+			
+			// Check whether the new user-email & password are already existing in the DB
+			while(set.next()) {
+				String email = set.getString("user_email");
+				String pwd = set.getString("password");
+				
+				if(userEmail.equals(email) && password.equals(pwd)) {
+					return "This User-email & Password has already taken. Please try again!...";
+					
+				}
+				
+			}
+			
 			// The query to Update the certain record in the User table & prepared statements
 			String query = "UPDATE `userdb`.`user` SET `user_email`=?, `password`=? WHERE `user_id`=?";
 			
@@ -276,8 +320,10 @@ public class GBMember {
 			
 			ResultSet set = preparedStmt1.executeQuery();
 			
+			set.next();
+			
 			// Reading values from the Result Set - set
-			String userID = Integer.toString(set.getInt("user_id"));
+			int userID = set.getInt("user_id");
 			
 			// The query to disable a GB Member & prepared statements
 			String query2 = "UPDATE `userdb`.`user` SET `account_status`=? WHERE `user_id`=?";
@@ -286,7 +332,7 @@ public class GBMember {
 			
 			// binding values
 			preparedStmt2.setString(1, accStatus);
-			preparedStmt2.setInt(2, Integer.parseInt(userID));
+			preparedStmt2.setInt(2, userID);
 			
 			// execute the statement
 			preparedStmt2.execute();

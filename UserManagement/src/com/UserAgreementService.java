@@ -26,7 +26,7 @@ public class UserAgreementService {
 	UserAgreement agreementObj = new UserAgreement();
 
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
-	@RolesAllowed( "Admin" )
+	@RolesAllowed(value = { "Admin", "Member" })
 	@GET
 	@Path("/view")
 	@Produces(MediaType.TEXT_HTML)
@@ -36,7 +36,7 @@ public class UserAgreementService {
 	}
 	
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
-	@RolesAllowed(value = { "Admin", "Researcher" })
+	@RolesAllowed(value = { "Admin", "Member" })
 	@POST
 	@Path("/create-agreement")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -57,7 +57,7 @@ public class UserAgreementService {
 	}
 	
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
-	@RolesAllowed(value = { "Admin", "Researcher" })
+	@RolesAllowed(value = { "Admin", "Member" })
 	@PUT
 	@Path("/update-agreement")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -79,7 +79,7 @@ public class UserAgreementService {
 	}
 	
 //	------------------------------------------------------------------------------------------------------------------------------------------------------------
-	@RolesAllowed(value = { "Admin", "Researcher" })
+	@RolesAllowed(value = { "Admin", "Member" })
 	@DELETE
 	@Path("/delete-agreement")
 	@Consumes(MediaType.APPLICATION_XML)
