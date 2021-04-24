@@ -33,7 +33,7 @@ public class Product {
 
 			Client client = ClientBuilder.newClient(clientC);
 
-			Response response = client.target("http://localhost:8080/UserManagement/user-management-service/user/user-status")
+			Response response = client.target("http://localhost:8080/UserManagement/UserService/user/user-status")
 					.queryParam("userID", sellerID).request().get();
 			
 			String status = response.readEntity(String.class);
@@ -113,7 +113,7 @@ public class Product {
 				String productName = set.getString("product_name");
 				String description = set.getString("description");
 				String unitPrice = Double.toString(set.getDouble("unit_price"));
-				String productStatus = Integer.toString(set.getInt("status"));
+				String productStatus = set.getString("status");
 				String createdAt = set.getTimestamp("created_at").toString();
 				String updatedAt = set.getTimestamp("updated_at").toString();
 				
@@ -225,30 +225,48 @@ public class Product {
 				
 			}
 			
+			// The query to retrieve all the product IDs of a certain seller
+			String query1 = "SELECT `product_id` FROM `productdb`.`product` WHERE `seller_id`=?";
+			
+			PreparedStatement preparedStmt1 = con.prepareStatement(query1);
+			
+			// binding values
+			preparedStmt1.setInt(1, Integer.parseInt(sellerID));
+			
+			// Retrieve records and store it in a ResultSet
+			ResultSet set1 = preparedStmt1.executeQuery();
+			
+			// Check whether the seller has any products in the DB
+			if(set1.next() == false) {
+				return "This Seller has no Registered Products at this moment.";
+			}
+
+			
 			// Prepare a HTML table to display the Product details
 			output = "<table border='1'>" + "<tr>" + "<th>Product Name</th>" + "<th>Description</th>" + "<th>Unit Price</th>"
 					+ "<th>Category</th>" + "<th>Product Status</th>" + "<th>Created At</th>" + "<th>Updated At</th>" + "</tr>";
 			
 			// The query to select the Product records by seller ID
-			String query = "SELECT `product_name`, `description`, `unit_price`, `category`, `status`, `created_at`, `updated_at` FROM `productdb`.`product` WHERE `seller_id`=?";
+			String query2 = "SELECT `product_name`, `description`, `unit_price`, `category`, `status`, `created_at`, `updated_at` FROM `productdb`.`product` WHERE `seller_id`=?";
 			
-			PreparedStatement preparedStmt = con.prepareStatement(query);
+			PreparedStatement preparedStmt2 = con.prepareStatement(query2);
 			
 			// binding values
-			preparedStmt.setInt(1, Integer.parseInt(sellerID));
+			preparedStmt2.setInt(1, Integer.parseInt(sellerID));
 			
-			ResultSet set = preparedStmt.executeQuery();
+			// Retrieve records and store it in a ResultSet
+			ResultSet set2 = preparedStmt2.executeQuery();
 			
 			// Iterate through all the records in the result set
-			while (set.next()) {
+			while (set2.next()) {
 				// Reading values from the Result Set - set
-				String productName = set.getString("product_name");
-				String description = set.getString("description");
-				String unitPrice = Double.toString(set.getDouble("unit_price"));
-				String category = set.getString("category");
-				String productStatus = Integer.toString(set.getInt("status"));
-				String createdAt = set.getTimestamp("created_at").toString();
-				String updatedAt = set.getTimestamp("updated_at").toString();
+				String productName = set2.getString("product_name");
+				String description = set2.getString("description");
+				String unitPrice = Double.toString(set2.getDouble("unit_price"));
+				String category = set2.getString("category");
+				String productStatus = set2.getString("status");
+				String createdAt = set2.getTimestamp("created_at").toString();
+				String updatedAt = set2.getTimestamp("updated_at").toString();
 				
 				// Add the record in to the HTML table
 				output += "<tr><td>" + productName + "</td>";
@@ -352,6 +370,8 @@ public class Product {
 			
 			if(set.next() == true) {
 				// Iterate through all the records in the result set
+				set.beforeFirst();
+				
 				while (set.next()) {
 					// Reading values from the Result Set - set
 					int productID = set.getInt("product_id");
@@ -379,7 +399,7 @@ public class Product {
 			con.close();
 			
 			// Success
-			output = "Category pf all the product records has Updated successfully!...";
+			output = "Category of all the product records has Updated successfully!...";
 			
 		} catch (Exception e) {
 			// Failure
