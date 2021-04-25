@@ -497,7 +497,7 @@ public class Orders {
 					+ "<th>Total Amount</th>";
 
 			// SQL Query for selecting all orders
-			String query = "select * from order where BuyerId = ?";
+			String query = "select * from orders where BuyerId = ?";
 			PreparedStatement preparedStatement = con.prepareStatement(query);
 			preparedStatement.setInt(1, Integer.parseInt(buyerId));
 
@@ -505,7 +505,7 @@ public class Orders {
 			// iterate through the rows in the result set
 			while (rs.next()) {
 				String orderId = rs.getString("orderId");
-				String date = rs.getDate("Date").toString();
+				String date = rs.getDate("created_at").toString();
 				String status = rs.getString("Status");
 				String totalAmount = Double.toString(rs.getDouble("TotalAmount"));
 

@@ -49,8 +49,8 @@ public class OrderDetails {
 
 				Client client = ClientBuilder.newClient(clientC);
 
-				Response response = client.target("http://localhost:8080/Lab06REST/ItemService/Items/price")
-						.queryParam("id", productId).request().get();
+				Response response = client.target("http://localhost:8080/ProductManagement/ProductService/product/read")
+						.queryParam("productID", productId).request().get();
 
 				String res = response.readEntity(String.class);
 				
@@ -88,7 +88,7 @@ public class OrderDetails {
 	 * 
 	 */
 	public String updateProductsInOrder(int OrderId, JsonArray orders) {
-		String output = null;
+		String output = "";
 		double total = 0;
 		try {
 			Connection con = ConnectDB.connect();
@@ -162,7 +162,7 @@ public class OrderDetails {
 	 * 
 	 */
 	public String addShipping(int orderId, int productId, String date, String shippingCompany, String trackId) {
-		String output = null;
+		String output = "";
 		try {
 			Connection con = ConnectDB.connect();
 			if (con == null) {

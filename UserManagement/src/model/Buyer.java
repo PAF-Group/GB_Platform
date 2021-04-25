@@ -22,7 +22,7 @@ public class Buyer {
 			}
 			
 			// The query to retrieve all the user-email & password records
-			String query1 = "SELECT `user_email`, `password` FROM `userdb`.`user`";
+			String query1 = "SELECT `user_email`, `password` FROM `user`";
 			
 			Statement stmt = con.createStatement();
 			
@@ -42,7 +42,7 @@ public class Buyer {
 			}
 			
 			// The query to insert a new record to the User table & prepared statements
-			String query2 = "INSERT INTO `userdb`.`user` (`user_email`, `password`, `user_role`, `account_status`) VALUES (?, ?, ?, ?)";
+			String query2 = "INSERT INTO `user` (`user_email`, `password`, `user_role`, `account_status`) VALUES (?, ?, ?, ?)";
 						
 			PreparedStatement preparedStmt1 = con.prepareStatement(query2);
 						
@@ -56,7 +56,7 @@ public class Buyer {
 			preparedStmt1.execute();
 			
 			// The query to get the newly created User/Buyer ID
-			String query3 = "SELECT `user_id` FROM `userdb`.`user` WHERE `user_email`=?";
+			String query3 = "SELECT `user_id` FROM `user` WHERE `user_email`=?";
 			
 			PreparedStatement preparedStmt2 = con.prepareStatement(query3);
 			
@@ -71,7 +71,7 @@ public class Buyer {
 			int userID = set2.getInt("user_id");
 			
 			// The query to insert a new record to the Buyer table & prepared statements
-			String query4 = " INSERT INTO `userdb`.`buyer` (`name`, `user_phone`, `address`, `user_id`, `user_agreement`) VALUES (?, ?, ?, ?, ?)";
+			String query4 = " INSERT INTO `buyer` (`name`, `user_phone`, `address`, `user_id`, `user_agreement`) VALUES (?, ?, ?, ?, ?)";
 			
 			PreparedStatement preparedStmt3 = con.prepareStatement(query4);
 			
@@ -121,7 +121,7 @@ public class Buyer {
 					+ "</tr>";
 
 			// The query to select all records from Researcher table
-			String query1 = "SELECT `name`, `user_phone`, `address`, `user_id`, `user_agreement`, `created_at`, `updated_at` FROM `userdb`.`buyer`";
+			String query1 = "SELECT `name`, `user_phone`, `address`, `user_id`, `user_agreement`, `created_at`, `updated_at` FROM `buyer`";
 			
 			Statement stmt1 = con.createStatement();
 			ResultSet set1 = stmt1.executeQuery(query1);
@@ -138,7 +138,7 @@ public class Buyer {
 				String updatedAt = set1.getTimestamp("updated_at").toString();
 				
 				// The query to select the certain Buyer record from the User table
-				String query2 = "SELECT `user_email`, `account_status` FROM `userdb`.`user` WHERE `user_id`=?";
+				String query2 = "SELECT `user_email`, `account_status` FROM `user` WHERE `user_id`=?";
 				
 				PreparedStatement preparedStmt = con.prepareStatement(query2);
 				
@@ -197,7 +197,7 @@ public class Buyer {
 			}
 			
 			// The query to Update the certain record in the Buyer table & prepared statements
-			String query = "UPDATE `userdb`.`buyer` SET `name`=?, `user_phone`=?, `address`=?, `user_agreement`=? WHERE `buyer_id`=?";
+			String query = "UPDATE `buyer` SET `name`=?, `user_phone`=?, `address`=?, `user_agreement`=? WHERE `buyer_id`=?";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
@@ -243,7 +243,7 @@ public class Buyer {
 			}
 			
 			// The query to retrieve all the user-email & password records
-			String query1 = "SELECT `user_email`, `password` FROM `userdb`.`user`";
+			String query1 = "SELECT `user_email`, `password` FROM `user`";
 			
 			Statement stmt = con.createStatement();
 			
@@ -263,7 +263,7 @@ public class Buyer {
 			}
 			
 			// The query to Update the certain record in the User table & prepared statements
-			String query = "UPDATE `userdb`.`user` SET `user_email`=?, `password`=? WHERE `user_id`=?";
+			String query = "UPDATE `user` SET `user_email`=?, `password`=? WHERE `user_id`=?";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
@@ -307,7 +307,7 @@ public class Buyer {
 			}
 			
 			// The query to retrieve user ID from the Buyer table
-			String query1 = "SELECT `user_id` FROM `userdb`.`buyer` WHERE `buyer_id`=?";
+			String query1 = "SELECT `user_id` FROM `buyer` WHERE `buyer_id`=?";
 			
 			PreparedStatement preparedStmt1 = con.prepareStatement(query1);
 			
@@ -322,7 +322,7 @@ public class Buyer {
 			int userID = set.getInt("user_id");
 			
 			// The query to disable a Buyer & prepared statements
-			String query2 = "UPDATE `userdb`.`user` SET `account_status`=? WHERE `user_id`=?";
+			String query2 = "UPDATE `user` SET `account_status`=? WHERE `user_id`=?";
 			
 			PreparedStatement preparedStmt2 = con.prepareStatement(query2);
 			
@@ -365,7 +365,7 @@ public class Buyer {
 			}
 			
 			// The query to retrieve address from the Buyer table
-			String query = "SELECT `address` FROM `userdb`.`buyer` WHERE `buyer_id`=?";
+			String query = "SELECT `address` FROM `buyer` WHERE `user_id`=?";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			

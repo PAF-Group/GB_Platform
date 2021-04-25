@@ -26,7 +26,7 @@ public class User {
 			+ "<th>Updated At</th>" + "</tr>";
 			
 			// The query to select all records from User table
-			String query = "SELECT `user_email`, `user_role`, `account_status`, `created_at`, `updated_at` FROM `userdb`.`user`";
+			String query = "SELECT `user_email`, `user_role`, `account_status`, `created_at`, `updated_at` FROM `user`";
 			
 			Statement stmt = con.createStatement();
 			ResultSet set = stmt.executeQuery(query);
@@ -82,21 +82,20 @@ public class User {
 			}
 			
 			// The query to select a specific user using user-email & password
-			String query = "SELECT `user_role`, `account_status` FROM `userdb`.`user` WHERE `user_email`=? AND `password`=?";
+			String query = "SELECT `user_role`, `account_status` FROM `user` WHERE `user_email`=? AND `password`=?";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
 			// binding values
 			preparedStmt.setString(1, userEmail);
 			preparedStmt.setString(2, password);
-						
 			// execute the statement
 			ResultSet set = preparedStmt.executeQuery();
 			
 			if(set.next() == true) {
 				String accStatus = set.getString("account_status");
 				
-				if(accStatus.equals("active")) {
+				if(accStatus.toLowerCase().equals("active")) {
 					userRole = set.getString("user_role");
 					
 				} else {
@@ -144,7 +143,7 @@ public class User {
 			}
 			
 			// The query to get the account status using user
-			String query = "SELECT `account_status` FROM `userdb`.`user` WHERE `user_id`=?";
+			String query = "SELECT `account_status` FROM `user` WHERE `user_id`=?";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			

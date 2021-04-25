@@ -57,27 +57,15 @@ public class OrderIssueService {
 	}
 
 	@DELETE
-	@Path("/Issue")
+	@Path("/Issue/{id}")
 	@RolesAllowed(value = { "Buyer" })
-	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String deleteIssue(String itemData) {
-		// Convert the input string to an XML document
-		Document doc = Jsoup.parse(itemData, "", Parser.xmlParser());
+	public String deleteIssue(@PathParam(value = "id") String id) {
 
-		// Read the value from the element <itemID>
-		String issueId = doc.select("IssueId").text();
-		String output = orderIssues.deleteIssue(issueId);
+		String output = orderIssues.deleteIssue(id);
 		return output;
 	}
 
-	@GET
-	@RolesAllowed(value = { "Buyer", "Researcher", "Admin" })
-	@Path("/Issue/{issueId}")
-	@Produces(MediaType.TEXT_HTML)
-	public String getIssueById(@PathParam("issueId") String issueId) {
-		return orderIssues.getIssueById(Integer.parseInt(issueId));
-	}
 
 	@GET
 	@Path("/Issue")
@@ -92,5 +80,13 @@ public class OrderIssueService {
 		String id = doc.select("OrderId").text();
 		String output = orderIssues.issuesInOrder(id);
 		return output;
+	}
+	
+	@GET
+	@RolesAllowed(value = { "Buyer", "Researcher", "Admin" })
+	@Path("/Issue/{issueId}")
+	@Produces(MediaType.TEXT_HTML)
+	public String getIssueById(@PathParam("issueId") String issueId) {
+		return orderIssues.getIssueById(Integer.parseInt(issueId));
 	}
 }

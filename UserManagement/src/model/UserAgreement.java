@@ -22,7 +22,7 @@ public class UserAgreement {
 			}
 			
 			// The query to insert a new record to the User Agreement table & prepared statements
-			String query = "INSERT INTO `userdb`.`user_agreement` (`agreement_name`, `description`, `file_location`) VALUES (?, ?, ?)";
+			String query = "INSERT INTO `user_agreement` (`agreement_name`, `description`, `file_location`) VALUES (?, ?, ?)";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
@@ -69,7 +69,7 @@ public class UserAgreement {
 					+ "<th>Created At</th>" + "<th>Updated At</th>" + "</tr>";
 
 			// The query to select all records from User Agreement table
-			String query = "SELECT `agreement_name`, `description`, `file_location`, `created_at`, `updated_at` FROM `userdb`.`user_agreement`";
+			String query = "SELECT `agreement_name`, `description`, `file_location`, `created_at`, `updated_at` FROM `user_agreement`";
 			
 			Statement stmt = con.createStatement();
 			
@@ -125,7 +125,7 @@ public class UserAgreement {
 			}
 			
 			// The query to Update the certain record in the User Agreement table & prepared statements
-			String query = "UPDATE `userdb`.`user_agreement` SET `agreement_name`=?, `description`=?, `file_location`=? WHERE `agreement_id`=?";
+			String query = "UPDATE `user_agreement` SET `agreement_name`=?, `description`=?, `file_location`=? WHERE `agreement_id`=?";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
@@ -170,7 +170,7 @@ public class UserAgreement {
 			}
 			
 			// The query to remove a User Agreement & prepared statements
-			String query = "DELETE FROM `userdb`.`user_agreement` WHERE `agreement_id`=?";
+			String query = "DELETE FROM `user_agreement` WHERE `agreement_id`=?";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			

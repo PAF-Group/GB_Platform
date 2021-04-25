@@ -22,7 +22,7 @@ public class GBMember {
 			}
 			
 			// The query to retrieve all the user-email & password records
-			String query1 = "SELECT `user_email`, `password` FROM `userdb`.`user`";
+			String query1 = "SELECT `user_email`, `password` FROM `user`";
 			
 			Statement stmt = con.createStatement();
 			
@@ -42,7 +42,7 @@ public class GBMember {
 			}
 			
 			// The query to insert a new record to the User table & prepared statements
-			String query2 = "INSERT INTO `userdb`.`user` (`user_email`, `password`, `user_role`, `account_status`) VALUES (?, ?, ?, ?)";
+			String query2 = "INSERT INTO `user` (`user_email`, `password`, `user_role`, `account_status`) VALUES (?, ?, ?, ?)";
 						
 			PreparedStatement preparedStmt1 = con.prepareStatement(query2);
 						
@@ -56,7 +56,7 @@ public class GBMember {
 			preparedStmt1.execute();
 			
 			// The query to get the newly created User/GBMember ID
-			String query3 = "SELECT `user_id` FROM `userdb`.`user` WHERE `user_email`=?";
+			String query3 = "SELECT `user_id` FROM `user` WHERE `user_email`=?";
 			
 			PreparedStatement preparedStmt2 = con.prepareStatement(query3);
 			
@@ -71,7 +71,7 @@ public class GBMember {
 			int userID = set2.getInt("user_id");
 			
 			// The query to insert a new record to the GB Member table & prepared statements
-			String query4 = "INSERT INTO `userdb`.`gb_member` (`employee_id`, `first_name`, `last_name`, `member_type`, `user_phone`, `user_id`) VALUES (?, ?, ?, ?, ?, ?)";
+			String query4 = "INSERT INTO `gb_member` (`employee_id`, `first_name`, `last_name`, `member_type`, `user_phone`, `user_id`) VALUES (?, ?, ?, ?, ?, ?)";
 			
 			PreparedStatement preparedStmt3 = con.prepareStatement(query4);
 			
@@ -122,7 +122,7 @@ public class GBMember {
 					+ "</tr>";
 
 			// The query to select all records from GB Member table
-			String query1 = "SELECT `employee_id`, `first_name`, `last_name`, `member_type`, `user_phone`, `user_id`, `created_at`, `updated_at` FROM `userdb`.`gb_member`";
+			String query1 = "SELECT `employee_id`, `first_name`, `last_name`, `member_type`, `user_phone`, `user_id`, `created_at`, `updated_at` FROM `gb_member`";
 			
 			Statement stmt = con.createStatement();
 			ResultSet set1 = stmt.executeQuery(query1);
@@ -140,7 +140,7 @@ public class GBMember {
 				String updatedAt = set1.getTimestamp("updated_at").toString();
 				
 				// The query to select the certain GB Member record from the User table
-				String query2 = "SELECT `user_email`, `account_status` FROM `userdb`.`user` WHERE `user_id`=?";
+				String query2 = "SELECT `user_email`, `account_status` FROM `user` WHERE `user_id`=?";
 				
 				PreparedStatement preparedStmt = con.prepareStatement(query2);
 				
@@ -200,7 +200,7 @@ public class GBMember {
 			}
 			
 			// The query to Update the certain record in the GB Member table & prepared statements
-			String query = "UPDATE `userdb`.`gb_member` SET `employee_id`=?, `first_name`=?, `last_name`=?, `member_type`=?, `user_phone`=? WHERE `member_id`=?";
+			String query = "UPDATE `gb_member` SET `employee_id`=?, `first_name`=?, `last_name`=?, `member_type`=?, `user_phone`=? WHERE `member_id`=?";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
@@ -247,7 +247,7 @@ public class GBMember {
 			}
 			
 			// The query to retrieve all the user-email & password records
-			String query1 = "SELECT `user_email`, `password` FROM `userdb`.`user`";
+			String query1 = "SELECT `user_email`, `password` FROM `user`";
 			
 			Statement stmt = con.createStatement();
 			
@@ -267,7 +267,7 @@ public class GBMember {
 			}
 			
 			// The query to Update the certain record in the User table & prepared statements
-			String query = "UPDATE `userdb`.`user` SET `user_email`=?, `password`=? WHERE `user_id`=?";
+			String query = "UPDATE `user` SET `user_email`=?, `password`=? WHERE `user_id`=?";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
@@ -311,7 +311,7 @@ public class GBMember {
 			}
 			
 			// The query to retrieve user ID from the GB Member table
-			String query1 = "SELECT `user_id` FROM `userdb`.`gb_member` WHERE `member_id`=?";
+			String query1 = "SELECT `user_id` FROM `gb_member` WHERE `member_id`=?";
 			
 			PreparedStatement preparedStmt1 = con.prepareStatement(query1);
 			
@@ -326,7 +326,7 @@ public class GBMember {
 			int userID = set.getInt("user_id");
 			
 			// The query to disable a GB Member & prepared statements
-			String query2 = "UPDATE `userdb`.`user` SET `account_status`=? WHERE `user_id`=?";
+			String query2 = "UPDATE `user` SET `account_status`=? WHERE `user_id`=?";
 			
 			PreparedStatement preparedStmt2 = con.prepareStatement(query2);
 			

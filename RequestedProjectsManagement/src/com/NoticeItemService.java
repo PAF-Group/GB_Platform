@@ -14,7 +14,7 @@ import org.jsoup.*;
 import org.jsoup.parser.*;
 import org.jsoup.nodes.Document;
 
-@Path("/Items")
+@Path("/Notices")
 public class NoticeItemService {
 	NoticeItem itemObj = new NoticeItem();
 

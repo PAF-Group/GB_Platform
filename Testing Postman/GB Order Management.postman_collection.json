@@ -1,0 +1,811 @@
+{
+	"info": {
+		"_postman_id": "233e16f0-969b-4248-a00d-063b8fba580d",
+		"name": "GB Order Management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add Order",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "nuwan@gmail.com",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"buyerId\" :11,\r\n    \"shippingAddress\" : \"Same Address\",\r\n    \"orderDetails\" : [\r\n        {\r\n            \"productId\" : 1,\r\n            \"quantity\" : 5\r\n        },\r\n        {\r\n            \"productId\" : 2,\r\n            \"quantity\" : 2\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/OrderManagement/OrderService/Orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"OrderManagement",
+						"OrderService",
+						"Orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Orders",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin@gmail.com",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/yasir/Downloads/main.png"
+						},
+						{
+							"key": "name",
+							"value": "Yasiru",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/OrderManagement/OrderService/Orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"OrderManagement",
+						"OrderService",
+						"Orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Order",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "nuwan@gmail.com",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "<orderId>25</orderId>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/OrderManagement/OrderService/Orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"OrderManagement",
+						"OrderService",
+						"Orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Order",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "nuwan@gmail.com",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"buyerId\" : 11,\r\n    \"orderId\" : 28,\r\n    \"shippingAddress\" : \"No.1, Temple Road, Galle\",\r\n    \"orderDetails\" : [\r\n        {\r\n            \"productId\" : 3,\r\n            \"quantity\" : 5\r\n        },\r\n        {\r\n            \"productId\" : 2,\r\n            \"quantity\" : 2\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/OrderManagement/OrderService/Orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"OrderManagement",
+						"OrderService",
+						"Orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Payment for the Order",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "nuwan@gmail.com",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "orderId",
+							"value": "28",
+							"type": "text"
+						},
+						{
+							"key": "paymentSlipUrl",
+							"value": "GoogleDrive/Link",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/OrderManagement/OrderService/Orders/addPayment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"OrderManagement",
+						"OrderService",
+						"Orders",
+						"addPayment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Shipping Details",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "amila@gmail.com",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "orderId",
+							"value": "28",
+							"type": "text"
+						},
+						{
+							"key": "productId",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "date",
+							"value": "25/04/2021",
+							"type": "text"
+						},
+						{
+							"key": "shippingCompany",
+							"value": "FedX",
+							"type": "text"
+						},
+						{
+							"key": "trackId",
+							"value": "4rsfdsafe",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/OrderManagement/OrderService/Orders/addShipping",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"OrderManagement",
+						"OrderService",
+						"Orders",
+						"addShipping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Order By Id",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "nuwan@gmail.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/OrderManagement/OrderService/Orders/28",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"OrderManagement",
+						"OrderService",
+						"Orders",
+						"28"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Orders by Buyer's ID",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "nuwan@gmail.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/OrderManagement/OrderService/Orders/Buyers/11",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"OrderManagement",
+						"OrderService",
+						"Orders",
+						"Buyers",
+						"11"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Orders by Seller's ID",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin@gmail.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/OrderManagement/OrderService/Orders/Sellers/8",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"OrderManagement",
+						"OrderService",
+						"Orders",
+						"Sellers",
+						"8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AcceptPayment",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin@gmail.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/OrderManagement/OrderService/Orders/acceptPayment?orderId=28",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"OrderManagement",
+						"OrderService",
+						"Orders",
+						"acceptPayment"
+					],
+					"query": [
+						{
+							"key": "orderId",
+							"value": "28"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reject Payment",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin@gmail.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/OrderManagement/OrderService/Orders/rejectPayment?orderId=28",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"OrderManagement",
+						"OrderService",
+						"Orders",
+						"rejectPayment"
+					],
+					"query": [
+						{
+							"key": "orderId",
+							"value": "28"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm Order Received",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "nuwan@gmail.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "orderID",
+							"value": "28",
+							"type": "text"
+						},
+						{
+							"key": "productId",
+							"value": "3",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/OrderManagement/OrderService/Orders/confirmOrder",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"OrderManagement",
+						"OrderService",
+						"Orders",
+						"confirmOrder"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Open an Issue",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "nuwan@gmail.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"orderId\" : 28,\r\n    \"productId\" : 3,\r\n    \"issue\" : \"The product was not as described\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/OrderManagement/OrderService/Orders/Issue",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"OrderManagement",
+						"OrderService",
+						"Orders",
+						"Issue"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get an Issue by ID",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin@gmail.com",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/OrderManagement/OrderService/Orders/Issue/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"OrderManagement",
+						"OrderService",
+						"Orders",
+						"Issue",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Issues for the orders",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin@gmail.com",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "<orderId>28</orderId>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/OrderManagement/OrderService/Orders/Issue",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"OrderManagement",
+						"OrderService",
+						"Orders",
+						"Issue"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Issue Status",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin@gmail.com",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"issueId\" : 3,\r\n    \"status\" : \"Transfered\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/OrderManagement/OrderService/Orders/Issue",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"OrderManagement",
+						"OrderService",
+						"Orders",
+						"Issue"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancel Issue",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "nuwan@gmail.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/OrderManagement/OrderService/Orders/Issue/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"OrderManagement",
+						"OrderService",
+						"Orders",
+						"Issue",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
