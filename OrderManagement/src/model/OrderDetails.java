@@ -49,8 +49,8 @@ public class OrderDetails {
 
 				Client client = ClientBuilder.newClient(clientC);
 
-				Response response = client.target("http://localhost:8080/Lab06REST/ItemService/Items/price")
-						.queryParam("id", productId).request().get();
+				Response response = client.target("http://localhost:8080/ProductManagement/ProductService/product/read")
+						.queryParam("productID", productId).request().get();
 
 				String res = response.readEntity(String.class);
 				

@@ -40,7 +40,7 @@ public class Product {
 			
 			if(status.equals("valid")) {
 				// The query to insert a new record to the Product table & prepared statements
-				String query = "INSERT INTO `productdb`.`product` (`product_name`, `description`, `unit_price`, `category`, `status`, `seller_id`) VALUES (?, ?, ?, ?, ?, ?)";
+				String query = "INSERT INTO `product` (`product_name`, `description`, `unit_price`, `category`, `status`, `seller_id`) VALUES (?, ?, ?, ?, ?, ?)";
 							
 				PreparedStatement preparedStmt = con.prepareStatement(query);
 							
@@ -98,7 +98,7 @@ public class Product {
 					+ "<th>Product Status</th>" + "<th>Created At</th>" + "<th>Updated At</th>" + "</tr>";
 
 			// The query to select all Product records ordered by a Category
-			String query = "SELECT `product_name`, `description`, `unit_price`, `status`, `created_at`, `updated_at` FROM `productdb`.`product` WHERE `category`=?";
+			String query = "SELECT `product_name`, `description`, `unit_price`, `status`, `created_at`, `updated_at` FROM `product` WHERE `category`=?";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
@@ -163,7 +163,7 @@ public class Product {
 					+ "<th>Category</th>" + "<th>Product Status</th>" + "<th>Created At</th>" + "<th>Updated At</th>" + "</tr>";
 			
 			// The query to select the Product record by product ID
-			String query = "SELECT `product_name`, `description`, `unit_price`, `category`, `status`, `created_at`, `updated_at` FROM `productdb`.`product` WHERE `product_id`=?";
+			String query = "SELECT `product_name`, `description`, `unit_price`, `category`, `status`, `created_at`, `updated_at` FROM `product` WHERE `product_id`=?";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
@@ -226,7 +226,7 @@ public class Product {
 			}
 			
 			// The query to retrieve all the product IDs of a certain seller
-			String query1 = "SELECT `product_id` FROM `productdb`.`product` WHERE `seller_id`=?";
+			String query1 = "SELECT `product_id` FROM `product` WHERE `seller_id`=?";
 			
 			PreparedStatement preparedStmt1 = con.prepareStatement(query1);
 			
@@ -247,7 +247,7 @@ public class Product {
 					+ "<th>Category</th>" + "<th>Product Status</th>" + "<th>Created At</th>" + "<th>Updated At</th>" + "</tr>";
 			
 			// The query to select the Product records by seller ID
-			String query2 = "SELECT `product_name`, `description`, `unit_price`, `category`, `status`, `created_at`, `updated_at` FROM `productdb`.`product` WHERE `seller_id`=?";
+			String query2 = "SELECT `product_name`, `description`, `unit_price`, `category`, `status`, `created_at`, `updated_at` FROM `product` WHERE `seller_id`=?";
 			
 			PreparedStatement preparedStmt2 = con.prepareStatement(query2);
 			
@@ -311,7 +311,7 @@ public class Product {
 			}
 			
 			// The query to update the product record
-			String query = "UPDATE `productdb`.`product` SET `product_name`=?, `description`=?, `unit_price`=?, `category`=?, `status`=? WHERE `product_id`=?";
+			String query = "UPDATE `product` SET `product_name`=?, `description`=?, `unit_price`=?, `category`=?, `status`=? WHERE `product_id`=?";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
@@ -358,7 +358,7 @@ public class Product {
 			}
 			
 			// The query to retrieve all the product records where category = oldCategory & seller ID = sellerID
-			String query1 = "SELECT `product_id` FROM `productdb`.`product` WHERE `seller_id`=? AND `category`=?";
+			String query1 = "SELECT `product_id` FROM `product` WHERE `seller_id`=? AND `category`=?";
 			
 			PreparedStatement preparedStmt1 = con.prepareStatement(query1);
 			
@@ -377,7 +377,7 @@ public class Product {
 					int productID = set.getInt("product_id");
 					
 					// The query to update the product category
-					String query2 = "UPDATE `productdb`.`product` SET `category`=? WHERE `product_id`=?";
+					String query2 = "UPDATE `product` SET `category`=? WHERE `product_id`=?";
 					
 					PreparedStatement preparedStmt2 = con.prepareStatement(query2);
 					
@@ -427,7 +427,7 @@ public class Product {
 			}
 			
 			// The query to delete the product record
-			String query = "DELETE FROM `productdb`.`product` WHERE `product_id`=?";
+			String query = "DELETE FROM `product` WHERE `product_id`=?";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
@@ -469,7 +469,7 @@ public class Product {
 			}
 			
 			// The query to retrieve unit price & seller ID
-			String query = "SELECT `unit_price`, `seller_id` FROM `productdb`.`product` WHERE `product_id`=?";
+			String query = "SELECT `unit_price`, `seller_id` FROM `product` WHERE `product_id`=?";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
@@ -480,7 +480,7 @@ public class Product {
 			
 			if(set.next() == true) {
 				String unitPrice = Double.toString(set.getDouble("unit_price"));
-				String sellerID = Double.toString(set.getDouble("seller_id"));
+				String sellerID = Integer.toString(set.getInt("seller_id"));
 				
 				output = "{'unitPrice' : " + unitPrice + ", 'sellerId' : " + sellerID + "}";
 				

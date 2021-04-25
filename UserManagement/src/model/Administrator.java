@@ -22,7 +22,7 @@ public class Administrator {
 			}
 			
 			// The query to retrieve all the user-email & password records
-			String query1 = "SELECT `user_email`, `password` FROM `userdb`.`user`";
+			String query1 = "SELECT `user_email`, `password` FROM `user`";
 			
 			Statement stmt = con.createStatement();
 			
@@ -42,7 +42,7 @@ public class Administrator {
 			}
 			
 			// The query to insert a new record to the User table & prepared statements
-			String query2 = "INSERT INTO `userdb`.`user` (`user_email`, `password`, `user_role`, `account_status`) VALUES (?, ?, ?, ?)";
+			String query2 = "INSERT INTO `user` (`user_email`, `password`, `user_role`, `account_status`) VALUES (?, ?, ?, ?)";
 			
 			PreparedStatement preparedStmt1 = con.prepareStatement(query2);
 			
@@ -56,7 +56,7 @@ public class Administrator {
 			preparedStmt1.execute();
 			
 			// The query to get the newly created User/Administrator ID
-			String query3 = "SELECT `user_id` FROM `userdb`.`user` WHERE `user_email`=?";
+			String query3 = "SELECT `user_id` FROM `user` WHERE `user_email`=?";
 			
 			PreparedStatement preparedStmt2 = con.prepareStatement(query3);
 			
@@ -71,7 +71,7 @@ public class Administrator {
 			int userID = set2.getInt("user_id");
 			
 			// The query to insert a new record to the Administrator table & prepared statements
-			String query4 = "INSERT INTO `userdb`.`administrator` (`employee_id`, `first_name`, `last_name`, `user_phone`, `user_id`) VALUES (?, ?, ?, ?, ?)";
+			String query4 = "INSERT INTO `administrator` (`employee_id`, `first_name`, `last_name`, `user_phone`, `user_id`) VALUES (?, ?, ?, ?, ?)";
 			
 			PreparedStatement preparedStmt3 = con.prepareStatement(query4);
 			
@@ -120,7 +120,7 @@ public class Administrator {
 					+  "<th>Email</th>" + "<th>Account Status</th>" + "<th>Created At</th>" + "<th>Updated At</th>" + "</tr>";
 
 			// The query to select all records from Administrator table
-			String query1 = "SELECT `employee_id`, `first_name`, `last_name`, `user_phone`, `user_id`, `created_at`, `updated_at` FROM `userdb`.`administrator`";
+			String query1 = "SELECT `employee_id`, `first_name`, `last_name`, `user_phone`, `user_id`, `created_at`, `updated_at` FROM `administrator`";
 			
 			Statement stmt1 = con.createStatement();
 			ResultSet set1 = stmt1.executeQuery(query1);
@@ -137,7 +137,7 @@ public class Administrator {
 				String updatedAt = set1.getTimestamp("updated_at").toString();
 				
 				// The query to select the certain Administrator record from the User table
-				String query2 = "SELECT `user_email`, `account_status` FROM `userdb`.`user` WHERE `user_id`=?";
+				String query2 = "SELECT `user_email`, `account_status` FROM `user` WHERE `user_id`=?";
 				
 				PreparedStatement preparedStmt = con.prepareStatement(query2);
 				
@@ -196,7 +196,7 @@ public class Administrator {
 			}
 			
 			// The query to Update the certain record in the Administrator table & prepared statements
-			String query = "UPDATE `userdb`.`administrator` SET `employee_id`=?, `first_name`=?, `last_name`=?, `user_phone`=? WHERE `admin_id`=?";
+			String query = "UPDATE `administrator` SET `employee_id`=?, `first_name`=?, `last_name`=?, `user_phone`=? WHERE `admin_id`=?";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
@@ -242,7 +242,7 @@ public class Administrator {
 			}
 			
 			// The query to retrieve all the user-email & password records
-			String query1 = "SELECT `user_email`, `password` FROM `userdb`.`user`";
+			String query1 = "SELECT `user_email`, `password` FROM `user`";
 			
 			Statement stmt = con.createStatement();
 			
@@ -262,7 +262,7 @@ public class Administrator {
 			}
 			
 			// The query to Update the certain record in the User table & prepared statements
-			String query2 = "UPDATE `userdb`.`user` SET `user_email`=?, `password`=? WHERE `user_id`=?";
+			String query2 = "UPDATE `user` SET `user_email`=?, `password`=? WHERE `user_id`=?";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query2);
 			
@@ -306,7 +306,7 @@ public class Administrator {
 			}
 			
 			// The query to retrieve user ID from the Administrator table
-			String query1 = "SELECT `user_id` FROM `userdb`.`administrator` WHERE `admin_id`=?";
+			String query1 = "SELECT `user_id` FROM `administrator` WHERE `admin_id`=?";
 			
 			PreparedStatement preparedStmt1 = con.prepareStatement(query1);
 			
@@ -321,7 +321,7 @@ public class Administrator {
 			int userID = set.getInt("user_id");
 			
 			// The query to disable an Administrator & prepared statements
-			String query2 = "UPDATE `userdb`.`user` SET `account_status`=? WHERE `user_id`=?";
+			String query2 = "UPDATE `user` SET `account_status`=? WHERE `user_id`=?";
 			
 			PreparedStatement preparedStmt2 = con.prepareStatement(query2);
 			

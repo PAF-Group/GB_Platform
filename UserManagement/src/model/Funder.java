@@ -22,7 +22,7 @@ public class Funder {
 			}
 			
 			// The query to retrieve all the user-email & password records
-			String query1 = "SELECT `user_email`, `password` FROM `userdb`.`user`";
+			String query1 = "SELECT `user_email`, `password` FROM `user`";
 			
 			Statement stmt = con.createStatement();
 			
@@ -42,7 +42,7 @@ public class Funder {
 			}
 			
 			// The query to insert a new record to the User table & prepared statements
-			String query2 = "INSERT INTO `userdb`.`user` (`user_email`, `password`, `user_role`, `account_status`) VALUES (?, ?, ?, ?)";
+			String query2 = "INSERT INTO `user` (`user_email`, `password`, `user_role`, `account_status`) VALUES (?, ?, ?, ?)";
 						
 			PreparedStatement preparedStmt1 = con.prepareStatement(query2);
 						
@@ -56,7 +56,7 @@ public class Funder {
 			preparedStmt1.execute();
 			
 			// The query to get the newly created User/Funder ID
-			String query3 = "SELECT `user_id` FROM `userdb`.`user` WHERE `user_email`=?";
+			String query3 = "SELECT `user_id` FROM `user` WHERE `user_email`=?";
 			
 			PreparedStatement preparedStmt2 = con.prepareStatement(query3);
 			
@@ -71,7 +71,7 @@ public class Funder {
 			int userID = set2.getInt("user_id");
 			
 			// The query to insert a new record to the Funder table & prepared statements
-			String query4 = "INSERT INTO `userdb`.`funder` (`name`, `user_phone`, `user_type`, `address`, `user_id`, `user_agreement`) VALUES (?, ?, ?, ?, ?, ?)";
+			String query4 = "INSERT INTO `funder` (`name`, `user_phone`, `user_type`, `address`, `user_id`, `user_agreement`) VALUES (?, ?, ?, ?, ?, ?)";
 			
 			PreparedStatement preparedStmt3 = con.prepareStatement(query4);
 			
@@ -122,7 +122,7 @@ public class Funder {
 					+ "<th>Updated At</th>" + "</tr>";
 
 			// The query to select all records from Funder table
-			String query1 = "SELECT `name`, `user_phone`, `user_type`, `address`, `user_id`, `user_agreement`, `created_at`, `updated_at` FROM `userdb`.`funder`";
+			String query1 = "SELECT `name`, `user_phone`, `user_type`, `address`, `user_id`, `user_agreement`, `created_at`, `updated_at` FROM `funder`";
 			
 			Statement stmt1 = con.createStatement();
 			ResultSet set1 = stmt1.executeQuery(query1);
@@ -140,7 +140,7 @@ public class Funder {
 				String updatedAt = set1.getTimestamp("updated_at").toString();
 				
 				// The query to select the certain Funder record from the User table
-				String query2 = "SELECT `user_email`, `account_status` FROM `userdb`.`user` WHERE `user_id`=?";
+				String query2 = "SELECT `user_email`, `account_status` FROM `user` WHERE `user_id`=?";
 				
 				PreparedStatement preparedStmt = con.prepareStatement(query2);
 				
@@ -200,7 +200,7 @@ public class Funder {
 			}
 			
 			// The query to Update the certain record in the Funder table & prepared statements
-			String query = "UPDATE `userdb`.`funder` SET `name`=?, `user_phone`=?, `user_type`=?, `address`=?, `user_agreement`=? WHERE `funder_id`=?";
+			String query = "UPDATE `funder` SET `name`=?, `user_phone`=?, `user_type`=?, `address`=?, `user_agreement`=? WHERE `funder_id`=?";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
@@ -247,7 +247,7 @@ public class Funder {
 			}
 			
 			// The query to retrieve all the user-email & password records
-			String query1 = "SELECT `user_email`, `password` FROM `userdb`.`user`";
+			String query1 = "SELECT `user_email`, `password` FROM `user`";
 			
 			Statement stmt = con.createStatement();
 			
@@ -267,7 +267,7 @@ public class Funder {
 			}
 			
 			// The query to Update the certain record in the User table & prepared statements
-			String query = "UPDATE `userdb`.`user` SET `user_email`=?, `password`=? WHERE `user_id`=?";
+			String query = "UPDATE `user` SET `user_email`=?, `password`=? WHERE `user_id`=?";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
@@ -311,7 +311,7 @@ public class Funder {
 			}
 			
 			// The query to retrieve user ID from the Funder table
-			String query1 = "SELECT `user_id` FROM `userdb`.`funder` WHERE `funder_id`=?";
+			String query1 = "SELECT `user_id` FROM `funder` WHERE `funder_id`=?";
 			
 			PreparedStatement preparedStmt1 = con.prepareStatement(query1);
 			
@@ -326,7 +326,7 @@ public class Funder {
 			int userID = set.getInt("user_id");
 			
 			// The query to disable a funder
-			String query2 = "UPDATE `userdb`.`user` SET `account_status`=? WHERE `user_id`=?";
+			String query2 = "UPDATE `user` SET `account_status`=? WHERE `user_id`=?";
 			
 			PreparedStatement preparedStmt2 = con.prepareStatement(query2);
 			

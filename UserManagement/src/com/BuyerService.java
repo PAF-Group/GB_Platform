@@ -134,7 +134,7 @@ public class BuyerService {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getBuyerAddress( @Context UriInfo uriInfo ) {
 		// Read buyer ID from the request URI info
-		String buyerID = uriInfo.getQueryParameters().getFirst("buyerID");
+		String buyerID = uriInfo.getQueryParameters().getFirst("id");
 		
 		String output = buyerObj.getBuyerAddress(buyerID);
 		
