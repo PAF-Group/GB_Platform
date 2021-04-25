@@ -88,7 +88,7 @@ public class OrderDetails {
 	 * 
 	 */
 	public String updateProductsInOrder(int OrderId, JsonArray orders) {
-		String output = null;
+		String output = "";
 		double total = 0;
 		try {
 			Connection con = ConnectDB.connect();
@@ -162,7 +162,7 @@ public class OrderDetails {
 	 * 
 	 */
 	public String addShipping(int orderId, int productId, String date, String shippingCompany, String trackId) {
-		String output = null;
+		String output = "";
 		try {
 			Connection con = ConnectDB.connect();
 			if (con == null) {
